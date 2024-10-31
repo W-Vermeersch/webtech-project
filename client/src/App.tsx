@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react'
-import {Login} from "./components/login/Login.tsx"
+import {SignIn} from "./components/login/SignIn.tsx"
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css'
@@ -45,16 +45,16 @@ function App() {
             <div>
             <Nav>
                 <Nav.Item>
-                    <Nav.Link><Link to="/home">Home</Link></Nav.Link>
+                    <Nav.Link as={Link} to="/home">Home</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link><Link to="/login">Login</Link></Nav.Link>
+                    <Nav.Link as={Link} to="/sign-in">Sign in</Nav.Link>
                 </Nav.Item>
             </Nav>
             {/*Implementing Routes for respective Path */}
             <Routes>
                 <Route path="/home" element={<Home/>}/>
-                <Route path="/login" element={<Login/>}>
+                <Route path="/sign-in" element={<SignIn/>}>
                     {/*<Route path="team" element={<Team/>}/>*/}
                     {/*<Route path="company" element={<Company/>}/>*/}
                 </Route>
