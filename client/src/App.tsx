@@ -1,10 +1,19 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect} from 'react'
+import {Login} from "./components/login/Login.tsx"
+import Nav from 'react-bootstrap/Nav';
+import 'bootstrap/dist/css/bootstrap.css';
 import './App.css'
 import axios from 'axios'
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    // useNavigate,
+    // Outlet,
+} from "react-router-dom";
 
-function App() {
+function Home(){
     const [count, setCount] = useState(0);
     const [array, setArray] = useState([])
 
@@ -20,28 +29,38 @@ function App() {
 
     return (
         <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-                {array.map((fruit, index) => (<div key={index}><p>{fruit}</p><br></br></div>))}
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            <button onClick={() => setCount((count) => count + 1)}>
+                count is {count}
+            </button>
+            {array.map((fruit, index) => (<div key={index}><p>{fruit}</p><br></br></div>))}
         </>
+    )
+}
+
+function App() {
+
+
+    return (
+        <Router>
+            <div>
+            <Nav>
+                <Nav.Item>
+                    <Nav.Link><Link to="/home">Home</Link></Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link><Link to="/login">Login</Link></Nav.Link>
+                </Nav.Item>
+            </Nav>
+            {/*Implementing Routes for respective Path */}
+            <Routes>
+                <Route path="/home" element={<Home/>}/>
+                <Route path="/login" element={<Login/>}>
+                    {/*<Route path="team" element={<Team/>}/>*/}
+                    {/*<Route path="company" element={<Company/>}/>*/}
+                </Route>
+            </Routes>
+        </div>
+        </Router>
     )
 }
 
