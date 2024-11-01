@@ -3,6 +3,7 @@ import {TextField} from "./TextField";
 import {PasswordField} from "./Password";
 import "./login.css";
 import axios from "axios";
+import RouteToServer from "../../infos.ts";
 
 function SignIn(){
     const [formData, setFormData] = useState({name:"",lastName:"",email:"",password:"",passwordConfirm:""});
@@ -24,8 +25,8 @@ function SignIn(){
         }
         else {
             console.log(formData);
+            axios.post(RouteToServer("/user/sign-in"), formData);
             setFormData({...formData, password: "", passwordConfirm: ""});
-            axios.post("http://localhost:5000/user/signin", formData);
         }
     };
 

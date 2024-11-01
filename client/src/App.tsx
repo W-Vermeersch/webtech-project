@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react'
 
-import {Map, SignIn} from "./components"
+import {Map, SignIn, Reroute} from "./components"
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css'
@@ -10,15 +10,14 @@ import {
     Routes,
     Route,
     Link,
-    // useNavigate,
-    // Outlet,
 } from "react-router-dom";
+import RouteToServer from "./infos.ts";
 
 function Home(){
     const [array, setArray] = useState([])
 
     const fetchApi = async () => {
-        const response = await axios.get("http://localhost:5000");
+        const response = await axios.get(RouteToServer("/"));
         setArray(response.data.fruits)
         console.log(response.data.fruits);
     }
@@ -54,12 +53,14 @@ function App() {
                 {/*Implementing Routes for respective Path */}
                 <div>
                     <Routes>
+
                         <Route path="/home" element={<Home/>}/>
                         <Route path="/user">
                             <Route path="sign-in" element={<SignIn/>}/>
                             {/*<Route path="login" element={<Login/>}/>*/}
                         </Route>
                         <Route path="/map" element={<Map/>}/>
+                        <Route path="*" element={<Reroute/>}/>
                     </Routes>
                 </div>
             </div>
