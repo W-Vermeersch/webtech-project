@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+*.infos.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

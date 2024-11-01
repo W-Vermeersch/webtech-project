@@ -38,7 +38,6 @@ function App() {
 
     return (
         <Router>
-            <div>
                 <Nav>
                     <Nav.Item>
                         <Nav.Link as={Link} to="/home">Home</Nav.Link>
@@ -51,7 +50,7 @@ function App() {
                     </Nav.Item>
                 </Nav>
                 {/*Implementing Routes for respective Path */}
-                <div>
+
                     <Routes>
 
                         <Route path="/home" element={<Home/>}/>
@@ -62,8 +61,6 @@ function App() {
                         <Route path="/map" element={<Map/>}/>
                         <Route path="*" element={<Reroute/>}/>
                     </Routes>
-                </div>
-            </div>
         </Router>
     )
 }
