@@ -1,5 +1,3 @@
-import {Map} from "./map/Map";
-import {SignIn} from "./login/SignIn";
-import {Reroute} from "./homeRedirection/redirection"
-
-export {Map, SignIn, Reroute};
+export {Map} from "./map/Map";
+export {SignIn} from "./login/SignIn";
+export {Reroute} from "./homeRedirection/redirection"
