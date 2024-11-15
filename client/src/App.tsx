@@ -27,10 +27,12 @@ function Home(){
     }, []);
 
     return (
-        <>
-            {array.map((fruit, index) => (<div key={index}><p>{fruit}</p><br></br></div>))}
-        </>
-    )
+            array.map((fruit, index) => (
+                <div key={index}>
+                    <p>
+                        {fruit}
+                    </p><br />
+                </div>)))
 }
 
 function App() {
