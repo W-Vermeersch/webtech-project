@@ -14,10 +14,7 @@ export default function FormTextField({
   value,
 }: Props) {
   return (
-    <div className="mb-3">
-      <label htmlFor={name} className="form-label">
-        {name}
-      </label>
+    <div className="form-floating">
       <input
         id={name}
         name={name}
@@ -28,6 +25,7 @@ export default function FormTextField({
         onChange={onChange}
         required
       />
+      <label htmlFor={name}>{name}</label>
     </div>
   );
 }
