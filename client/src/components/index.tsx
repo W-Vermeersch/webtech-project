@@ -1,3 +1,2 @@
-export {Map} from "./map/Map";
-export {SignIn} from "./login/SignIn";
-export {Reroute} from "./homeRedirection/redirection"
+export { Map } from "./map/Map";
+export { Reroute } from "./homeRedirection/redirection";

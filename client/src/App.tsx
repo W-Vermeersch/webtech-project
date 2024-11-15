@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { Map, SignIn, Reroute } from "./components";
-import Nav from "react-bootstrap/Nav";
+import { Map, Reroute } from "./components";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import axios from "axios";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import RouteToServer from "./infos.ts";
+import SignUpPage from "./pages/SignUpPage.tsx";
+import NavBar from "./components/navBar/NavBar.tsx";
 
 function Home() {
   const [array, setArray] = useState([]);
@@ -31,36 +32,19 @@ function Home() {
 
 function App() {
   return (
-    <Router>
-      <Nav>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/home">
-            Home
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/user/sign-in">
-            Sign in
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={Link} to="/map">
-            Map
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
-      {/*Implementing Routes for respective Path */}
+    <>
+      <NavBar />
 
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/user">
-          <Route path="sign-in" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUpPage />} />
           {/*<Route path="login" element={<Login/>}/>*/}
         </Route>
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
