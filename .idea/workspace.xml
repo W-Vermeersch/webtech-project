@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/Homepage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/pages/Homepage.tsx" afterDir="false" />
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Leaderbord medals.&#10;Created pixel images and display them on leaderboard.">
+      <change afterPath="$PROJECT_DIR$/client/src/assets/bronzemedal.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/assets/goldmedal.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/assets/silvermedal.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/leaderboard/Leaderboard.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,8 +78,17 @@
       <workItem from="1731584699711" duration="1854000" />
       <workItem from="1731588151737" duration="3025000" />
       <workItem from="1731667967847" duration="70000" />
-      <workItem from="1731765688407" duration="1440000" />
+      <workItem from="1731765688407" duration="6483000" />
     </task>
+    <task id="LOCAL-00001" summary="Redirection to Homepage.tsx instead of home function in App.tsx. (Because I don't really understand what's going on there currently). Made a Leaderboard.tsx component. I pretend the backend implementation will give a list of users with their points. This then generates the leaderboard. Layout (css file) has to be changed still.">
+      <option name="closed" value="true" />
+      <created>1731767500868</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731767500868</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -95,5 +104,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Redirection to Homepage.tsx instead of home function in App.tsx. (Because I don't really understand what's going on there currently). Made a Leaderboard.tsx component. I pretend the backend implementation will give a list of users with their points. This then generates the leaderboard. Layout (css file) has to be changed still." />
+    <MESSAGE value="Leaderbord medals.&#10;Created pixel images and display them on leaderboard." />
+    <option name="LAST_COMMIT_MESSAGE" value="Leaderbord medals.&#10;Created pixel images and display them on leaderboard." />
   </component>
 </project>
