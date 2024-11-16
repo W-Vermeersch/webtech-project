@@ -1,7 +1,6 @@
 import {UserAuthentificationController} from "./base.user.controller";
 import express = require("express");
-import {User} from "../../Modules/User";
-
+import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
 
 export class SignInController extends UserAuthentificationController{
 
@@ -11,55 +10,50 @@ export class SignInController extends UserAuthentificationController{
         this.router.post("/sign-in", (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
         });
-
-        // this.router.get("/success", (req: express.Request, res: express.Response) => {
-        //     return this.openSuccess(req, res);
-        // })
-    }
-
-    openAddPost(req: express.Request, res: express.Response): void {
-        const sessionData: any = req.session;
-        const inputs = new Map<string, string>();
-        inputs.set("userName", "Stupid");
-        sessionData.inputs = Object.fromEntries(inputs);
-        res.render("addUser", {});
     }
 
     addPost(req: express.Request, res: express.Response): void {
-        console.log("POST request received for /sign-in");
-        console.log(req.body);
 
-        // Contains the errors found during validation
-        const errors = new Map<string, string>();
-        // Contains the input values that validated correctly
-        // This way, when an error is found you only have to retype the wrong fields
-        const inputs = new Map<string, string>();
+        const inputs: SignInForm  = new SignInForm();
+        inputs.fill(req.body);
+        const errors: ErrorInForm = new ErrorInForm();
 
-        // Get the form field called "username" that was posted here
-        const username: string = req.body.userName;
-        // User name is mandatory: first check whether it was given
-        if (!this._isGiven(username)) {
-            // If an error occurs, put it in the "errors" datastructure
-            // The next line means we will dusplay "Please enter a username" in the HTML element called "userNameError"
-            errors.set("userNameError", "Please enter a username.");
-        } else {
-            // If a value was entered correctly, put it in the "inputs" datastructure
-            // In this case the value will be placed in the HTML input field "userName" because it was correct
-            inputs.set("userName", username);
+        if (!this._isGiven(inputs.firstName)) {
+            errors.firstName = "Please enter your first name.";
+            inputs.firstName = "";
+        }
+        if (!this._isGiven(inputs.lastName)) {
+            errors.lastName = "Please enter your last name.";
+            inputs.lastName = "";
+        }
+        if (this._isEmailValid(inputs.email)) {
+            errors.email = "Please enter a valid email address.";
+            inputs.email = "";
+        }
+        if (!this._isGiven(inputs.password)) {
+            errors.password = "Please enter a password.";
+            inputs.password = "";
+        } else if (!this._isGoodPassword(inputs.password)) {
+            errors.password = "Password must have a minimum length of 8 characters ans must contain special characters.";
+        }
+        if (!this._isGiven(inputs.passwordConfirm)) {
+            errors.passwordConfirm = "Please confirm your password.";
+            inputs.passwordConfirm = "";
+        } else if (!this.samePassword(inputs.password, inputs.passwordConfirm)){
+            inputs.password = "";
+            inputs.passwordConfirm = "";
+            errors.passwordConfirm = "Please repeat the same password.";
+
         }
 
-        const sessionData: any = req.session;
-        if (errors.size > 0) {
-            sessionData.errors = Object.fromEntries(errors);
-            sessionData.inputs = Object.fromEntries(inputs);
-            // res.redirect("add"); // Redirect to GET http://localhost:5555/add
+        if (errors.hasErrors()) {
+            res.status(206).json({
+                errors: errors.toObject(),
+                inputs: inputs.toObject()
+            })
+            console.log(errors)
         } else {
-            sessionData.errors = {};
-            sessionData.inputs = {};
-            sessionData.user = {
-                username
-            } as User;
-            // res.redirect("success"); // Redirect to GET http://localhost:5555/success
+            res.json({ redirect: '/home' });
         }
     }
 
@@ -72,12 +66,9 @@ export class SignInController extends UserAuthentificationController{
     private _isGiven(param: string): boolean {
         if (param == null)
             return false;
-        else
+        else{
             return param.trim().length > 0;
-    }
-
-    openSuccess(req: express.Request, res: express.Response): void {
-        res.render("success");
+        }
     }
 
     /**
@@ -91,5 +82,11 @@ export class SignInController extends UserAuthentificationController{
         const dotIdx = email.indexOf(".");
 
         return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
+    }
+    private samePassword(password1: string, password2: string): boolean {
+        return password1 === password2
+    }
+    private _isGoodPassword(password: string): boolean {
+        return password.length >= 8;
     }
 }

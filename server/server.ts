@@ -4,21 +4,6 @@ import { BaseController, SignInController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 
-class TestController extends BaseController {
-
-    constructor() {
-        super("/");
-    }
-    initializeRoutes(): void {
-
-        this.router.get("/", (req: express.Request, response: express.Response) => {
-            return response.json({"fruits": ["apple", "orange", "banana"]});
-        });
-    }
-}
-
-
-
 export class App {
     app: express.Application;
     port: number = 5000;
@@ -37,9 +22,6 @@ export class App {
     private _initializeControllers(): void {
         // Add new controllers here
         this.addController(new SignInController());
-        this.addController(new TestController());
-        // this.addController(new UserController());
-        // TODO
 
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
@@ -58,13 +40,9 @@ export class App {
             resave: true,
             saveUninitialized: true
         }));
-        // this.app.use(cors());
-        this.app.use(cors({
-            origin: false,//'http://localhost:5173', // Replace with your frontend's URL
-            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-            credentials: true                // Allow credentials (like cookies)
-        }));
+        this.app.use(cors());
 
+        this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static(path.join(__dirname, "../static")));
     }
