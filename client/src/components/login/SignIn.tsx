@@ -4,6 +4,10 @@ import "./login.css";
 import axios from "axios";
 import RouteToServer from "../../infos.ts";
 
+import Stack from "react-bootstrap/Stack";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+
 export default function SignIn() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,8 +36,8 @@ export default function SignIn() {
   }
 
   return (
-    <form id="loginForm" onSubmit={handleSubmit}>
-      <div className="vstack gap-4">
+    <Form id="loginForm" onSubmit={handleSubmit}>
+      <Stack gap={3}>
         <FormTextField
           name="firstName"
           type="text"
@@ -69,13 +73,11 @@ export default function SignIn() {
           onChange={handleChange}
           value={formData.passwordConfirm}
         />
-        <div className="col">
-          <button className="btn btn-success" type="submit">
-            Sign in
-          </button>
-        </div>
+        <Button variant="success" type="submit">
+          Sign in
+        </Button>
         <p id="error">{error}</p>
-      </div>
-    </form>
+      </Stack>
+    </Form>
   );
 }

@@ -1,14 +1,18 @@
 import SignIn from "../components/login/SignIn";
 import "./SignUpPage.css";
 
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+
 export default function SignUpPage() {
   return (
-    <div className="row justify-content-center">
-      <div className="col-7">
-        <div id="form-container" className="container-sm rounded shadow-sm">
+    <Row className="justify-content-center">
+      <Col xs={6}>
+        <Container id="form-container" className="rounded shadow-sm">
           <SignIn />
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Col>
+    </Row>
   );
 }

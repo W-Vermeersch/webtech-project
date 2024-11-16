@@ -1,3 +1,6 @@
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
+
 interface Props {
   name: string;
   type: string;
@@ -14,18 +17,16 @@ export default function FormTextField({
   value,
 }: Props) {
   return (
-    <div className="form-floating">
-      <input
+    <FloatingLabel label={name} className="mb-3">
+      <Form.Control
+        type={type}
+        placeholder={placeholder}
         id={name}
         name={name}
-        type={type}
-        className="form-control"
-        placeholder={placeholder}
         value={value}
         onChange={onChange}
         required
       />
-      <label htmlFor={name}>{name}</label>
-    </div>
+    </FloatingLabel>
   );
 }

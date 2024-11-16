@@ -34,7 +34,6 @@ function App() {
   return (
     <>
       <NavBar />
-
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/user">
