@@ -4,17 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Simple Commit">
-      <change afterPath="$PROJECT_DIR$/client/src/components/login/FormPasswordField.tsx" afterDir="false" />
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Remove unnecessary functions and cleaned navbar with redirection">
+      <change afterPath="$PROJECT_DIR$/Global/sign-in-form.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/homeRedirection/redirection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/homeRedirection/redirection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/navBar/NavBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/navBar/NavBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/login/FormTextField.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/login/FormTextField.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/login/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/login/SignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/login/login.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/login/login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -82,6 +97,15 @@
       <workItem from="1731667967847" duration="70000" />
       <workItem from="1731765688407" duration="1440000" />
     </task>
+    <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
+      <option name="closed" value="true" />
+      <created>1731771068647</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731771068647</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,6 +124,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Simple Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Simple Commit" />
+    <MESSAGE value="Remove unnecessary functions and cleaned navbar with redirection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove unnecessary functions and cleaned navbar with redirection" />
   </component>
 </project>
