@@ -7,7 +7,6 @@ export default function NavBar() {
       <nav className="container-xxl">
         <div className="container-fluid d-flex">
           <NavItem to="/home">Animal Go</NavItem>
-          <NavItem to="/home">Home</NavItem>
           <NavItem to="/user/sign-up">Sign Up</NavItem>
           <NavItem to="/map">Map</NavItem>
         </div>
