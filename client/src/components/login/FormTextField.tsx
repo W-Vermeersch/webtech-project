@@ -1,4 +1,5 @@
-import { ErrorMessage } from "@hookform/error-message"
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
 
 interface Props {
   name: string;
@@ -12,28 +13,26 @@ interface Props {
 
 export default function FormTextField({
   name,
-    id,
+  id,
   type,
   placeholder,
   onChange,
   value,
-    error,
+  error,
 }: Props) {
   return (
-      <div className="mb-3">
-          <label htmlFor={id} className="form-label">
-              {name}
-          </label>
-          <input
-              id={id}
-              type={type}
-              className="form-control"
-              placeholder={placeholder}
-              value={value}
-              onChange={onChange}
-              required
-          />
-          <div className="invalid-input"> {error}</div>
-      </div>
+    <>
+      <FloatingLabel label={name} className="mb-3">
+        <Form.Control
+          type={type}
+          placeholder={placeholder}
+          id={id}
+          value={value}
+          onChange={onChange}
+          required
+        />
+      </FloatingLabel>
+      <div className="invalid-input"> {error}</div>
+    </>
   );
 }

@@ -4,7 +4,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import NavBar from "./components/navBar/NavBar.tsx";
-import HomePage from "./pages/HomePage.tsx";
+import HomePage from "./pages/Homepage.tsx";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/user">
           <Route path="sign-up" element={<SignUpPage />} />
-          <Route path="login" element={<HomePage/>}/>
+          <Route path="login" element={<HomePage />} />
         </Route>
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
