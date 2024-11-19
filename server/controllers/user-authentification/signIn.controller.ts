@@ -51,7 +51,6 @@ export class SignInController extends UserAuthentificationController{
                 errors: errors.toObject(),
                 inputs: inputs.toObject()
             })
-            console.log(errors)
         } else {
             res.json({ redirect: '/home' });
         }
