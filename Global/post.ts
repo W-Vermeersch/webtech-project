@@ -1,5 +1,6 @@
 export class Post{
     title:string;
+    user: String
     image_url: string[]; // url to the storage api
     idx: number; // index of Post
     description: string;
