@@ -1,5 +1,8 @@
 import Leaderboard from "../components/leaderboard/Leaderboard.tsx";
 import "./Homepage.css"
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const Homepage = () => {
 
@@ -10,17 +13,18 @@ const Homepage = () => {
         { name: "Charlie", points: 2 },
         { name: "Diana", points: 72 },
         { name: "Eve", points: 80 },
+        { name: "Ozioma", points: 1000}
     ];
 
     return (
-        <div className="container">
-            <div className="row">
+        <Container>
+            <Row className={'justify-content-end'}>
                 {/* for future components like map and postfeed */}
-                <div className="col-md-3">
+                <Col xs={3}>
                     <Leaderboard users={mockUsers} />
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

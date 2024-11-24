@@ -6,9 +6,7 @@ interface LeaderboardEntry{
     points: number;
 }
 
-interface LeaderboardProps{
-    users: LeaderboardEntry[]; // the list of users for the leaderboard
-}
+
 
 const getMedal = (index: number) => {
     switch (index) {
@@ -23,13 +21,16 @@ const getMedal = (index: number) => {
     }
 };
 
+interface LeaderboardProps{
+    users: LeaderboardEntry[]; // the list of users for the leaderboard
+}
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ users }) => {
+export default function Leaderboard({ users }: LeaderboardProps) {
     // sort the users by points in descending order
     const sortedUsers = [...users].sort((a, b) => b.points - a.points);
 
     return (
-        <div>
+        <>
             <h2>Leaderboard</h2>
             <ol>
                 {sortedUsers.map((user, index) => (
@@ -39,10 +40,6 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ users }) => {
                     </li>
                 ))}
             </ol>
-        </div>
+        </>
     );
 };
-
-
-
-export default Leaderboard;
