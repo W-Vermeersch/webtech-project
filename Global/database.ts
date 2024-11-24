@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import {User} from "../server/Modules/User";
 
 class Database {
     pool = new Pool({
