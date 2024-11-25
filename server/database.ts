@@ -2,13 +2,41 @@ import { Pool } from 'pg';
 
 class Database {
     pool = new Pool({
-        host: "localhost",  //location of the database, here localhost because we don't have any servers
-        user: "postgres",
-        port: 5432,   //default port for postgresql
-        password: "webtech",
-        database: "Animal_GO_Database", //name of postgresql databse
+        host: "pg-14b692ff-webtech.b.aivencloud.com",  //location of the database, here localhost because we don't have any servers
+        user: "avnadmin",
+        port: 15545,   //default port for postgresql
+        password: "AVNS_fBxdMHN8jb4EYdOS0ir",
+        database: "defaultdb", //name of postgresql databse
         max: 10, //maximum amount of clients in the pool
-        idleTimeout: 60000   //close idle clients after 1 minute
+        idleTimeout: 60000,   //close idle clients after 1 minute
+        ssl: {
+            rejectUnauthorized: true,
+            ca: `-----BEGIN CERTIFICATE-----
+MIIEQTCCAqmgAwIBAgIUHnlWqW1FQc9NKcdf8w4sMsEvZQAwDQYJKoZIhvcNAQEM
+BQAwOjE4MDYGA1UEAwwvYmJiMmMxN2MtYjk3Yy00MzdmLWJkYmMtMGRmM2NiYjdh
+YzczIFByb2plY3QgQ0EwHhcNMjQxMTI1MTYyMjM1WhcNMzQxMTIzMTYyMjM1WjA6
+MTgwNgYDVQQDDC9iYmIyYzE3Yy1iOTdjLTQzN2YtYmRiYy0wZGYzY2JiN2FjNzMg
+UHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMdUD0Yw
+1jMxrbRKBp2c07qOi/3m/zBhS3cA7sYhqcYaYNbb75JA1VtQbkitqOskFoCmB2Nl
+BD3Pz0FmIcS8gF98B3rs92lHLBqyEV64uBdCwz4MZC7+09UkoU6vYzxyGK5HvBrp
+HXDWBO9Kr6C2yuK0Pyo8IvVZ7DOhOo7XWB++LpkxIGU+7j4S6e0Qi/wm+Mwm9ied
+bKrdMruFruQvF7eQXTI4Bx5HBmC2r8WF80L8cz5O9OBTzsFoqIRPyxeVcwuJ5BCf
+coEK2Pb3YIcLV1uZk9Y6xCXJ3NAnvoLedYzvygTa3kDlV141osUjU9j5Qily2VPa
+tvl92YQAuSFLsFeFARQ0WYwYJIhMAkaTSmAX/oNNr3jYvk8VC8PIH8b5ClsDH6ta
+Sm9ZGxWVIthUJlqxU/7nsmG7l0FnLJ46bTHWjxXdtEY9QVTG2MetHA3QLQaOrC7s
+AHzvG1JFHovRrzvygt64e1VAlGsAr2RU048NWzdmY9d9JW3qYn0bFQ2ZRwIDAQAB
+oz8wPTAdBgNVHQ4EFgQUz/4E0crCMtdRnx8e/C0LVmWS2PQwDwYDVR0TBAgwBgEB
+/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGBAE59NmXI9ge3lLgU
+3GVbzMENPLl71rO0b+try8V2C5q0UE4/tYxCU6vMY3UK5lzUiX4rtZcN93y6xZPs
+6RZqgt0u818wkShWiU3mPSqabYAUL8d9DRtYld6URxqV7VSAri+akW7u/pomBZAy
+Lwv6IR2kMZyuxRCkzTp8ASy+V1qJzRSU3ms6za/RR8ARNeRHbyZcMgLSYwSJ4heF
+hP/7fOtF/iUs+YPXpDxXMicaJBtvdWmnDrcWMhzual1Lc0TX5QQdmu8lXe0UnRbU
+XcZF/nSjadV1loVCMqOF/5NCjZi2S+4SyqR4B7kUWBdGNAu/b1sB7LvGpasx1NlF
+PTLjeEfhdEDZ2LeqlZSCD2pJCUle/49nkPD8QYW4GKUlAEkHuU42oFBDABiK5/gu
+O3AUz7xTGi1NI83iJzbScoDeSDALFpkbVyc8o0WOfZXV/mNR47UASIydJjjm+Q5D
+RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
+-----END CERTIFICATE-----`,
+        },
     });
 
     private executeQuery(query) {
@@ -27,13 +55,12 @@ class Database {
         first_name: string,
         last_name: string,
         email: string,
-        id: number,
         password: string
     ) {
         console.log("Storing user.");
         const query = {
-            text: 'INSERT INTO user_table (username, first_name, last_name, email, password, id) VALUES ($1, $2, $3, $4, $5, $6)',
-            values: [username, first_name, last_name, email, password, id],
+            text: 'INSERT INTO user_table (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)',
+            values: [username, first_name, last_name, email, password],
         };
         await this.executeQuery(query);
     }
@@ -195,6 +222,25 @@ class Database {
         const query = {
             text: 'DELETE FROM post_table WHERE idx = $1',
             values: [idx],
+        };
+        await this.executeQuery(query);
+    }
+
+    public async init(): Promise<void> {
+        let query = {
+            text: 'CREATE EXTENSION IF NOT EXISTS postgis;'
+        };
+        await this.executeQuery(query);
+        query = {
+            text: 'CREATE TABLE IF NOT EXISTS user_table (id SERIAL PRIMARY KEY,username VARCHAR(255) UNIQUE NOT NULL,first_name VARCHAR(255) NOT NULL,last_name VARCHAR(255) NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,password VARCHAR(255) NOT NULL)',
+        };
+        await this.executeQuery(query);
+        query = {
+            text: 'CREATE TABLE IF NOT EXISTS post_table (idx SERIAL PRIMARY KEY,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],likes TEXT[],location GEOGRAPHY(POINT, 4326))',
+        };
+        await this.executeQuery(query);
+        query = {
+            text: 'CREATE TABLE IF NOT EXISTS comment_table (id SERIAL PRIMARY KEY,idx INT NOT NULL,username VARCHAR(255) NOT NULL,description TEXT NOT NULL,FOREIGN KEY (idx) REFERENCES post_table(idx) ON DELETE CASCADE)',
         };
         await this.executeQuery(query);
     }

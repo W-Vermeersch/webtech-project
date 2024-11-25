@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Database connection established, table for users created and methods for storing and fetching users created. &#10;&#10;(!!) Installed the pg package using npm install pg&#10;&#10;(!!) you need a postgresql database on your local computer and reestablish the link using the ports, names, users etc. of the pool. this is because we do not have a server to put the databse on, so it needs to be local.">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_11_2024_12_58_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_14_11_2024_12_58__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Global/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Global/database.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Global/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,20 +59,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.server.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "sql",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\timod\\WebstormProjects\\webtech-project\\client\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.server.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sql&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\liamv\\WebstormProjects\\webtech-project\\server\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\liamv\WebstormProjects\webtech-project\server" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -88,6 +100,7 @@
       <workItem from="1731765688407" duration="1440000" />
       <workItem from="1731783121542" duration="352000" />
       <workItem from="1732030405548" duration="355000" />
+      <workItem from="1732550147793" duration="5486000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
       <option name="closed" value="true" />
@@ -105,15 +118,7 @@
       <option name="project" value="LOCAL" />
       <updated>1731781937404</updated>
     </task>
-    <task id="LOCAL-00003" summary="Database connection established, table for users created and methods for storing and fetching users created. &#10;&#10;(!!) Installed the pg package using npm install pg&#10;&#10;(!!) you need a postgresql database on your local computer and reestablish the link using the ports, names, users etc. of the pool. this is because we do not have a server to put the databse on, so it needs to be local.">
-      <option name="closed" value="true" />
-      <created>1732461163623</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1732461163623</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,7 +139,6 @@
     <MESSAGE value="Simple Commit" />
     <MESSAGE value="Remove unnecessary functions and cleaned navbar with redirection" />
     <MESSAGE value="Working sign-in with redirection to home if success" />
-    <MESSAGE value="Database connection established, table for users created and methods for storing and fetching users created. &#10;&#10;(!!) Installed the pg package using npm install pg&#10;&#10;(!!) you need a postgresql database on your local computer and reestablish the link using the ports, names, users etc. of the pool. this is because we do not have a server to put the databse on, so it needs to be local." />
-    <option name="LAST_COMMIT_MESSAGE" value="Database connection established, table for users created and methods for storing and fetching users created. &#10;&#10;(!!) Installed the pg package using npm install pg&#10;&#10;(!!) you need a postgresql database on your local computer and reestablish the link using the ports, names, users etc. of the pool. this is because we do not have a server to put the databse on, so it needs to be local." />
+    <option name="LAST_COMMIT_MESSAGE" value="Working sign-in with redirection to home if success" />
   </component>
 </project>

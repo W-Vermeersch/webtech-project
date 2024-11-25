@@ -1,9 +1,12 @@
 import {UserAuthentificationController} from "./base.user.controller";
 import express = require("express");
 import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
+import Database from "../../database";
 
 export class SignInController extends UserAuthentificationController{
-
+    public constructor(private db: Database) {
+        super();
+    }
 
     initializeRoutes(): void {
 
@@ -52,6 +55,7 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             })
         } else {
+            this.db.storeUser(inputs.firstName + ' ' + inputs.lastName, inputs.firstName, inputs.lastName, inputs.email, inputs.password)
             res.json({ redirect: '/home' });
         }
     }

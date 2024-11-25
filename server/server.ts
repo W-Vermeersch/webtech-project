@@ -3,7 +3,7 @@ import * as session from 'express-session';
 import { BaseController, SignInController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
-import Database from "../Global/database";
+import Database from "./database";
 
 export class App {
     app: express.Application;
@@ -25,7 +25,7 @@ export class App {
 
     private _initializeControllers(): void {
         // Add new controllers here
-        this.addController(new SignInController());
+        this.addController(new SignInController(this.database));
 
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
@@ -49,6 +49,8 @@ export class App {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.static(path.join(__dirname, "../static")));
+
+        this.database.init()
     }
 
     public listen() {
