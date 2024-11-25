@@ -5,6 +5,8 @@ import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
 import {PostController} from "./controllers/post/post.controller";
+const swaggerUi = require('swagger-ui-express') ;
+const swaggerDocument = require('./swagger.json');
 
 export class App {
     app: express.Application;
@@ -52,6 +54,7 @@ export class App {
         this.app.use(express.static(path.join(__dirname, "../static")));
 
         this.database.init()
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 
     public listen() {

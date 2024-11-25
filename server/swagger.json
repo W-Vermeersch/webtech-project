@@ -1,0 +1,72 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Animal GO Api",
+    "version": "1.0"
+  },
+  "host": "localhost:5000",
+  "basePath": "",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/user/sign-in": {
+      "post": {
+        "summary": "Sign in a user",
+        "description": "Validates user input and processes sign-in data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "password": {
+                  "type": "string",
+                  "minLength": 8
+                },
+                "passwordConfirm": {
+                  "type": "string",
+                  "minLength": 8
+                }
+              },
+              "required": [
+                "firstName",
+                "lastName",
+                "email",
+                "password",
+                "passwordConfirm"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "206": {
+            "description": "Invalid input. Check error messages for details."
+          },
+          "200": {
+            "description": "All fields are correct. A URL is returned for redirection."
+          }
+        }
+      }
+    }
+  }
+}

@@ -16,7 +16,6 @@ export class SignInController extends UserAuthentificationController{
     }
 
     addPost(req: express.Request, res: express.Response): void {
-
         const inputs: SignInForm  = new SignInForm();
         inputs.fill(req.body);
         const errors: ErrorInForm = new ErrorInForm();
@@ -46,7 +45,6 @@ export class SignInController extends UserAuthentificationController{
             inputs.password = "";
             inputs.passwordConfirm = "";
             errors.passwordConfirm = "Please repeat the same password.";
-
         }
 
         if (errors.hasErrors()) {
@@ -82,9 +80,11 @@ export class SignInController extends UserAuthentificationController{
      */
     private _isEmailValid(email: string): boolean {
         const atIdx = email.indexOf("@");
-        const dotIdx = email.indexOf(".");
+        const dotIdx = email.lastIndexOf(".");
 
-        return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
+
+
+        return atIdx != -1 && dotIdx != -1 && dotIdx < atIdx;
     }
     private samePassword(password1: string, password2: string): boolean {
         return password1 === password2
