@@ -4,6 +4,7 @@ import { BaseController, SignInController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
+import {PostController} from "./controllers/post/post.controller";
 
 export class App {
     app: express.Application;
@@ -26,7 +27,7 @@ export class App {
     private _initializeControllers(): void {
         // Add new controllers here
         this.addController(new SignInController(this.database));
-
+        this.addController(new PostController(this.database));
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
             this.app.use(`${this.path}${controller.path}`, controller.router);

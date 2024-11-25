@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import {Post} from "../Global/post";
 
 class Database {
     pool = new Pool({
@@ -144,17 +145,17 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     //so the resulting array will be an array of arrays.
 
     /* Stores a post into the DB, idx is the post's identifier (auto-incremented). */
-    public async storePost(post_title: string,
-                           image_url: string[],
-                           description: string,
-                           tags: string[],
-                           likes: string[],
-                           latitude: number,
-                           longitude: number): Promise<void> {
-        const query = {
+    public async storePost(post: Post): Promise<void> {
+        let query = {
             text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326))',
-            values: [post_title, image_url, description, tags, likes, longitude, latitude],
+            values: [post.title, post.image_url, post.description, post.tags, post.likes, post.longitude, post.latitude],
         };
+        if (post.longitude === undefined) {
+            query = {
+                text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes) VALUES ($1, $2, $3, $4, $5)',
+                values: [post.title, post.image_url, post.description, post.tags, post.likes],
+            };
+        }
         await this.executeQuery(query);
     }
 
