@@ -40,6 +40,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/homefunction" element={<Home />} />
         <Route path="/user">
+          {/*<Route path ="userId" element={<HomePage />} />*/}
           <Route path="sign-up" element={<SignUpPage />} />
           {/*<Route path="login" element={<Login/>}/>*/}
         </Route>
