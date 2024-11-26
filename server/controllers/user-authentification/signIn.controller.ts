@@ -1,9 +1,12 @@
 import {UserAuthentificationController} from "./base.user.controller";
 import express = require("express");
 import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
+import Database from "../../database";
 
 export class SignInController extends UserAuthentificationController{
-
+    public constructor(private db: Database) {
+        super();
+    }
 
     initializeRoutes(): void {
 
@@ -13,7 +16,6 @@ export class SignInController extends UserAuthentificationController{
     }
 
     addPost(req: express.Request, res: express.Response): void {
-
         const inputs: SignInForm  = new SignInForm();
         inputs.fill(req.body);
         const errors: ErrorInForm = new ErrorInForm();
@@ -43,7 +45,6 @@ export class SignInController extends UserAuthentificationController{
             inputs.password = "";
             inputs.passwordConfirm = "";
             errors.passwordConfirm = "Please repeat the same password.";
-
         }
 
         if (errors.hasErrors()) {
@@ -52,6 +53,7 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             })
         } else {
+            this.db.storeUser(inputs.firstName + ' ' + inputs.lastName, inputs.firstName, inputs.lastName, inputs.email, inputs.password)
             res.json({ redirect: '/home' });
         }
     }
@@ -78,9 +80,11 @@ export class SignInController extends UserAuthentificationController{
      */
     private _isEmailValid(email: string): boolean {
         const atIdx = email.indexOf("@");
-        const dotIdx = email.indexOf(".");
+        const dotIdx = email.lastIndexOf(".");
 
-        return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
+
+
+        return atIdx != -1 && dotIdx != -1 && dotIdx < atIdx;
     }
     private samePassword(password1: string, password2: string): boolean {
         return password1 === password2

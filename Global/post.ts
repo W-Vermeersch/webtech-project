@@ -1,10 +1,22 @@
 export class Post{
     title:string;
-    image_url: string[]; // url to the storage api
+    user: string;
+    image_url: string; // url to the storage api
     idx: number; // index of Post
-    description: string;
-    tags: string[];
-    likes: number; // in DB each posts has a list of all Users who liked
+    description: string = "";
+    tags: string[] = [];
+    likes: number = 0; // in DB each posts has a list of all Users who liked
+    longitude: number | undefined;
+    latitude: number | undefined;
+
+    constructor(body: any) {
+        for (const key in body) {
+            if (key in this) {
+                const value = body[key];
+                (this as any)[key] = value;
+            }
+        }
+    }
 }
 
 export class Comment{
