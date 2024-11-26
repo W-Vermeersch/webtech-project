@@ -14,6 +14,7 @@
       <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,9 +46,11 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/W-Vermeersch/webtech-project.git&quot;,
+
     &quot;accountId&quot;: &quot;4bd1e9a6-8de6-4a40-ab3a-d8f21b95307a&quot;
   }
 }</component>
+
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -63,7 +66,9 @@
   &quot;keyToString&quot;: {
     &quot;Node.js.server.js.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+
     &quot;git-widget-placeholder&quot;: &quot;sql&quot;,
+
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -97,6 +102,7 @@
       <workItem from="1731584699711" duration="1854000" />
       <workItem from="1731588151737" duration="3025000" />
       <workItem from="1731667967847" duration="70000" />
+
       <workItem from="1731765688407" duration="1440000" />
       <workItem from="1731783121542" duration="352000" />
       <workItem from="1732030405548" duration="355000" />
@@ -119,6 +125,7 @@
       <updated>1731781937404</updated>
     </task>
     <option name="localTasksCounter" value="3" />
+
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,6 +143,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+
     <MESSAGE value="Simple Commit" />
     <MESSAGE value="Remove unnecessary functions and cleaned navbar with redirection" />
     <MESSAGE value="Working sign-in with redirection to home if success" />

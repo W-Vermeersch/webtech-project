@@ -11,14 +11,17 @@ ol li {
     border-radius: 5px;
 }
 
-ol li:nth-child(1) {
-    background-color: #ffd700;
+.medal{
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    display: inline-block;
 }
 
-ol li:nth-child(2) {
-    background-color: #c0c0c0;
-}
-
-ol li:nth-child(3) {
-    background-color: #cd7f32;
+.rank{
+    font-weight: bold;
+    margin-right: 10px;
+    margin-left: 6px;
+    color: #555;
+    display: inline-block;
 }
