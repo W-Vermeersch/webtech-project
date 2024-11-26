@@ -1,5 +1,4 @@
 import Leaderboard from "../components/leaderboard/Leaderboard.tsx";
-
 import PostFeed from "../components/postfeed/Feed.tsx";
 import "./Homepage.css"
 import Container from "react-bootstrap/Container";
