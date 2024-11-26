@@ -1,5 +1,5 @@
 form {
-  color: #ffffff;
+  color: #080808;
   display: flex;
   flex-direction: column;
   justify-content: right;
@@ -13,4 +13,9 @@ form p {
 #form-container {
   background-color: rgb(13, 88, 13);
   padding: 20px;
+}
+
+.invalid-input {
+  color: #d66868;
+  font: bold 14px/1.5 Georgia, serif;
 }

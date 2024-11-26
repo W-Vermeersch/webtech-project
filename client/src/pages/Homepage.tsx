@@ -5,7 +5,17 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const Homepage = () => {
+
+export default function Homepage() {
+  // pretend this data is coming from the backend
+  const mockUsers = [
+    { name: "Alice", points: 120 },
+    { name: "Bob", points: 430 },
+    { name: "Charlie", points: 2 },
+    { name: "Diana", points: 72 },
+    { name: "Eve", points: 80 },
+  ];
+
 
     // pretend this data is coming from the backend
     const mockUsers = [
