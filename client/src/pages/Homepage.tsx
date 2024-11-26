@@ -35,7 +35,7 @@ const Homepage = () => {
         {
             id: 3,
             username: "Diana",
-            content: "Loving this game! Just hit 100 points!",
+            content: "lol! Just hit 100 points!",
             comments: ["Great work!", "Keep it up!"],
         },
     ];
