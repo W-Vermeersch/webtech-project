@@ -17,35 +17,27 @@ export default function Homepage() {
   ];
 
 
-    // pretend this data is coming from the backend
-    const mockUsers = [
-        { name: "Alice", points: 120 },
-        { name: "Bob", points: 430 },
-        { name: "Charlie", points: 2 },
-        { name: "Diana", points: 72 },
-        { name: "Eve", points: 80 },
-        { name: "Ozioma", points: 1000}
-    ];
+   
 
-    const mockPosts = [
+ const mockPosts = [
         {
             id:1,
             username: "Alice",
-            content: "Just captured a majestic lion!",
+            caption: "Just captured a majestic lion!",
             comments: ["Amazing!", "Wow, congrats!"],
         },
 
         {
             id: 2,
             username: "Bob",
-            content: "Exploring new areas... Found a rare bird!",
+            caption: "Exploring new areas... Found a rare bird!",
             comments: ["That's awesome!", "Where was this?"],
         },
 
         {
             id: 3,
             username: "Diana",
-            content: "lol! Just hit 100 points!",
+            caption: "lol! Just hit 100 points!",
             comments: ["Great work!", "Keep it up!"],
         },
     ];
@@ -65,4 +57,3 @@ export default function Homepage() {
     );
 };
 
-export default Homepage;

@@ -3,7 +3,6 @@ import "./Feed.css";
 interface Post{
     id: number;
     username: string;
-    imageurl: string;
     caption: string;
     comments: string[];
 }
