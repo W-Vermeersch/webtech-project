@@ -17,10 +17,15 @@ const CustomInput = ({ label, ...props }: CustomInputProps) => {
         <Form.Control
           {...field}
           {...props}
-          className={meta.touched && meta.error ? "input-error" : ""}
+          isValid={meta.touched && !meta.error}
+          isInvalid={meta.touched && !!meta.error}
         />
+        {meta.touched && meta.error && (
+          <Form.Control.Feedback type="invalid">
+            {meta.error}
+          </Form.Control.Feedback>
+        )}
       </FloatingLabel>
-      {meta.touched && meta.error && <div className="error">{meta.error}</div>}
     </>
   );
 };

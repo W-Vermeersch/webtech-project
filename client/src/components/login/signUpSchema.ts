@@ -1,7 +1,6 @@
-import { First } from "react-bootstrap/esm/PageItem";
 import * as yup from "yup";
 
-const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]){8,}$/;
+const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 export const signUpSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
@@ -17,7 +16,7 @@ export const signUpSchema = yup.object().shape({
         "Password must contain at least 8 characters, one uppercase letter, one lowercase latter and one digit",
     })
     .required("Password is required"),
-  confirmPassword: yup
+  passwordConfirm: yup
     .string()
     .oneOf([yup.ref("password"), ""], "Passwords must match")
     .required("Password confirmation is required"),
