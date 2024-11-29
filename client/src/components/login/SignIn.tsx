@@ -55,11 +55,11 @@ export default function SignIn() {
   return (
     <Formik
       initialValues={{
-        firstName: "Ozioma",
-        lastName: "Olisa",
-        email: "ozioma.olisa@vub",
-        password: "Bobbob147",
-        passwordConfirm: "Bobbob147",
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
       }}
       validationSchema={signUpSchema}
       onSubmit={onSubmit}
