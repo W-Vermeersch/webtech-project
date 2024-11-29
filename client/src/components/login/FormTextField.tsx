@@ -1,38 +1,28 @@
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
+import { useField } from "formik";
 
-interface Props {
+interface CustomInputProps {
+  label: string;
   name: string;
-  id: string;
-  type: string;
-  placeholder: string;
-  onChange: (e: any) => void;
-  value: string;
-  error: string;
+  [key: string]: any;
 }
 
-export default function FormTextField({
-  name,
-  id,
-  type,
-  placeholder,
-  onChange,
-  value,
-  error,
-}: Props) {
+const CustomInput = ({ label, ...props }: CustomInputProps) => {
+  const [field, meta] = useField(props);
+
   return (
     <>
-      <FloatingLabel label={name} className="mb-3">
+      <FloatingLabel label={label} className="mb-3">
         <Form.Control
-          type={type}
-          placeholder={placeholder}
-          id={id}
-          value={value}
-          onChange={onChange}
-          required
+          {...field}
+          {...props}
+          className={meta.touched && meta.error ? "input-error" : ""}
         />
       </FloatingLabel>
-      <div className="invalid-input"> {error}</div>
+      {meta.touched && meta.error && <div className="error">{meta.error}</div>}
     </>
   );
-}
+};
+
+export default CustomInput;
