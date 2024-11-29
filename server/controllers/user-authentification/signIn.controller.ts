@@ -1,5 +1,5 @@
 import {UserAuthentificationController} from "./base.user.controller";
-import express = require("express");
+import * as express from "express";
 import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
 import Database from "../../database";
 
@@ -17,6 +17,7 @@ export class SignInController extends UserAuthentificationController{
 
     addPost(req: express.Request, res: express.Response): void {
         const inputs: SignInForm  = new SignInForm();
+        console.log(req.body)
         inputs.fill(req.body);
         const errors: ErrorInForm = new ErrorInForm();
 
@@ -81,9 +82,6 @@ export class SignInController extends UserAuthentificationController{
     private _isEmailValid(email: string): boolean {
         const atIdx = email.indexOf("@");
         const dotIdx = email.lastIndexOf(".");
-
-
-
         return atIdx != -1 && dotIdx != -1 && dotIdx < atIdx;
     }
     private samePassword(password1: string, password2: string): boolean {
