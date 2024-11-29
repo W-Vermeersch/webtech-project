@@ -13,7 +13,7 @@ const CustomInput = ({ label, ...props }: CustomInputProps) => {
 
   return (
     <>
-      <FloatingLabel label={label} className="mb-3">
+      <FloatingLabel label={label} className="mb-1">
         <Form.Control
           {...field}
           {...props}
