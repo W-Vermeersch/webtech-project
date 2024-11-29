@@ -1,4 +1,4 @@
-import { Map, Reroute } from "./components";
+import { MyMap, Reroute } from "./components";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
@@ -17,7 +17,7 @@ function App() {
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="login" element={<HomePage />} />
         </Route>
-        <Route path="/map" element={<Map />} />
+        <Route path="/map" element={<MyMap />} />
         <Route path="*" element={<Reroute />} />
       </Routes>
     </>

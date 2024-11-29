@@ -1,2 +1,2 @@
-export { Map } from "./map/Map";
+export { MyMap } from "./map/Map";
 export { Reroute } from "./homeRedirection/redirection";
