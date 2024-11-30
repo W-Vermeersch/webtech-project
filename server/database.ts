@@ -53,15 +53,13 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /* Stores a user into the BD.*/
     public async storeUser(
         username: string,
-        first_name: string,
-        last_name: string,
         email: string,
         password: string
     ) {
         console.log("Storing user.");
         const query = {
-            text: 'INSERT INTO user_table (username, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)',
-            values: [username, first_name, last_name, email, password],
+            text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3, $4, $5)',
+            values: [username, email, password],
         };
         await this.executeQuery(query);
     }

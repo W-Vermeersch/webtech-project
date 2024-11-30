@@ -16,8 +16,7 @@ import { signUpSchema } from "./signUpSchema.ts";
 export default function SignIn() {
 
   interface FormValues {
-    firstName: string;
-    lastName: string;
+    username: string;
     email: string;
     password: string;
     passwordConfirm: string;
@@ -55,8 +54,7 @@ export default function SignIn() {
   return (
     <Formik
       initialValues={{
-        firstName: "",
-        lastName: "",
+        username: "",
         email: "",
         password: "",
         passwordConfirm: "",
@@ -68,26 +66,15 @@ export default function SignIn() {
       {({ isSubmitting, status }) => (
         <Form>
           <Stack gap={4}>
-            <Row xs={1} md={2}>
               <FormGroup as={Col} controlId="validationFormik01">
                 <CustomInput
-                  label="First Name"
-                  name="firstName"
-                  id="firstName"
+                  label="Username"
+                  name="username"
+                  id="username"
                   type="text"
-                  placeholder="Enter your first name"
+                  placeholder="Enter your username"
                 />
               </FormGroup>
-              <FormGroup as={Col} controlId="validationFormik02">
-                <CustomInput
-                  label="Last Name"
-                  name="lastName"
-                  id="lastName"
-                  type="text"
-                  placeholder="Enter your last name"
-                />
-              </FormGroup>
-            </Row>
 
             <FormGroup controlId="validationFormik03">
               <CustomInput

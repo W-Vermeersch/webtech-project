@@ -1,5 +1,5 @@
 import {BaseController} from "../base.controller";
-import express = require("express");
+import * as express from "express";
 import Database from "../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../Global/post";

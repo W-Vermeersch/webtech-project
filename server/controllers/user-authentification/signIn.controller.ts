@@ -21,13 +21,9 @@ export class SignInController extends UserAuthentificationController{
         inputs.fill(req.body);
         const errors: ErrorInForm = new ErrorInForm();
 
-        if (!this._isGiven(inputs.firstName)) {
-            errors.firstName = "Please enter your first name.";
-            inputs.firstName = "";
-        }
-        if (!this._isGiven(inputs.lastName)) {
-            errors.lastName = "Please enter your last name.";
-            inputs.lastName = "";
+        if (!this._isGiven(inputs.username)) {
+            errors.username = "Please enter your username.";
+            inputs.username = "";
         }
         if (this._isEmailValid(inputs.email)) {
             errors.email = "Please enter a valid email address.";
@@ -54,7 +50,7 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             })
         } else {
-            this.db.storeUser(inputs.firstName + ' ' + inputs.lastName, inputs.firstName, inputs.lastName, inputs.email, inputs.password)
+            this.db.storeUser(inputs.username, inputs.email, inputs.password)
             res.json({ redirect: '/home' });
         }
     }
