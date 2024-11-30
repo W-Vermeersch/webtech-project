@@ -31,7 +31,7 @@ export class PostController extends BaseController {
              await this.imageApi.postImage(req.body.filename).then((resp) => {
                 post.image_url = resp
                  // TODO: extract longitude and latitude from image
-                this.db.storePost(post)
+                // this.db.storePost(post)
                  return res.status(200);
             }).catch((err: Error) => {
                 return res.status(500).send("Something went wrong");
