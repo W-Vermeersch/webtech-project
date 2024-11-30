@@ -78,7 +78,7 @@ export class SignInController extends UserAuthentificationController{
     private _isEmailValid(email: string): boolean {
         const atIdx = email.indexOf("@");
         const dotIdx = email.lastIndexOf(".");
-        return atIdx != -1 && dotIdx != -1 && dotIdx < atIdx;
+        return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
     }
     private samePassword(password1: string, password2: string): boolean {
         return password1 === password2

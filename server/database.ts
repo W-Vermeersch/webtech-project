@@ -50,7 +50,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     };
 
     //Operations for the user table:
-    /* Stores a user into the BD.*/
+    /* Stores a user into the DB.*/
     public async storeUser(
         username: string,
         email: string,
@@ -58,18 +58,17 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     ) {
         console.log("Storing user.");
         const query = {
-            text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3, $4, $5)',
+            text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [username, email, password],
         };
         await this.executeQuery(query);
     }
-    /* Returns an array with all the column values of a user given their identifiers (username and id).*/
-    public async fetchUser(username: string,
-                           id: number): Promise<any> {
+    /* Returns an array with all the column values of a user given their username.*/
+    public async fetchUserUsingUsername(username: string): Promise<any> {
         console.log("Fetching user.");
         const query = {
-            text: 'SELECT * FROM user_table WHERE username = $1 AND id = $2',
-            values: [username, id],
+            text: 'SELECT * FROM user_table WHERE username = $1',
+            values: [username],
             rowMode: 'array',
         }
         const res = await this.executeQuery(query);
@@ -78,58 +77,75 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                          // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
     };                   // if you need that metadata you can remove .rows and extract what you need.
 
-    /* Deletes a user form the BD given their identifier (username and id).*/
-    public async deleteUser(username: string,
-                            id: number): Promise<void> {
+    /* Returns an array with all the column values of a user given their ID.*/
+    public async fetchUserUsingID(user_id: number): Promise<any> {
+        console.log("Fetching user.");
         const query = {
-            text: 'DELETE FROM user_table WHERE username = $1 AND id = $2',
-            values: [username, id],
+            text: 'SELECT * FROM user_table WHERE user_id = $1',
+            values: [user_id],
+            rowMode: 'array',
+        }
+        const res = await this.executeQuery(query);
+        console.log(res.rows);
+        return res.rows;
+    };
+    /* Returns the ID of a user given their username*/
+    public async getUserID(username: string): Promise<any> {
+        const userInfo = this.fetchUserUsingUsername(username);
+        return userInfo[0]
+    };
+
+    /* Deletes a user form the BD given their identifier (username and id). All posts that belong to this user will automatically be deleted as well as its comments and the users comments. */
+    public async deleteUser(username: string,
+                            user_id: number): Promise<void> {
+        const query = {
+            text: 'DELETE FROM user_table WHERE username = $1 AND user_id = $2',
+            values: [username, user_id],
         };
         await this.executeQuery(query);
     }
-
 
 
     //Operations for the comment table
-    /* Stores a comment into the DB, idx must be the same index as the posts index. */
-    public async storeComment(idx: number,
-                              user: string,
+    /* Stores a comment into the DB, IDs of user and post need to be given */
+    public async storeComment(user_id: number,
+                              post_id: number,
                               comment: string): Promise<void> {
         const query = {
-            text: 'INSERT INTO comment_table (idx, username, description) VALUES ($1, $2, $3)',
-            values: [idx, user, comment],
+            text: 'INSERT INTO comment_table (post_id, user_id, description) VALUES ($1, $2, $3)',
+            values: [post_id, user_id, comment],
         };
         await this.executeQuery(query);
     }
 
-    /* Returns an array with all the comments of a given post using its identifier (idx). */
-    public async fetchCommentsOfPost(idx: number): Promise<any[]> {
+    /* Returns an array with all the comments of a given post using its ID. */
+    public async fetchCommentsOfPost(post_id: number): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM comment_table WHERE idx = $1',
-            values: [idx],
+            text: 'SELECT * FROM comment_table WHERE post_id = $1',
+            values: [post_id],
             rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
     }
 
-    /* Returns an array with all the comments from a given user given their username. */
-    public async fetchCommentsOfUser(user: string): Promise<any[]> {
+    /* Returns an array with all the comments from a given user given their ID. */
+    public async fetchCommentsOfUser(user_id: number): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM comment_table WHERE username = $1',
-            values: [user],
+            text: 'SELECT * FROM comment_table WHERE user_id = $1',
+            values: [user_id],
             rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
     }
 
-    /* Deletes a comment from the DB given its idx and user. */
-    public async deleteComment(idx: number,
-                               user: string): Promise<void> {
+    /* Deletes a comment from the DB given the ID of itself and its user. */
+    public async deleteComment(comment_id: number,
+                               user_id: string): Promise<void> {
         const query = {
-            text: 'DELETE FROM comment_table WHERE idx = $1 AND username = $2',
-            values: [idx, user],
+            text: 'DELETE FROM comment_table WHERE comment_id = $1 AND user_id = $2',
+            values: [comment_id, user_id],
         };
         await this.executeQuery(query);
     }
@@ -142,26 +158,32 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     //and each post will be an array of all the columns of the post table.
     //so the resulting array will be an array of arrays.
 
-    /* Stores a post into the DB, idx is the post's identifier (auto-incremented). */
-    public async storePost(post: Post): Promise<void> {
-        let query = {
-            text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326))',
-            values: [post.title, post.image_url, post.description, post.tags, post.likes, post.longitude, post.latitude],
+    /* Stores a post into the DB, ID of the user needs to be given */
+    public async storePost(user_id: number,
+                           post_title: string,
+                           image_url: string[],
+                           description: string,
+                           tags: string[],
+                           latitude: number,
+                           longitude: number): Promise<void> {
+        var query = {
+            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
+            values: [user_id, post_title, image_url, description, tags, longitude, latitude],
         };
-        if (post.longitude === undefined) {
+        if (longitude === undefined) {
             query = {
                 text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes) VALUES ($1, $2, $3, $4, $5)',
-                values: [post.title, post.image_url, post.description, post.tags, post.likes],
+                values: [post_title, image_url, description, tags],
             };
         }
         await this.executeQuery(query);
     }
 
-    /* Returns an array with all the posts made by a user given their username. */
-    public async fetchPostsOfUser(username: string): Promise<any[]> {
+    /* Returns an array with all the posts made by a user given their ID. */
+    public async fetchPostsOfUser(user_id: number): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM post_table WHERE username = $1',
-            values: [username],
+            text: 'SELECT * FROM post_table WHERE user_id = $1',
+            values: [user_id],
             rowMode: 'array',
         };
         const res = await this.executeQuery(query);
@@ -216,30 +238,43 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         return res.rows;
     }
 
-    /* Deletes a post from the DB given its identifier (idx). All comments that belong to this post will automatically be deleted as well. */
-    public async deletePost(idx: number): Promise<void> {
+    /* Deletes a post from the DB given its ID. All comments that belong to this post will automatically be deleted as well. */
+    public async deletePost(post_id: number): Promise<void> {
         const query = {
-            text: 'DELETE FROM post_table WHERE idx = $1',
-            values: [idx],
+            text: 'DELETE FROM post_table WHERE post_id = $1',
+            values: [post_id],
         };
         await this.executeQuery(query);
     }
 
     public async init(): Promise<void> {
+        // Adding the extensions to the DB
         let query = {
             text: 'CREATE EXTENSION IF NOT EXISTS postgis;'
         };
         await this.executeQuery(query);
+
+        // Create Table for Users
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS user_table (id SERIAL PRIMARY KEY,username VARCHAR(255) UNIQUE NOT NULL,first_name VARCHAR(255) NOT NULL,last_name VARCHAR(255) NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,password VARCHAR(255) NOT NULL)',
+            text: 'CREATE TABLE IF NOT EXISTS user_table (user_id SERIAL PRIMARY KEY,username VARCHAR(255) NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,password VARCHAR(255) NOT NULL);',
         };
         await this.executeQuery(query);
+
+        // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (idx SERIAL PRIMARY KEY,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],likes TEXT[],location GEOGRAPHY(POINT, 4326))',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
+
+        // Create Table for Comments
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS comment_table (id SERIAL PRIMARY KEY,idx INT NOT NULL,username VARCHAR(255) NOT NULL,description TEXT NOT NULL,FOREIGN KEY (idx) REFERENCES post_table(idx) ON DELETE CASCADE)',
+            text: 'CREATE TABLE IF NOT EXISTS comment_table (comment_id SERIAL PRIMARY KEY,post_id INT NOT NULL,user_id INT NOT NULL,description TEXT NOT NULL,FOREIGN KEY (post_id) REFERENCES post_table(post_id) ON DELETE CASCADE,FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+        };
+        await this.executeQuery(query);
+
+        // Create Table for Likes
+        query = {
+            text: 'CREATE TABLE IF NOT EXISTS likes_table (post_id INT NOT NULL,user_id INT NOT NULL,FOREIGN KEY (post_id) REFERENCES post_table(post_id) ON DELETE CASCADE,FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
     }
