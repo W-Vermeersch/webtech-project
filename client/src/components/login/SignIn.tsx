@@ -1,103 +1,135 @@
-import { useState } from "react";
-import FormTextField from "./FormTextField.tsx";
 import "./login.css";
 import axios from "axios";
 import RouteToServer from "../../infos.ts";
+import { useState } from "react";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { SignInForm, ErrorInForm } from "../../../../Global/sign-in-form.ts";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import FormGroup from "react-bootstrap/FormGroup";
+
+import { Formik, Form, FormikHelpers } from "formik";
+import CustomInput from "./CustomInput.tsx";
+import { signUpSchema } from "./signUpSchema.ts";
 
 export default function SignIn() {
-  const [formData, setFormData] = useState<SignInForm>(new SignInForm());
-  const [error, setError] = useState<ErrorInForm>(new ErrorInForm());
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { id, value } = e.target;
-    const oldData = formData.toObject();
-    setFormData(new SignInForm().fill({ ...oldData, [id]: value }));
+  interface FormValues {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (false) {
-      //e.stopPropagation();
-      //setError("Passwords don't match");
-    } else {
-      console.log(formData);
-      const resp = await axios.post(RouteToServer("/user/sign-in"), formData);
-      console.log(resp);
-      if (resp.status === 206) {
+  async function onSubmit(
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) {
+    console.log(values);
+    const resp = await axios.post(RouteToServer("/user/sign-in"), values);
+    console.log(resp);
+
+    if (resp.status === 206) {
+      if (resp.data.errors) {
+
         if (resp.data.inputs) {
-          const inputs = new SignInForm();
-          inputs.fill(resp.data.inputs);
-          setFormData(inputs);
+          actions.setValues(resp.data.inputs);
         }
-        if (resp.data.errors) {
-          setError(error.fill(resp.data.errors));
-        }
+        const touchedFields = Object.keys(resp.data.errors).reduce((acc: { [key: string]: boolean }, key) => {
+          acc[key] = true;
+          return acc;
+        }, {});
+        actions.setTouched(touchedFields);
+        actions.setStatus(resp.data.errors);
       }
+    } else {
       if (resp.data.redirect) {
         window.location.href = resp.data.redirect; // Redirect on the frontend
+        actions.resetForm();
       }
-      // setFormData({...formData, password: "", passwordConfirm: ""});
     }
   }
 
   return (
-    <Form id="loginForm" onSubmit={handleSubmit}>
-      <Stack gap={3}>
-        <FormTextField
-          name="Name :"
-          id="firstName"
-          type="text"
-          placeholder="Enter your first name"
-          onChange={handleChange}
-          value={formData.firstName}
-          error={error.firstName}
-        />
-        <FormTextField
-          name="Last Name :"
-          id="lastName"
-          type="text"
-          placeholder="Enter your last Name"
-          onChange={handleChange}
-          value={formData.lastName}
-          error={error.lastName}
-        />
-        <FormTextField
-          name="E-mail :"
-          id="email"
-          type="email"
-          placeholder="Enter your email address"
-          onChange={handleChange}
-          value={formData.email}
-          error={error.email}
-        />
-        <FormTextField
-          name="Password :"
-          id="password"
-          type="password"
-          placeholder="Enter your password"
-          onChange={handleChange}
-          value={formData.password}
-          error={error.password}
-        />
-        <FormTextField
-          name="Confirm password :"
-          id="passwordConfirm"
-          type="password"
-          placeholder="Repeat your password"
-          onChange={handleChange}
-          value={formData.passwordConfirm}
-          error={error.passwordConfirm}
-        />
-        <Button variant="success" type="submit">
-          Sign in
-        </Button>
-        <p id="error">{error.total}</p>
-      </Stack>
-    </Form>
+    <Formik
+      initialValues={{
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+      }}
+      validationSchema={signUpSchema}
+      onSubmit={onSubmit}
+
+    >
+      {({ isSubmitting, status }) => (
+        <Form>
+          <Stack gap={4}>
+            <Row xs={1} md={2}>
+              <FormGroup as={Col} controlId="validationFormik01">
+                <CustomInput
+                  label="First Name"
+                  name="firstName"
+                  id="firstName"
+                  type="text"
+                  placeholder="Enter your first name"
+                />
+              </FormGroup>
+              <FormGroup as={Col} controlId="validationFormik02">
+                <CustomInput
+                  label="Last Name"
+                  name="lastName"
+                  id="lastName"
+                  type="text"
+                  placeholder="Enter your last name"
+                />
+              </FormGroup>
+            </Row>
+
+            <FormGroup controlId="validationFormik03">
+              <CustomInput
+                label="E-mail"
+                name="email"
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+              />
+            </FormGroup>
+
+            <Row xs={1} md={2}>
+              <FormGroup as={Col} controlId="validationFormik04">
+                <CustomInput
+                  label="Password"
+                  name="password"
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                />
+              </FormGroup>
+              <FormGroup as={Col} controlId="validationFormik05">
+                <CustomInput
+                  label="Confirm password"
+                  name="passwordConfirm"
+                  id="passwordConfirm"
+                  type="password"
+                  placeholder="Repeat your password"
+                />
+              </FormGroup>
+            </Row>
+            <Button variant="success" type="submit" disabled={isSubmitting}>
+              Sign Up
+            </Button>
+            {status &&
+              Object.values(status).map((value, idx) => (
+                value && <div key={String(idx)} className="text-danger small">{value as string}</div>
+              ))
+            }
+          </Stack>
+        </Form>
+      )}
+    </Formik>
   );
 }

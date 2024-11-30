@@ -16,9 +16,6 @@ export default function Homepage() {
     { name: "Eve", points: 80 },
   ];
 
-
-   
-
  const mockPosts = [
         {
             id:1,
