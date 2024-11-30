@@ -57,7 +57,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     ) {
         console.log("Storing user.");
         const query = {
-            text: 'INSERT INTO user_table (username, first_name, last_name, email, password) VALUES ($1, $2, $3)',
+            text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [username, email, password],
         };
         await this.executeQuery(query);
