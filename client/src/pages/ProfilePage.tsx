@@ -15,7 +15,7 @@ const mockPosts = new Array(15).fill(post);
 
 export default function ProfilePage() {
   return (
-    <Container className="text-white">
+    <Container className="text-white rounded overflow-hidden border border-light shadow">
       <Row>
         <Col
           className="p-4 d-flex justify-content-center"
