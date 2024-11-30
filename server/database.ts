@@ -163,12 +163,11 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                            image_url: string[],
                            description: string,
                            tags: string[],
-                           likes: string[],
                            latitude: number,
                            longitude: number): Promise<void> {
         const query = {
-            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, likes, location) VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
-            values: [user_id, post_title, image_url, description, tags, likes, longitude, latitude],
+            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
+            values: [user_id, post_title, image_url, description, tags, longitude, latitude],
         };
         await this.executeQuery(query);
     }
@@ -242,20 +241,33 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     public async init(): Promise<void> {
+        // Adding the extensions to the DB
         let query = {
             text: 'CREATE EXTENSION IF NOT EXISTS postgis;'
         };
         await this.executeQuery(query);
+
+        // Create Table for Users
         query = {
-            text: 'CREATE TABLE user_table (user_id SERIAL PRIMARY KEY,username VARCHAR(255) NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,password VARCHAR(255) NOT NULL);',
+            text: 'CREATE TABLE IF NOT EXISTS user_table (user_id SERIAL PRIMARY KEY,username VARCHAR(255) NOT NULL,email VARCHAR(255) UNIQUE NOT NULL,password VARCHAR(255) NOT NULL);',
         };
         await this.executeQuery(query);
+
+        // Create Table for Posts
         query = {
-            text: 'CREATE TABLE post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],likes TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
+
+        // Create Table for Comments
         query = {
-            text: 'CREATE TABLE comment_table (comment_id SERIAL PRIMARY KEY,post_id INT NOT NULL,user_id INT NOT NULL,description TEXT NOT NULL,FOREIGN KEY (post_id) REFERENCES post_table(post_id) ON DELETE CASCADE,FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS comment_table (comment_id SERIAL PRIMARY KEY,post_id INT NOT NULL,user_id INT NOT NULL,description TEXT NOT NULL,FOREIGN KEY (post_id) REFERENCES post_table(post_id) ON DELETE CASCADE,FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+        };
+        await this.executeQuery(query);
+
+        // Create Table for Likes
+        query = {
+            text: 'CREATE TABLE IF NOT EXISTS likes_table (post_id INT NOT NULL,user_id INT NOT NULL,FOREIGN KEY (post_id) REFERENCES post_table(post_id) ON DELETE CASCADE,FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
     }
