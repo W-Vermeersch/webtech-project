@@ -5,7 +5,7 @@ const CreatePost = () => {
     return (
         <>
         <Container>
-            <Row>
+            <Row className="w-75 mx-auto">
                 <Col xs="auto">
                 <img src="src/assets/add-post.svg"
                     width={36}
@@ -14,7 +14,7 @@ const CreatePost = () => {
                     </img>
                 </Col>
                 <Col>
-                    <h2 className="fw-bold text-left">Create Post</h2>
+                    <h2 className="fw-bold text-left" >Create Post</h2>
                 </Col>
             </Row>
             
