@@ -21,7 +21,7 @@ export default function Homepage() {
             <Row className={'justify-content-end'}>
                 {/* for future components like map and postfeed */}
                 <Col xs={9}>
-                   test
+                  test
                 </Col>
                 <Col xs={3}>
                     <Leaderboard users={mockUsers} />
