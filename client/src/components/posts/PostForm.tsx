@@ -1,27 +1,43 @@
-import { Formik, Form, Field } from "formik";
-import { FormGroup, FormLabel, Button } from "react-bootstrap";
+import { Formik, Form, Field, FormikHelpers} from "formik";
+import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import "./PostForm.css";
+import FileUploader from "./FileUploader";
 
-const animalTags = ["Cat", "Dog", "Lion"];
+interface PostFormValues {
+  caption: string;
+  file: string;
+  tags: string[];
+} 
+
+const animalTags: string[] = ["Cat", "Dog", "Lion"];
 
 
 const PostForm = () => {
 
+  const initialValues: PostFormValues = {
+    caption: "",
+    file: "",
+    tags: [],
+  };
+  
+
+  async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
+    console.log("Form data:", values);
+    console.log("Caption:", values.caption);
+    console.log("File:", values.file ? values.file : "No file selected");
+    if (values.tags.length > 0) {
+      console.log("Tags:", values.tags.join(", "));
+    } else {
+      console.log("No tags selected");
+    }
+    actions.setSubmitting(false);
+  }  
+
   return (
     <Formik
-      initialValues={{
-        caption: "",
-        file: null,
-        tags: [],
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log("Form data:", values);
-          setSubmitting(false);
-        }, 400);
-      }}
+      initialValues={initialValues}
+      onSubmit={onSubmit}
     >
       {({ setFieldValue, values, isSubmitting }) => (
         
@@ -29,42 +45,40 @@ const PostForm = () => {
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
-            <FormLabel>Caption</FormLabel>
+            Caption
             <Field
               as="textarea"
               name="caption"
+              id="caption"
               rows={4}
               className="form-control"
               placeholder="Write your caption here"
+              autoComplete="off"
             />
           </FormGroup>
 
-          {/* Upload a file */}
-          <FormGroup className="mb-4 file-upload" controlId="formFile">
-            <FormLabel>Add photo</FormLabel>
-            <input
-              type="file"
-              name="file"
-              accept="image/*"
-              className="form-control"
-              onChange={(event) => {
-                if (event.currentTarget.files) {
-                  setFieldValue("file", event.currentTarget.files[0]);
-                }
-              }}
-            />
-          </FormGroup>
+          <FormGroup className="mb-4 " controlId="reactFile">
+            <FileUploader setFieldValue={setFieldValue}/>
+          </FormGroup>  
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
-            <FormLabel>Animal Tags</FormLabel>
+            Animal tag
             <Typeahead
+              id="animaltags"
               options={animalTags}
               placeholder="Lion, Cat, Pigeon, ..."
               multiple
-              allowNew // Enables custom tags
-              id="animaltags"
-              onChange={(selected) => setFieldValue("tags", selected)}
+              allowNew
+              onChange={(selected) => {
+                const newTags = selected.map((item) => {
+                  if (typeof item === "string") {
+                    return item;
+                  } else if (item && typeof item === "object" && "label" in item) {
+                    return item.label;
+                  }});
+                setFieldValue("tags", newTags.filter(tag => tag));
+              }}
               selected={values.tags}
             />
           </FormGroup>
