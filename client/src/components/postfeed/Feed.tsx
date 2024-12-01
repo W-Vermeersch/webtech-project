@@ -7,15 +7,15 @@ interface Post{
     comments: string[];
 
     // from post.ts
-    title:string;
-    user: string;
-    image_url: string; // url to the storage api
-    idx: number; // index of Post
-    description: string;
-    tags: string[];
-    likes: number; // in DB each posts has a list of all Users who liked
-    longitude: number | undefined;
-    latitude: number | undefined;
+    title?:string;
+    user?: string;
+    image_url?: string; // url to the storage api
+    idx?: number; // index of Post
+    description?: string;
+    tags?: string[];
+    likes?: number; // in DB each posts has a list of all Users who liked
+    longitude?: number | undefined;
+    latitude?: number | undefined;
 }
 
 interface PostsProps{
