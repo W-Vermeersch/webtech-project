@@ -1,5 +1,7 @@
 import "./ProfilePage.css";
 
+import { useState } from "react";
+
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -10,12 +12,19 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 
 import PostGallery from "../components/profile/PostGallery";
+import PostMap from "../components/profile/PostMap";
 
-const post = { image_url: "https://via.placeholder.com/180" };
-
-const mockPosts = new Array(15).fill(post);
+const mockPosts = Array(15)
+  .fill(null)
+  .map((_, index) => ({
+    image_url: "https://via.placeholder.com/180",
+    latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
+    longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
+  }));
 
 export default function ProfilePage() {
+  const [activeTab, setActiveTab] = useState("gallery");
+
   return (
     <Container className="text-white rounded overflow-hidden border border-light shadow">
       <Row>
@@ -53,8 +62,8 @@ export default function ProfilePage() {
         </Col>
         <Col className="ps-3 pt-2" id="userPosts" xs={12} lg={9}>
           <Tabs
-            defaultActiveKey="gallery"
-            id="justify-tab-example"
+            activeKey={activeTab}
+            onSelect={(k) => setActiveTab(k || "gallery")}
             className="mb-3 custom-tabs"
             variant="underline"
             justify
@@ -68,7 +77,9 @@ export default function ProfilePage() {
               </Container>
             </Tab>
             <Tab eventKey="map" title="Map">
-              Here comes the map
+              {activeTab === "map" && (
+                <PostMap posts={mockPosts} center={[50.822376, 4.395356]} />
+              )}
             </Tab>
           </Tabs>
         </Col>

@@ -11,9 +11,11 @@
 }
 
 .custom-tabs .nav-link.active {
-  color: white !important; 
+  color: white !important;
 }
 
 .custom-tabs .nav-link:hover {
-  color: gray; 
+  color: gray;
 }
+
+
