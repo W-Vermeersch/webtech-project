@@ -1,7 +1,19 @@
 #userInfo {
-    background-color: rgb(34, 37, 41);
+  background-color: rgb(34, 37, 41);
 }
 
 #userPosts {
-    background-color: rgb(72, 78, 84);
+  background-color: rgb(72, 78, 84);
+}
+
+.custom-tabs .nav-link {
+  color: black;
+}
+
+.custom-tabs .nav-link.active {
+  color: white !important; 
+}
+
+.custom-tabs .nav-link:hover {
+  color: gray; 
 }

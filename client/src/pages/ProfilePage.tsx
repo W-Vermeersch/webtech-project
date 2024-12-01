@@ -6,6 +6,8 @@ import Container from "react-bootstrap/Container";
 import Image from "react-bootstrap/Image";
 import Stack from "react-bootstrap/Stack";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 
 import PostGallery from "../components/profile/PostGallery";
 
@@ -43,17 +45,32 @@ export default function ProfilePage() {
               <p className="text-center">
                 Morbi feugiat lectus at luctus porta. Nunc interdum varius leo
                 eget cursus. Etiam et massa et diam sagittis pretium suscipit
-                sit amet purus. Aenean sit amet justo rutrum mi tincidunt
-                elementum ac at quam.
+                sit amet purus. Nullam nec nunc nec nunc ultricies. Morbi
+                feugiat lectus at luctus. {/* max size of the bio*/}
               </p>
             </Container>
           </Stack>
         </Col>
-        <Col className="p-3" id="userPosts" xs={12} lg={9}>
-          <Container className="d-flex flex-wrap justify-content-center"
-          style={{ maxHeight: '500px', overflowY: 'auto' }}>
-            <PostGallery posts={mockPosts} />
-          </Container>
+        <Col className="ps-3 pt-2" id="userPosts" xs={12} lg={9}>
+          <Tabs
+            defaultActiveKey="gallery"
+            id="justify-tab-example"
+            className="mb-3 custom-tabs"
+            variant="underline"
+            justify
+          >
+            <Tab eventKey="gallery" title="Gallery">
+              <Container
+                className="d-flex flex-wrap justify-content-center"
+                style={{ maxHeight: "450px", overflowY: "auto" }}
+              >
+                <PostGallery posts={mockPosts} />
+              </Container>
+            </Tab>
+            <Tab eventKey="map" title="Map">
+              Here comes the map
+            </Tab>
+          </Tabs>
         </Col>
       </Row>
     </Container>
