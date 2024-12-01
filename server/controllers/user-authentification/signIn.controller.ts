@@ -1,6 +1,6 @@
 import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
-import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
+import {SignInForm, ErrorInSignInForm} from "../../../Global/sign-in-form";
 import Database from "../../database";
 
 export class SignInController extends UserAuthentificationController{
@@ -19,7 +19,7 @@ export class SignInController extends UserAuthentificationController{
         const inputs: SignInForm  = new SignInForm();
         console.log(req.body)
         inputs.fill(req.body);
-        const errors: ErrorInForm = new ErrorInForm();
+        const errors: ErrorInSignInForm = new ErrorInSignInForm();
 
         if (!this._isGiven(inputs.username)) {
             errors.username = "Please enter your username.";

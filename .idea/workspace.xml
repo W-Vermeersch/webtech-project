@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Global/log-in-forms.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/controllers/user-authentification/login.controllers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Global/sign-in-form.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Global/sign-in-form.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,12 +43,12 @@
     &quot;assignee&quot;: &quot;ozioma147&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/W-Vermeersch/webtech-project.git&quot;,
-    &quot;accountId&quot;: &quot;4bd1e9a6-8de6-4a40-ab3a-d8f21b95307a&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/W-Vermeersch/webtech-project.git",
+    "accountId": "0a2c7c12-1802-4446-8e8d-a48c78fc0fc9"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -56,7 +64,7 @@
   "keyToString": {
     "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "sql",
+    "git-widget-placeholder": "JWT",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,7 +82,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23339.15" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
       </set>
     </attachedChunks>
   </component>
@@ -94,6 +102,7 @@
       <workItem from="1731783121542" duration="352000" />
       <workItem from="1732030405548" duration="355000" />
       <workItem from="1732550147793" duration="5486000" />
+      <workItem from="1733053466480" duration="10563000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
       <option name="closed" value="true" />
@@ -116,6 +125,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
