@@ -4,7 +4,7 @@ import Database from "../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../Global/post";
 import * as ExifReader from 'exifreader';
-import {authenticateToken} from "../user-authentification/login.controllers";
+//import {authenticateToken} from "../user-authentification/login.controllers";
 
 
 export class PostController extends BaseController {
@@ -17,11 +17,11 @@ export class PostController extends BaseController {
 
     initializeRoutes(): void {
 
-        this.router.post("/add", authenticateToken,(req: express.Request, response: express.Response) => {
+        this.router.post("/add", (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
         });
 
-        this.router.get("/get", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/get", (req: express.Request, response: express.Response) => {
             return this.getPost(req, response);
         });
     }

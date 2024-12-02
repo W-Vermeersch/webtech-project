@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Global/log-in-forms.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/controllers/user-authentification/login.controllers.ts" afterDir="false" />
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Global/sign-in-form.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Global/sign-in-form.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/user-authentification/signIn.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/user-authentification/login.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/user-authentification/login.controllers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +37,12 @@
     &quot;assignee&quot;: &quot;ozioma147&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/W-Vermeersch/webtech-project.git",
-    "accountId": "0a2c7c12-1802-4446-8e8d-a48c78fc0fc9"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/W-Vermeersch/webtech-project.git&quot;,
+    &quot;accountId&quot;: &quot;0a2c7c12-1802-4446-8e8d-a48c78fc0fc9&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -60,20 +54,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.server.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "JWT",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\timod\\WebstormProjects\\webtech-project\\client\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.server.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;JWT&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\timod\\WebstormProjects\\webtech-project\\client\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\liamv\WebstormProjects\webtech-project\server" />
@@ -102,7 +96,8 @@
       <workItem from="1731783121542" duration="352000" />
       <workItem from="1732030405548" duration="355000" />
       <workItem from="1732550147793" duration="5486000" />
-      <workItem from="1733053466480" duration="10563000" />
+      <workItem from="1733053466480" duration="10854000" />
+      <workItem from="1733146706588" duration="671000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
       <option name="closed" value="true" />
@@ -120,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731781937404</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS">
+      <option name="closed" value="true" />
+      <created>1733064236250</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733064236250</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -144,6 +147,7 @@
     <MESSAGE value="Simple Commit" />
     <MESSAGE value="Remove unnecessary functions and cleaned navbar with redirection" />
     <MESSAGE value="Working sign-in with redirection to home if success" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
   </component>
 </project>
