@@ -26,16 +26,18 @@ interface Post {
 }
 
 // Create more realistic mock data with coordinates
-const mockPosts: Post[] = Array(15).fill(null).map((_, index) => ({
-  image_url: "https://via.placeholder.com/180",
-  latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
-  longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
-  title: `Post ${index + 1}`,
-  description: `This is post number ${index + 1}`
-}));
+const mockPosts: Post[] = Array(15)
+  .fill(null)
+  .map((_, index) => ({
+    image_url: "holder.js/180px180",
+    latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
+    longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
+    title: `Post ${index + 1}`,
+    description: `This is post number ${index + 1}`,
+  }));
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState('gallery');
+  const [activeTab, setActiveTab] = useState("gallery");
 
   return (
     <Container className="text-white rounded overflow-hidden border border-light shadow">
@@ -75,7 +77,7 @@ export default function ProfilePage() {
         <Col className="ps-3 pt-2" id="userPosts" xs={12} lg={9}>
           <Tabs
             activeKey={activeTab}
-            onSelect={(k) => setActiveTab(k || 'gallery')}
+            onSelect={(k) => setActiveTab(k || "gallery")}
             id="justify-tab-example"
             className="mb-3 custom-tabs"
             variant="underline"
@@ -90,8 +92,11 @@ export default function ProfilePage() {
               </Container>
             </Tab>
             <Tab eventKey="map" title="Map">
-              {activeTab === 'map' && (
-                <MapContainer posts={mockPosts} center={[50.822376, 4.395356]} />
+              {activeTab === "map" && (
+                <MapContainer
+                  posts={mockPosts}
+                  center={[50.822376, 4.395356]}
+                />
               )}
             </Tab>
           </Tabs>
