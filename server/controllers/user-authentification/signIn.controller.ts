@@ -1,6 +1,6 @@
 import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
-import {SignInForm, ErrorInForm} from "../../../Global/sign-in-form";
+import {SignInForm, ErrorInSignInForm} from "../../../Global/sign-in-form";
 import Database from "../../database";
 
 export class SignInController extends UserAuthentificationController{
@@ -19,7 +19,7 @@ export class SignInController extends UserAuthentificationController{
         const inputs: SignInForm  = new SignInForm();
         console.log(req.body)
         inputs.fill(req.body);
-        const errors: ErrorInForm = new ErrorInForm();
+        const errors: ErrorInSignInForm = new ErrorInSignInForm();
 
         if (!this._isGiven(inputs.username)) {
             errors.username = "Please enter your username.";
@@ -53,37 +53,5 @@ export class SignInController extends UserAuthentificationController{
             this.db.storeUser(inputs.username, inputs.email, inputs.password)
             res.json({ redirect: '/home' });
         }
-    }
-
-    /**
-     * Check if a string is actually provided
-     *
-     * @param {string} param Provided string
-     * @returns {boolean} Valid or not
-     */
-    private _isGiven(param: string): boolean {
-        if (param == null)
-            return false;
-        else{
-            return param.trim().length > 0;
-        }
-    }
-
-    /**
-     * Check if a string is a valid email
-     *
-     * @param {string} email Email string
-     * @returns {boolean} Valid or not
-     */
-    private _isEmailValid(email: string): boolean {
-        const atIdx = email.indexOf("@");
-        const dotIdx = email.lastIndexOf(".");
-        return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
-    }
-    private samePassword(password1: string, password2: string): boolean {
-        return password1 === password2
-    }
-    private _isGoodPassword(password: string): boolean {
-        return password.length >= 8;
     }
 }

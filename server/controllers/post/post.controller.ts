@@ -4,6 +4,7 @@ import Database from "../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../Global/post";
 import * as ExifReader from 'exifreader';
+//import {authenticateToken} from "../user-authentification/login.controllers";
 
 
 export class PostController extends BaseController {

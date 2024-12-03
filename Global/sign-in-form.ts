@@ -23,7 +23,7 @@ export class SignInForm {
     return this;
   }
 }
-export class ErrorInForm extends SignInForm {
+export class ErrorInSignInForm extends SignInForm {
   total: string = "";
 
   public hasErrors(): boolean {
@@ -36,7 +36,7 @@ export class ErrorInForm extends SignInForm {
     return false; // No errors found
   }
 
-  override fill(body: Record<string, any>): ErrorInForm {
+  override fill(body: Record<string, any>): ErrorInSignInForm {
     super.fill(body);
     return this;
   }
