@@ -29,7 +29,7 @@ interface Post {
 const mockPosts: Post[] = Array(15)
   .fill(null)
   .map((_, index) => ({
-    image_url: "holder.js/180px180",
+    image_url: "https://dummyimage.com/180",
     latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
     longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
     title: `Post ${index + 1}`,
@@ -50,7 +50,7 @@ export default function ProfilePage() {
         >
           <Stack className="align-items-center" gap={1}>
             <Image
-              src="https://via.placeholder.com/180"
+              src="https://dummyimage.com/180"
               alt="profile pic"
               className="rounded-circle"
             />
