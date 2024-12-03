@@ -15,8 +15,8 @@ export class SignInController extends UserAuthentificationController{
         });
     }
 
-    addPost(req: express.Request, res: express.Response): void {
-        const inputs: SignInForm  = new SignInForm();
+    async addPost(req: express.Request, res: express.Response): Promise<void> {
+        const inputs: SignInForm = new SignInForm();
         console.log(req.body)
         inputs.fill(req.body);
         const errors: ErrorInSignInForm = new ErrorInSignInForm();
@@ -38,7 +38,7 @@ export class SignInController extends UserAuthentificationController{
         if (!this._isGiven(inputs.passwordConfirm)) {
             errors.passwordConfirm = "Please confirm your password.";
             inputs.passwordConfirm = "";
-        } else if (!this.samePassword(inputs.password, inputs.passwordConfirm)){
+        } else if (!this.samePassword(inputs.password, inputs.passwordConfirm)) {
             inputs.password = "";
             inputs.passwordConfirm = "";
             errors.passwordConfirm = "Please repeat the same password.";
@@ -50,8 +50,10 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             })
         } else {
-            this.db.storeUser(inputs.username, inputs.email, inputs.password)
-            res.json({ redirect: '/home' });
+            await this.db.storeUser(inputs.username, inputs.email, inputs.password)
+            const user_id = await this.db.getUserID(inputs.username);
+            await this.db.storeProfileDecoration(user_id, inputs.username, "")
+            res.json({redirect: '/home'});
         }
     }
 }

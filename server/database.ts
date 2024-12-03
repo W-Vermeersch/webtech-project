@@ -101,7 +101,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns the ID of a user given their username*/
-    public async getUserID(username: string): Promise<any> {
+    public async getUserID(username: string): Promise<number> {
         const userInfo = this.fetchUserUsingUsername(username);
         return userInfo[0]
     };
@@ -258,6 +258,64 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         await this.executeQuery(query);
     }
 
+
+    //profile decoration operations
+
+    public async storeProfileDecoration(
+        user_id: number,
+        displayName: string,
+        bio: string,
+    ) {
+        const query = {
+            text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
+            values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, "ARRAY[]::TEXT[]"],
+        };
+        await this.executeQuery(query);
+    }
+
+    /*Update a user's profile picture given their ID*/
+    public async updateProfilePicture(user_id: number, newImageUrl: string): Promise<void> {
+        const query = {
+            text: 'UPDATE user_profile SET profile_picture_image_url = $1 WHERE user_id = $2',
+            values: [newImageUrl, user_id],
+        };
+        await this.executeQuery(query);
+    }
+
+    /*Update the total EXP count of a user given their ID*/
+    public async updateTotalExp(user_id: number, newExp: number): Promise<void> {
+        const query = {
+            text: 'UPDATE user_profile SET total_exp = $1 WHERE user_id = $2',
+            values: [newExp, user_id],
+        };
+        await this.executeQuery(query);
+    }
+
+    /*Updates a user's badge list (replaces the entire list)*/
+    public async updateBadges(user_id: number, newBadges: string[]): Promise<void> {
+        const query = {
+            text: 'UPDATE user_profile SET badges = $1 WHERE user_id = $2',
+            values: [JSON.stringify(newBadges), user_id],
+        };
+        await this.executeQuery(query);
+    }
+    /*Updates a user's bio description*/
+    public async updateBio(user_id: number, newBio: string): Promise<void> {
+        const query = {
+            text: 'UPDATE user_profile SET bio = $1 WHERE user_id = $2',
+            values: [newBio, user_id],
+        };
+        await this.executeQuery(query);
+    }
+    public async updateDisplayName(user_id: number, newName: string): Promise<void> {
+        const query = {
+            text: 'UPDATE user_profile SET display_name = $1 WHERE user_id = $2',
+            values: [newName, user_id],
+        };
+        await this.executeQuery(query);
+    }
+
+
     public async init(): Promise<void> {
         // Adding the extensions to the DB
         let query = {
@@ -291,7 +349,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for user decoration
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,profile_picture_image_url TEXT,total_exp INT NOT NULL, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,display_name TEXT NOT NULL,bio TEXT,profile_picture_image_url TEXT,total_exp INT NOT NULL, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 
