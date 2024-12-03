@@ -23,14 +23,14 @@ export default function NavBar() {
             <NavItem to="/map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">
-            <NavItem to="/home">
+            <NavItem to="/user/profile">
               {/* Change this to /user/*current-user* */}
               <Image src="https://dummyimage.com/35" roundedCircle />
             </NavItem>
           </Nav>
           <Nav>
             <NavDropdown title="*user name*" id="user-dropdown">
-              <NavItem to="/user/sign-up">Profile</NavItem>
+              <NavItem to="/user/profile">Profile</NavItem>
               {/* Change this to /user/*current-user* */}
               <NavItem to="/user/sign-up">Log In</NavItem>
               <NavItem to="/user/sign-up">Sign Up</NavItem>
