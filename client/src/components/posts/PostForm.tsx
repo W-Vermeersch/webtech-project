@@ -43,6 +43,11 @@ const PostForm = () => {
         
         
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
+
+        <FormGroup className="mb-4 " controlId="reactFile">
+            <FileUploader setFieldValue={setFieldValue}/>
+          </FormGroup>  
+
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
             Caption
@@ -55,11 +60,7 @@ const PostForm = () => {
               placeholder="Write your caption here"
               autoComplete="off"
             />
-          </FormGroup>
-
-          <FormGroup className="mb-4 " controlId="reactFile">
-            <FileUploader setFieldValue={setFieldValue}/>
-          </FormGroup>  
+          </FormGroup> 
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
