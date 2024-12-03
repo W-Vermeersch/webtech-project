@@ -104,14 +104,6 @@ export class LogInController extends UserAuthentificationController {
             });
         }
     }
-
-    private _isGiven(param: string): boolean {
-        if (param == null)
-            return false;
-        else {
-            return param.trim().length > 0;
-        }
-    }
 }
 
 
