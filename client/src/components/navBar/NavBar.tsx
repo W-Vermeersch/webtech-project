@@ -9,13 +9,22 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
 import useSignOut from "react-auth-kit/hooks/useSignOut";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import axios from "axios";
+import RouteToServer from "../../infos";
 
 export default function NavBar() {
   const signOut = useSignOut();
+  const authHeader = useAuthHeader();
 
-  function handleLogOut() {
+  async function handleLogOut() {
     console.log("Logging out");
-    signOut();
+    const resp = await axios.post(RouteToServer("/user/log-in"), {authHeader: authHeader});
+    // deal with error handling maybe
+    if (resp.status === 204) {
+      signOut();
+      console.log("Logged out");
+    }
   }
 
   return (
