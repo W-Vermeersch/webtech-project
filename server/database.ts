@@ -89,6 +89,17 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         console.log(res.rows);
         return res.rows;
     };
+    /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
+    public async fetchUserUsingEmailOrUsername(input: string): Promise<any> {
+        const query = {
+            text: 'SELECT * FROM user_table WHERE email = $1 OR username = $1',
+            values: [input],
+            rowMode: 'array',
+        };
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+
     /* Returns the ID of a user given their username*/
     public async getUserID(username: string): Promise<any> {
         const userInfo = this.fetchUserUsingUsername(username);

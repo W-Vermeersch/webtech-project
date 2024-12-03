@@ -10,11 +10,6 @@ form p {
   font: bold 14px/1.5 Georgia, serif;
 }
 
-#form-container {
-  background-color: rgb(34, 37, 41);
-  padding: 20px;
-}
-
 .invalid-input {
   color: #d66868;
   font: bold 14px/1.5 Georgia, serif;
