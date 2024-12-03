@@ -6,6 +6,8 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
     "react-bootstrap": "^2.10.5",
+    "react-bootstrap-typeahead": "^6.3.4",
+    "react-dropzone": "^14.3.5",
     "yup": "^1.4.0"
   }
 }

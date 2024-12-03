@@ -18,6 +18,8 @@ export default function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav>
             <NavItem to="/home">Home</NavItem>
+            <NavItem to="/create-post">Create Post</NavItem>
+            <NavItem to="/user/sign-up">Sign Up</NavItem>
             <NavItem to="/map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">

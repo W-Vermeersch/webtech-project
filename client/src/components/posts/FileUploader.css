@@ -1,0 +1,36 @@
+/* 1 rem is dependant on the font size which is standard 16 px
+    makes it easier to be consistent with the paddint of each element rather
+    than having to calculate it; also if root font size changes, it adapts so*/
+
+.file-uploader-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.file-uploader-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem; /* This gives the preview image rounded corners */
+}
+
+.file-uploader-box{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding:2rem 1.5rem;
+    border-radius: 1rem;
+    background-color: lightgreen;
+}
+
+.dropzone-title{
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    font-size: 1rem;
+    color: black;
+}
+
+.file-subtitle{
+    color:brown;
+}
