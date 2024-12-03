@@ -28,10 +28,10 @@ export class LogInController extends UserAuthentificationController {
     }
 
     private generateAccessToken(user) {
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }) 
+        return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }) 
     }
     private generateRefreshToken(user) {
-        return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+        return jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET)
     }
 
     refreshTokens = []  //needs to be replaced with the DB later
@@ -49,7 +49,7 @@ export class LogInController extends UserAuthentificationController {
         })
     }
 
-    logIn(req: express.Request, res: express.Response): void {
+    async logIn(req: express.Request, res: express.Response): Promise<void> {
         const inputs: LogInForm = new LogInForm();
         console.log(req.body);
         inputs.fill(req.body);
@@ -68,28 +68,35 @@ export class LogInController extends UserAuthentificationController {
         }
 
         //authenticate user (we might want to add hashed passwords in the future)
-        const user: any = this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);
+        const user: any = await this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);
+        //console.log("user[0].username: "+ user[0].username)
         if (user.length === 0) {
+            console.log("username or email not found")
             errors.usernameOrEmail = "Username or e-mail not found."
             inputs.usernameOrEmail = "";
         }
-        if (user.length >= 1) {
-            const userPassword = user[2]
+        if (user.length != 0) {
+            const userPassword = user[0].password
+            console.log("user password: " + user[0].password + "Given password: " + password)
             if (password != userPassword) {
+                console.log("password incorrect")
                 errors.password = "Password incorrect!"
                 inputs.password = "";
             }
         }
 
         if (errors.hasErrors()) {
+            console.log("has errors")
+            console.log(errors)
             res.status(206).json({  //moet verandert worden waarschijnlijk
                 errors: errors.toObject(),
                 inputs: inputs.toObject()
             })
         } else {
             // handle sessions
-            const userID = user[0]
-            const username = user[1]
+            console.log("handling tokens")
+            const userID = user[0].user_id
+            const username = user[0].username
             const userObject = {username: username}
             const accessToken = this.generateAccessToken(user);
             const refreshToken = this.generateRefreshToken(user);
