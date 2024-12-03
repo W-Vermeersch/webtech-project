@@ -29,10 +29,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
-                  "type": "string"
-                },
-                "lastName": {
+                "userName": {
                   "type": "string"
                 },
                 "email": {
@@ -49,8 +46,7 @@
                 }
               },
               "required": [
-                "firstName",
-                "lastName",
+                "userName",
                 "email",
                 "password",
                 "passwordConfirm"
