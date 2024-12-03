@@ -51,7 +51,7 @@ export class SignInController extends UserAuthentificationController{
             })
         } else {
             this.db.storeUser(inputs.username, inputs.email, inputs.password)
-            res.json({ redirect: '/home' });
+            res.json({ redirect: '/log-in' });
         }
     }
 }
