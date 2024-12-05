@@ -33,7 +33,8 @@ export class App {
         this.addController(new SignInController(this.database));
         this.addController(new PostController(this.database));
         this.addController(new LogInController(this.database));
-        this.addController(new createPostController());
+        this.addController(new CreatePostController());
+        this.addController(new )
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
             this.app.use(`${this.path}${controller.path}`, controller.router);
