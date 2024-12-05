@@ -1,6 +1,5 @@
 import NavItem from "./NavItem";
 import "./NavBar.css";
-import { useEffect, useState } from "react";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -15,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RouteToServer from "../../infos";
 import Cookies from "js-cookie";
-import { Row, Stack } from "react-bootstrap";
 
 interface IUserData {
   username: string;
@@ -47,54 +45,58 @@ export default function NavBar() {
   }
 
   return (
-    <Navbar expand="md" bg="dark" data-bs-theme="dark" fixed="top">
+    <Navbar
+      expand="md"
+      bg="dark"
+      data-bs-theme="dark"
+      fixed="top"
+      collapseOnSelect={true}
+    >
       <Container>
         <Navbar.Brand>
-          <NavItem to="/home">Animal Go</NavItem>
+          <NavItem to="/home" eventKey="Animal Go">Animal Go</NavItem>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav>
-            <NavItem to="/home">Home</NavItem>
+            <NavItem to="/home" eventKey="Home">Home</NavItem>
 
-            <NavItem to="/map">Map</NavItem>
+            <NavItem to="/map" eventKey="Map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">
-            <NavItem to="/create-post">
+            <NavItem to="/create-post" eventKey="Create Post">
               <Button variant="success">Create Post</Button>
             </NavItem>
-          </Nav> 
-          <Stack direction="horizontal" className="align-items-md-center align-items-baseline" gap={3}>
-          <NavItem to="/user/profile" className={authUser ? "" : "disabled"}>
-            {/* Change this to /user/*current-user* */}
-            <Image src="https://dummyimage.com/35" roundedCircle />
-          </NavItem>
-          <Nav>
-            <NavDropdown
-              title={(authUser ? authUser.username : "Guest") + " "}
-              id="user-dropdown"
-            >
-              <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                <NavItem to="/user/profile">Profile</NavItem>
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item  className={authUser ? "disabled" : ""}>
-                <NavItem to="/user/log-in">Log In</NavItem>
-              </NavDropdown.Item>
-              <NavDropdown.Item className={authUser ? "disabled" : ""}>
-                <NavItem to="/user/sign-up" >Sign Up</NavItem>
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                <div onClick={handleLogOut}>
-                  <NavItem to="/user/profile" >Log Out</NavItem> {/* ignore path */}
-                </div>
-              </NavDropdown.Item>
-            </NavDropdown>
           </Nav>
-          </Stack>
-
-          
+            <Nav>
+              <NavDropdown
+                title={
+                  <>
+                    <Image className="me-2" src="https://dummyimage.com/35" roundedCircle />
+                    <span >{(authUser ? authUser.username : "Guest") } </span>
+                  </>
+                }
+                id="user-dropdown"
+              >
+                <NavDropdown.Item className={authUser ? "" : "disabled"}>
+                  <NavItem to="/user/profile" eventKey="Profile">Profile</NavItem>
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item className={authUser ? "disabled" : ""}>
+                  <NavItem to="/user/log-in" eventKey="Log In">Log In</NavItem>
+                </NavDropdown.Item>
+                <NavDropdown.Item className={authUser ? "disabled" : ""}>
+                  <NavItem to="/user/sign-up" eventKey="Sign Up">Sign Up</NavItem>
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item className={authUser ? "" : "disabled"}>
+                  <div onClick={handleLogOut}>
+                    <NavItem to="/user/profile" eventKey="Log Out">Log Out</NavItem>{" "}
+                    {/* ignore path */}
+                  </div>
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
