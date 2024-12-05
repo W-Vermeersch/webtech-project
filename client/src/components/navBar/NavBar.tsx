@@ -35,6 +35,7 @@ export default function NavBar() {
     if (resp.status === 204) {
       signOut();
       console.log("Logged out");
+      window.location.reload();
     }
   }
 
@@ -56,7 +57,6 @@ export default function NavBar() {
               <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
-          <Button variant="success" onClick={() => console.log(authUser)}>show user</Button>
           <NavItem to="/user/profile">
             {/* Change this to /user/*current-user* */}
             <Image src="https://dummyimage.com/35" roundedCircle />

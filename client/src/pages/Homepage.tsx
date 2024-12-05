@@ -25,12 +25,6 @@ export default function Homepage() {
 
   return (
     <Container>
-      <Button
-        variant="primary"
-        onClick={() => console.log(isAuthenticated, authHeader, authUser)}
-      >
-        Log auth
-      </Button>
       <Row className={"justify-content-end"}>
         {/* for future components like map and postfeed */}
         <Col xs={9}>test</Col>
