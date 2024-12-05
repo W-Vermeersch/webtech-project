@@ -9,17 +9,21 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
 import useSignOut from "react-auth-kit/hooks/useSignOut";
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import axios from "axios";
 import RouteToServer from "../../infos";
+import Cookies from 'js-cookie';
 
 export default function NavBar() {
   const signOut = useSignOut();
-  const authHeader = useAuthHeader();
 
   async function handleLogOut() {
     console.log("Logging out");
-    const resp = await axios.post(RouteToServer("/user/log-in"), {authHeader: authHeader});
+    const resp = await axios.delete(RouteToServer("/user/log-out"), {
+      headers: {
+        'refresh-token': Cookies.get('_auth_refresh'),
+      },
+    });
     // deal with error handling maybe
     if (resp.status === 204) {
       signOut();
@@ -41,7 +45,7 @@ export default function NavBar() {
             <NavItem to="/map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">
-            <NavItem to="/create-post">
+            <NavItem to="/user/create-post">
               <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
