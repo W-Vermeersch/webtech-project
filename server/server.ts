@@ -6,7 +6,8 @@ import cors = require("cors");
 import Database from "./database";
 import {PostController} from "./controllers/post/post.controller";
 import { LogInController } from './controllers/user-authentification/login.controllers';
-import { createPostController } from './controllers/post/create-post.controllers';
+import { CreatePostController} from './controllers/post/create-post.controllers';
+import { UserProfileController } from './controllers/user-profile.controllers';
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 
@@ -34,7 +35,7 @@ export class App {
         this.addController(new PostController(this.database));
         this.addController(new LogInController(this.database));
         this.addController(new CreatePostController());
-        this.addController(new )
+        this.addController(new UserProfileController());
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
             this.app.use(`${this.path}${controller.path}`, controller.router);

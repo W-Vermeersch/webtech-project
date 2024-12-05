@@ -2,7 +2,7 @@ import * as express from "express";
 import { authenticateToken } from "./user-authentification/login.controllers";
 import { UserAuthentificationController } from "./user-authentification/base.user.controller";
 
-export class userProfileController extends UserAuthentificationController {
+export class UserProfileController extends UserAuthentificationController {
 
     constructor() {
         super();
