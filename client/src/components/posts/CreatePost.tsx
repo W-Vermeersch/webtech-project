@@ -17,18 +17,16 @@ const CreatePost = () => {
   const authUser = useAuthUser<IUserData>()
   const navigate = useNavigate();
 
-//   useEffect(() => {
-//     if (authUser) {
-//       console.log(authUser.username);
-//     }
-//     if (!isAuthenticated) {
-//       navigate("/user/log-in");
-//     }
-//   }, [isAuthenticated, navigate]);
+  useEffect(() => {
 
-//   if (!isAuthenticated) {
-//     return null;
-//   }
+    if (!isAuthenticated) {
+      navigate("/user/log-in");
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <Container>

@@ -1,5 +1,6 @@
 import NavItem from "./NavItem";
 import "./NavBar.css";
+import { useEffect, useState } from "react";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -9,19 +10,25 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
 import useSignOut from "react-auth-kit/hooks/useSignOut";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import axios from "axios";
 import RouteToServer from "../../infos";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+
+interface IUserData {
+  username: string;
+  userID: string;
+}
 
 export default function NavBar() {
   const signOut = useSignOut();
+  const authUser = useAuthUser<IUserData>();
 
   async function handleLogOut() {
     console.log("Logging out");
     const resp = await axios.delete(RouteToServer("/user/log-out"), {
       headers: {
-        'refresh-token': Cookies.get('_auth_refresh'),
+        "refresh-token": Cookies.get("_auth_refresh"),
       },
     });
     // deal with error handling maybe
@@ -45,16 +52,20 @@ export default function NavBar() {
             <NavItem to="/map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">
-            <NavItem to="/user/create-post">
+            <NavItem to="/create-post">
               <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
+          <Button variant="success" onClick={() => console.log(authUser)}>show user</Button>
           <NavItem to="/user/profile">
             {/* Change this to /user/*current-user* */}
             <Image src="https://dummyimage.com/35" roundedCircle />
           </NavItem>
           <Nav>
-            <NavDropdown title="*user name*" id="user-dropdown">
+            <NavDropdown
+              title={authUser ? authUser.username : "Guest"}
+              id="user-dropdown"
+            >
               <NavItem to="/user/profile">Profile</NavItem>
               {/* Change this to /user/*current-user* */}
               <NavItem to="/user/log-in">Log In</NavItem>

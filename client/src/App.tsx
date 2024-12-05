@@ -17,19 +17,12 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/home" element={<HomePage />} />
+        <Route path="/create-post" element={<CreatePost />} />
         <Route path="/user">
           {/*<Route path ="userId" element={<HomePage />} />*/}
           <Route path="profile" element={<ProfilePage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
-          <Route
-            path="create-post"
-            element={
-              <RequireAuth fallbackPath={"log-in"}>
-                <CreatePost />
-              </RequireAuth>
-            }
-          />
         </Route>
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
