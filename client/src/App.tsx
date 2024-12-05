@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
 
+
 function App() {
   return (
     <>
