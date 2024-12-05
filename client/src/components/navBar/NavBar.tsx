@@ -11,6 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RouteToServer from "../../infos";
 import Cookies from "js-cookie";
@@ -23,6 +24,7 @@ interface IUserData {
 export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser<IUserData>();
+  const navigate = useNavigate();
 
   async function handleLogOut() {
     if (!authUser) {
@@ -38,6 +40,7 @@ export default function NavBar() {
     if (resp.status === 204) {
       signOut();
       console.log("Logged out");
+      navigate("/home");
       window.location.reload();
     }
   }
@@ -69,20 +72,20 @@ export default function NavBar() {
               title={(authUser ? authUser.username : "Guest") + " "}
               id="user-dropdown"
             >
-              <NavDropdown.Item>
-                <NavItem to="/user/profile" className={authUser ? "" : "disabled"}>Profile</NavItem>
+              <NavDropdown.Item className={authUser ? "" : "disabled"}>
+                <NavItem to="/user/profile">Profile</NavItem>
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <NavItem to="/user/log-in" className={authUser ? "disabled" : ""}>Log In</NavItem>
+              <NavDropdown.Item  className={authUser ? "disabled" : ""}>
+                <NavItem to="/user/log-in">Log In</NavItem>
               </NavDropdown.Item>
-              <NavDropdown.Item>
-                <NavItem to="/user/sign-up" className={authUser ? "disabled" : ""}>Sign Up</NavItem>
+              <NavDropdown.Item className={authUser ? "disabled" : ""}>
+                <NavItem to="/user/sign-up" >Sign Up</NavItem>
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item>
+              <NavDropdown.Item className={authUser ? "" : "disabled"}>
                 <div onClick={handleLogOut}>
-                  <NavItem to="/home" className={authUser ? "" : "disabled"}>Log Out</NavItem>
+                  <NavItem to="/user/profile" >Log Out</NavItem> {/* ignore path */}
                 </div>
               </NavDropdown.Item>
             </NavDropdown>
