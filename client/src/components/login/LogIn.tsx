@@ -62,9 +62,9 @@ export default function LogIn() {
     ) {
       console.log("Logged in successfully");
       if (resp.data.redirect) {
+        actions.resetForm();
         navigate(resp.data.redirect); // to home
         window.location.reload();
-        actions.resetForm();
       }
     } else {
       console.log("refresh token issue");

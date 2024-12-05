@@ -25,6 +25,9 @@ export default function NavBar() {
   const authUser = useAuthUser<IUserData>();
 
   async function handleLogOut() {
+    if (!authUser) {
+      return;
+    }
     console.log("Logging out");
     const resp = await axios.delete(RouteToServer("/user/log-out"), {
       headers: {
@@ -57,23 +60,31 @@ export default function NavBar() {
               <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
-          <NavItem to="/user/profile">
+          <NavItem to="/user/profile" className={authUser ? "" : "disabled"}>
             {/* Change this to /user/*current-user* */}
             <Image src="https://dummyimage.com/35" roundedCircle />
           </NavItem>
           <Nav>
             <NavDropdown
-              title={authUser ? authUser.username : "Guest"}
+              title={(authUser ? authUser.username : "Guest") + " "}
               id="user-dropdown"
             >
-              <NavItem to="/user/profile">Profile</NavItem>
-              {/* Change this to /user/*current-user* */}
-              <NavItem to="/user/log-in">Log In</NavItem>
-              <NavItem to="/user/sign-up">Sign Up</NavItem>
+              <NavDropdown.Item>
+                <NavItem to="/user/profile" className={authUser ? "" : "disabled"}>Profile</NavItem>
+              </NavDropdown.Item>
               <NavDropdown.Divider />
-              <div onClick={handleLogOut}>
-                <NavItem to="/home">Log Out</NavItem>
-              </div>
+              <NavDropdown.Item>
+                <NavItem to="/user/log-in" className={authUser ? "disabled" : ""}>Log In</NavItem>
+              </NavDropdown.Item>
+              <NavDropdown.Item>
+                <NavItem to="/user/sign-up" className={authUser ? "disabled" : ""}>Sign Up</NavItem>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <div onClick={handleLogOut}>
+                  <NavItem to="/home" className={authUser ? "" : "disabled"}>Log Out</NavItem>
+                </div>
+              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
