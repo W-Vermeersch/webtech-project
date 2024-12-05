@@ -11,7 +11,7 @@ export class createPostController extends BaseController {
 
     initializeRoutes(): void {
         this.router.post("/create-post", authenticateToken, (req: express.Request, response: express.Response) => {
-           console.log("authenticated, redirect to create post page.")
+           console.log("authenticated")
            return response.status(204).send("Succesfully authenticated the user");
 
         }
