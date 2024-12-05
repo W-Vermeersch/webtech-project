@@ -3,6 +3,8 @@ import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import FileUploader from "./FileUploader";
+import axios from "axios";
+import RouteToServer from "../../infos";
 
 interface PostFormValues {
   caption: string;
@@ -24,13 +26,7 @@ const PostForm = () => {
 
   async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
     console.log("Form data:", values);
-    console.log("Caption:", values.caption);
-    console.log("File:", values.file ? values.file : "No file selected");
-    if (values.tags.length > 0) {
-      console.log("Tags:", values.tags.join(", "));
-    } else {
-      console.log("No tags selected");
-    }
+    const resp = await axios.post(RouteToServer("post/add"), values);
     actions.setSubmitting(false);
   }  
 
