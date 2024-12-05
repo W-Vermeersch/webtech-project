@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RouteToServer from "../../infos";
 import Cookies from "js-cookie";
+import { Row, Stack } from "react-bootstrap";
 
 interface IUserData {
   username: string;
@@ -62,7 +63,8 @@ export default function NavBar() {
             <NavItem to="/create-post">
               <Button variant="success">Create Post</Button>
             </NavItem>
-          </Nav>
+          </Nav> 
+          <Stack direction="horizontal" className="align-items-md-center align-items-baseline" gap={3}>
           <NavItem to="/user/profile" className={authUser ? "" : "disabled"}>
             {/* Change this to /user/*current-user* */}
             <Image src="https://dummyimage.com/35" roundedCircle />
@@ -90,6 +92,9 @@ export default function NavBar() {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
+          </Stack>
+
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>
