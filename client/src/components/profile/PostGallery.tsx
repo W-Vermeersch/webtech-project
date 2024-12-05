@@ -2,7 +2,7 @@
 import Image from "react-bootstrap/Image";
 import { NavLink } from "react-router-dom";
 
-interface Post {
+export interface Post {
   title?: string;
   user?: string;
   image_url: string; // url to the storage api
@@ -12,6 +12,8 @@ interface Post {
   likes?: number; // in DB each posts has a list of all Users who liked
   longitude?: number | undefined;
   latitude?: number | undefined;
+  // added because profile pictures also exist
+  profilepicurl?: string;
 }
 
 interface PostGalleryProps {

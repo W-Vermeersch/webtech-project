@@ -26,7 +26,7 @@ function App() {
           <Route
             path="create-post"
             element={
-              <RequireAuth fallbackPath={"log-in"}>
+              <RequireAuth fallbackPath={'/log-in'}>
                 <CreatePost />
               </RequireAuth>
             }

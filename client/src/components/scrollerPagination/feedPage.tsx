@@ -2,21 +2,52 @@ import { useIntersection } from "@mantine/hooks";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
-
-interface Post {
-  id: number;
-  title: string;
-}
+import SinglePost from "./SinglePost";
+import { Post }  from "../profile/PostGallery";
 
 // Mock posts data (replace with actual database fetch later)
-const posts = [
-  { id: 1, title: "post 1" },
-  { id: 2, title: "post 2" },
-  { id: 3, title: "post 3" },
-  { id: 4, title: "post 4" },
-  { id: 5, title: "post 5" },
-  { id: 6, title: "post 6" },
-];
+const posts: Post[] = [
+    {
+      idx: 1,
+      title: "post 1",
+      image_url: "https://dummyimage.com/180",
+      tags: ["Cat", "Feline"],
+      user: "kel",
+      profilepicurl: "https://dummyimage.com/180"
+    },
+    {
+      idx: 2,
+      title: "post 2",
+      image_url: "https://dummyimage.com/180",
+      tags: ["Dog", "Canine"],
+      user: "Ozioma",
+      profilepicurl: "https://dummyimage.com/180"
+    },
+    {
+      idx:3,
+      image_url: "https://dummyimage.com/180",
+      title: "the Bee movie",
+      tags: ["Bee", "FlyingInsect"],
+      user: "Timo",
+      profilepicurl: "https://dummyimage.com/180"
+    },
+    {
+        idx:4,
+        image_url: "https://dummyimage.com/180",
+        title: "Catch this pokemon!",
+        tags: ["Wurmple", "Pokemon"],
+        user: "Lol",
+        profilepicurl: "https://dummyimage.com/180"
+      },
+      {
+        idx:5,
+        image_url: "https://dummyimage.com/180",
+        title: "Guess this pokemon ",
+        tags: ["Pikachu", "Pokemon"],
+        user: "Lol",
+        profilepicurl: "https://dummyimage.com/180"
+      }
+  ];
 
 // Mock a database fetch function
 const fetchPost = async (page: number): Promise<Post[]> => {
@@ -56,12 +87,13 @@ const FeedPage = () => {
 
   return (
     <>
-      posts:
         {_posts?.map((post, i)=> {
             if(i === _posts.length - 1) return(
-                <div key={post.id} ref={ref}>{post.title}</div>
+                <div ref={ref} key={post.idx}>
+              <SinglePost post={post} />
+                </div>
             )
-            return <div key={post.id}>{post.title}</div>
+            return <SinglePost key={post.idx} post={post} />
         })}
       <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
         {isFetchingNextPage
