@@ -1,4 +1,5 @@
 import {v2 as cloudinary} from "cloudinary";
+import path = require("path");
 
 export class CloudinaryApi {
     cloudinary = cloudinary.config({
@@ -7,13 +8,29 @@ export class CloudinaryApi {
         api_secret: 'cJERdPRUsBChIrjvUlmR9nbw_MM'
 });
     public async postImage(url: string){
-        const response = await cloudinary.uploader.upload(url).then((url) => {
+        const response = await cloudinary.uploader.upload(url, {
+            resource_type: "image",
+            transformation: [
+                {width: 1000, crop: "scale"},
+                {quality: "auto"},
+                {fetch_format: "auto"}
+            ]
+        }).then((url) => {
             return url
         })
-        if (response.status !== 200){
+        if (!response){
+            console.log(response)
             throw new Error(response.statusText);
         } else {
+            console.log(response);
             return response.url;
         }
     }
 }
+//
+// const cloudinaryApi = new CloudinaryApi();
+//
+// const pathway = path.join(__dirname, "uploads/chat.jpg");
+// cloudinaryApi.postImage(pathway).then((url)=> {
+//     console.log(url);
+// });

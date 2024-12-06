@@ -1,12 +1,9 @@
 import * as express from 'express';
 import * as session from 'express-session';
-import { BaseController, SignInController } from './controllers';
+import { BaseController,LogInController, SignInController, PostController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
-import {PostController} from "./controllers/post/post.controller";
-import { LogInController } from './controllers/user-authentification/login.controllers';
-import { createPostController } from './controllers/post/create-post.controllers';
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 
@@ -33,7 +30,6 @@ export class App {
         this.addController(new SignInController(this.database));
         this.addController(new PostController(this.database));
         this.addController(new LogInController(this.database));
-        this.addController(new createPostController());
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
             this.app.use(`${this.path}${controller.path}`, controller.router);
@@ -53,8 +49,8 @@ export class App {
         //}));
         this.app.use(cors());
 
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.json({ limit: "150mb" }));
+        this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
         this.app.use(express.static(path.join(__dirname, "../static")));
 
         this.database.init()

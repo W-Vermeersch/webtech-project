@@ -22,15 +22,17 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
-          <Route
-            path="create-post"
-            element={
-              <RequireAuth fallbackPath={"log-in"}>
-                <CreatePost />
-              </RequireAuth>
-            }
-          />
+
+          {/*<Route*/}
+          {/*  path="create-post"*/}
+          {/*  element={*/}
+          {/*    <RequireAuth fallbackPath={"log-in"}>*/}
+          {/*      <CreatePost />*/}
+          {/*    </RequireAuth>*/}
+          {/*  }*/}
+          {/*/>*/}
         </Route>
+          <Route path="create" element={<CreatePost/>}/>
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
       </Routes>

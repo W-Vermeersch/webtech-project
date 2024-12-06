@@ -30,6 +30,7 @@ export abstract class UserAuthentificationController extends BaseController {
     protected _isEmailValid(email: string): boolean {
         const atIdx = email.indexOf("@");
         const dotIdx = email.lastIndexOf(".");
+        console.log("at " + atIdx + " point " + dotIdx)
         return atIdx != -1 && dotIdx != -1 && dotIdx > atIdx;
     }
     protected samePassword(password1: string, password2: string): boolean {

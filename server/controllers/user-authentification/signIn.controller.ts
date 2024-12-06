@@ -26,10 +26,10 @@ export class SignInController extends UserAuthentificationController{
             inputs.username = "";
         }
 
-        //if (this._isEmailValid(inputs.email)) {
-        //    errors.email = "Please enter a valid email address.";
-        //    inputs.email = "";
-        //}
+        if (!this._isEmailValid(inputs.email)) {
+           errors.email = "Please enter a valid email address.";
+           inputs.email = "";
+        }
 
         if (!this._isGiven(inputs.password)) {
             errors.password = "Please enter a password.";
