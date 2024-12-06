@@ -14,24 +14,8 @@ export default function Homepage() {
   const authUser = useAuthUser();
   const authHeader = useAuthHeader();
 
-  // pretend this data is coming from the backend
-  const mockUsers = [
-    { name: "Alice", points: 120 },
-    { name: "Bob", points: 430 },
-    { name: "Charlie", points: 2 },
-    { name: "Diana", points: 72 },
-    { name: "Eve", points: 80 },
-  ];
-
   return (
     <Container>
-      <Row className={"justify-content-end"}>
-        {/* for future components like map and postfeed */}
-        <Col xs={9}>test</Col>
-        <Col xs={3}>
-          <Leaderboard users={mockUsers} />
-        </Col>
-      </Row>
     </Container>
   );
 }
