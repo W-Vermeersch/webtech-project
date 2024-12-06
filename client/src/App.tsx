@@ -13,12 +13,15 @@ import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
+import FullPost from "./components/posts/FullPost.tsx";
+
 
 
 function App() {
   return (
     <>
       <NavBar />
+      <FullPost />
       <Routes>
         <Route path="/home" element={<HomePage />} />
         <Route path="/create-post" element={<CreatePost />} />

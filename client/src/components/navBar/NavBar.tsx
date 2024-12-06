@@ -54,49 +54,68 @@ export default function NavBar() {
     >
       <Container>
         <Navbar.Brand>
-          <NavItem to="/home" eventKey="Animal Go">Animal Go</NavItem>
+          <NavItem to="/home" eventKey="Animal Go">
+            Animal Go
+          </NavItem>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav>
-            <NavItem to="/home" eventKey="Home">Home</NavItem>
-            <NavItem to="/map" eventKey="Map">Map</NavItem>
-            <NavItem to="/leaderboard" eventKey="Leaderboard">LeaderBoard</NavItem>
+          <Nav className="me-auto">
+            <NavItem to="/home" eventKey="Home">
+              Home
+            </NavItem>
+            <NavItem to="/map" eventKey="Map">
+              Map
+            </NavItem>
+            <NavItem to="/leaderboard" eventKey="Leaderboard">
+              Leaderboard
+            </NavItem>
           </Nav>
-          <Nav className="ms-auto">
+          <Nav>
             <NavItem to="/create-post" eventKey="Create Post">
               <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
-            <Nav>
-              <NavDropdown
-                title={
-                  <>
-                    <Image className="me-2" src="https://dummyimage.com/35" roundedCircle />
-                    <span >{(authUser ? authUser.username : "Guest") } </span>
-                  </>
-                }
-                id="user-dropdown"
-              >
-                <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                  <NavItem to="/user/profile" eventKey="Profile">Profile</NavItem>
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item className={authUser ? "disabled" : ""}>
-                  <NavItem to="/user/log-in" eventKey="Log In">Log In</NavItem>
-                </NavDropdown.Item>
-                <NavDropdown.Item className={authUser ? "disabled" : ""}>
-                  <NavItem to="/user/sign-up" eventKey="Sign Up">Sign Up</NavItem>
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                  <div onClick={handleLogOut}>
-                    <NavItem to="#" eventKey="Log Out">Log Out</NavItem>{" "}
-                    {/* ignore path */}
-                  </div>
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+          <Nav>
+            <NavDropdown
+              title={
+                <>
+                  <Image
+                    className="me-2"
+                    src="https://dummyimage.com/35"
+                    roundedCircle
+                  />
+                  <span>{authUser ? authUser.username : "Guest"} </span>
+                </>
+              }
+              id="user-dropdown"
+            >
+              <NavDropdown.Item className={authUser ? "" : "disabled"}>
+                <NavItem to="/user/profile" eventKey="Profile">
+                  Profile
+                </NavItem>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item className={authUser ? "disabled" : ""}>
+                <NavItem to="/user/log-in" eventKey="Log In">
+                  Log In
+                </NavItem>
+              </NavDropdown.Item>
+              <NavDropdown.Item className={authUser ? "disabled" : ""}>
+                <NavItem to="/user/sign-up" eventKey="Sign Up">
+                  Sign Up
+                </NavItem>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item className={authUser ? "" : "disabled"}>
+                <div onClick={handleLogOut}>
+                  <NavItem to="#" eventKey="Log Out">
+                    Log Out
+                  </NavItem>
+                </div>
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

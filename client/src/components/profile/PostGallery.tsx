@@ -3,7 +3,6 @@ import Image from "react-bootstrap/Image";
 import { NavLink } from "react-router-dom";
 
 interface Post {
-  title?: string;
   user?: string;
   image_url: string; // url to the storage api
   idx?: number; // index of Post
