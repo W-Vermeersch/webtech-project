@@ -39,7 +39,7 @@ export default function NavBar() {
     if (resp.status === 204) {
       signOut();
       console.log("Logged out");
-      navigate("/home");
+      navigate("/user/log-in");
       window.location.reload();
     }
   }
@@ -91,7 +91,7 @@ export default function NavBar() {
                 <NavDropdown.Divider />
                 <NavDropdown.Item className={authUser ? "" : "disabled"}>
                   <div onClick={handleLogOut}>
-                    <NavItem to="/user/profile" eventKey="Log Out">Log Out</NavItem>{" "}
+                    <NavItem to="#" eventKey="Log Out">Log Out</NavItem>{" "}
                     {/* ignore path */}
                   </div>
                 </NavDropdown.Item>
