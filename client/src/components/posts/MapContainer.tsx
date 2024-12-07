@@ -33,7 +33,7 @@ L.Icon.Default.mergeOptions({
 
 export default function MapContainer({ post }: MapContainerProps) {
   return (
-    <div className="map-wrapper">
+    <div className="map-wrapper mb-3 mb-md-0">
       <LeafletMapContainer
         center={[post.latitude, post.longitude]}
         zoom={5}

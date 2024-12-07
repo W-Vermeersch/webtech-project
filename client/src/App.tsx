@@ -15,19 +15,13 @@ import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
 import FullPost from "./components/posts/FullPost.tsx";
 
-
-
-function App() {
-  return (
-    <>
-      <NavBar />
-      <FullPost />
-      <Routes>
+/*
+<Routes>
         <Route path="/home" element={<HomePage />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/user">
-          {/*<Route path ="userId" element={<HomePage />} />*/}
+          {<Route path ="userId" element={<HomePage />} />}
           <Route path="profile" element={<ProfilePage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
@@ -35,6 +29,16 @@ function App() {
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
       </Routes>
+*/
+
+
+
+function App() {
+  return (
+    <>
+      <NavBar />
+      <FullPost />
+      
     </>
   );
 }

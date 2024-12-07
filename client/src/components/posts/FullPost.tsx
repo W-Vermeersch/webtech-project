@@ -35,7 +35,7 @@ const mockUser: User = {
 
 const mockPost: Post = {
   user: "username",
-  image_url: "https://dummyimage.com/180",
+  image_url: "https://cdn.shopify.com/s/files/1/1577/4333/files/IMG-3186_-_Andy_Dobrzynski.jpg?v=1646875888",
   description: "Look at this post! It's so cool!",
   tags: ["#tag1", "#tag2"],
   likes: 5,
@@ -46,18 +46,21 @@ const mockPost: Post = {
 export default function FullPost() {
   return (
     <Container>
-      <Row xs={1} md={2} style={{ height: "80vh" }}>
+      <Row style={{ height: "80vh" }}>
         <Col
-          md={7}
-          lg={6}
-          className="d-flex justify-content-center align-items-center mb-4 mb-md-0"
+        xs={12}
+          md={6}
+          className="d-flex justify-content-center align-items-center order-md-2"
         >
           <div id="post-image-container">
             <Image id="post-image" src={mockPost.image_url} alt="post" fluid />
+            <div id="image-overlay">
+              <h4><Badge bg="danger" className="m-3">City, Country</Badge></h4>
+            </div>
           </div>
         </Col>
-        <Col md={5} lg={6}>
-          <Container>
+        <Col xs={12} md={6} className="order-md-1">
+          <Container className="mt-3">
             <Row>
               <Col xs="auto">
                 <Image
@@ -67,26 +70,28 @@ export default function FullPost() {
                 />
               </Col>
               <Col>
-                <h2>{mockUser.username}</h2>
-                <h3>{"Level " + mockUser.level}</h3>
+                <h2 className="text-light mt-2">{mockUser.username}</h2>
+                <h3 className="text-light">{"Level " + mockUser.level}</h3>
               </Col>
             </Row>
             <Row>
-              <div className="card text-bg-dark mt-3 mb-3" >
+              <div className="card text-bg-dark mt-3 mb-3">
                 <div className="card-body">
                   <p className="card-text">{mockPost.description}</p>
-                    <Stack direction="horizontal" gap={2}>
-                        {mockPost.tags?.map((tag) => (
-                        <Badge key={tag} bg="success">{tag}</Badge>
-                        ))}
-                    </Stack>
+                  <Stack direction="horizontal" gap={2}>
+                    {mockPost.tags?.map((tag) => (
+                      <Badge key={tag} bg="success">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </Stack>
                 </div>
               </div>
             </Row>
             <Row>
-                <MapContainer post={mockPost}/>
+              <MapContainer post={mockPost} />
             </Row>
-            </Container>
+          </Container>
         </Col>
       </Row>
     </Container>
