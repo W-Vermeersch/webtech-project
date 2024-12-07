@@ -20,6 +20,7 @@ interface Post {
 
 interface MapContainerProps {
   post: Post;
+  zoom: number;
 }
 
 // Initialize Leaflet default icon
@@ -31,12 +32,12 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapContainer({ post }: MapContainerProps) {
+export default function MapContainer({ post, zoom }: MapContainerProps) {
   return (
     <div className="map-wrapper mb-3 mb-md-0">
       <LeafletMapContainer
         center={[post.latitude, post.longitude]}
-        zoom={5}
+        zoom={zoom}
         scrollWheelZoom={true}
         className="map-container"
       >
@@ -44,6 +45,7 @@ export default function MapContainer({ post }: MapContainerProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         <Marker position={[post.latitude, post.longitude]} />
       </LeafletMapContainer>
     </div>
