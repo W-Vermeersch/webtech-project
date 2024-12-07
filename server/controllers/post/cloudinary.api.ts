@@ -8,6 +8,8 @@ export class CloudinaryApi {
         api_secret: 'cJERdPRUsBChIrjvUlmR9nbw_MM'
 });
     public async postImage(url: string){
+        return "lol.url"
+
         const response = await cloudinary.uploader.upload(url, {
             resource_type: "image",
             transformation: [
