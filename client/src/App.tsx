@@ -13,7 +13,7 @@ import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
-import FullPost from "./components/posts/FullPost.tsx";
+import FullPost from "./components/posts/full-post/FullPost.tsx";
 
 /*
 <Routes>
@@ -31,14 +31,11 @@ import FullPost from "./components/posts/FullPost.tsx";
       </Routes>
 */
 
-
-
 function App() {
   return (
     <>
       <NavBar />
       <FullPost />
-      
     </>
   );
 }
