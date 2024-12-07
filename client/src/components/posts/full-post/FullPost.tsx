@@ -46,7 +46,7 @@ const mockPost: Post = {
 
 export default function FullPost() {
   return (
-    <Container>
+    <div id="full-post">
       <Row
         style={{ height: "80vh" }}
         id="full-post-row"
@@ -66,7 +66,7 @@ export default function FullPost() {
           </div>
         </Col>
         <Col xs={12} md={6} className="order-md-1 order-1">
-          <Row>
+          <Row className="mb-3 mb-md-1 mt-md-3">
             <Col xs="auto">
               <Image
                 src={mockUser.profile_pic}
@@ -102,6 +102,6 @@ export default function FullPost() {
           </Row>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 }
