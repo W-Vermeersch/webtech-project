@@ -21,6 +21,7 @@ interface Post {
 interface MapContainerProps {
   post: Post;
   zoom: number;
+  className?: string;
 }
 
 // Initialize Leaflet default icon
@@ -32,9 +33,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapContainer({ post, zoom }: MapContainerProps) {
+export default function MapContainer({ post, zoom, className }: MapContainerProps) {
   return (
-    <div className="map-wrapper mb-3 mb-md-0">
+    <div className={"map-wrapper mb-3 mb-md-0 " + className}>
       <LeafletMapContainer
         center={[post.latitude, post.longitude]}
         zoom={zoom}
