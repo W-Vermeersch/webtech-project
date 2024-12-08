@@ -1,5 +1,5 @@
 import { Badge } from "react-bootstrap";
-import "./FullPost.css";
+import "./FullPostPage.css";
 
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
@@ -9,6 +9,9 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
 import MapContainer from "../components/posts/full-post/MapContainer";
+import Description from "../components/posts/full-post/description";
+import UserSection from "../components/posts/full-post/UserSection";
+import PostImage from "../components/posts/full-post/PostImage";
 
 // later make modules of components
 
@@ -23,7 +26,7 @@ interface Post {
   image_url: string; // url to the storage api
   idx?: number; // index of Post
   description: string;
-  tags?: string[];
+  tags: string[];
   likes?: number; // in DB each posts has a list of all Users who liked
   longitude: number;
   latitude: number;
@@ -55,58 +58,20 @@ export default function FullPost() {
         className="flex-nowrap flex-md-wrap row-cols-md-3"
       >
         <Col xs={12} md={6} className="order-md-4 order-2">
-          <div id="post-image-container">
-            <Image id="post-image" src={mockPost.image_url} alt="post" fluid />
-            <div id="image-overlay" className="d-flex flex-column">
-              <h4 className="mb-auto">
-                <Badge bg="danger" className="m-3">
-                  City, Country
-                </Badge>
-              </h4>
-              <Stack id="tags" direction="horizontal">
-                {mockPost.tags?.map((tag) => (
-                  <Badge key={tag} bg="success" className="m-2">
-                    {tag}
-                  </Badge>
-                ))}
-              </Stack>
-              {/* add more things to overlay on the post image */}
-            </div>
-          </div>
+          <PostImage image_url={mockPost.image_url} tags={mockPost.tags} latitude={mockPost.latitude} longitude={mockPost.longitude} />
         </Col>
         <Col xs={12} md={6} className="order-md-1 order-1">
-          <div
-            id="user"
-            className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded"
-          >
-            <Row className="">
-              <Col xs="auto">
-                <Image
-                  src={mockUser.profile_pic}
-                  alt="profile pic"
-                  roundedCircle
-                />
-              </Col>
-              <Col>
-                <h2 className="text-light mt-2">{mockUser.username}</h2>
-                <h3 className="text-light">{"Level " + mockUser.level}</h3>
-              </Col>
-              <Col xs="auto" className="ms-auto mt-auto">
-                <Button variant="outline-light">Follow</Button>
-              </Col>
-            </Row>
+          <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
+            <UserSection
+              username={mockUser.username}
+              profile_pic={mockUser.profile_pic}
+              level={mockUser.level}
+            />
           </div>
         </Col>
         <Col xs={12} md={6} className="order-md-2 order-3">
           <Row>
-            <div
-              id="description"
-              className="card text-bg-dark mt-3 mb-3 border border-secondary"
-            >
-              <div className="card-body">
-                <p className="card-text">{mockPost.description}</p>
-              </div>
-            </div>
+            <Description description={mockPost.description} />
           </Row>
         </Col>
         <Col xs={12} md={6} className="order-md-3 order-4">

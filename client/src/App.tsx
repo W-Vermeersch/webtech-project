@@ -13,7 +13,7 @@ import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
-import FullPost from "./pages/FullPost.tsx";
+import FullPost from "./pages/FullPostPage.tsx";
 
 /*
 <Routes>

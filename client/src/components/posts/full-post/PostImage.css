@@ -1,34 +1,21 @@
-#full-post-row {
-  flex-direction: column;
-}
-
 #post-image-container {
   width: 100%;
   height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; 
+  overflow: hidden;
   border-radius: 10px;
 }
 
 #post-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
 #image-overlay {
   width: 100%;
   height: 100%;
   margin-left: -100%;
-}
-#user {
-  margin-top: 0 !important;
-  padding: 15px !important;
-  background-color: rgba(0, 0, 0, 0.284);
-  
-}
-#description {
-  min-height: 15vh;
 }
