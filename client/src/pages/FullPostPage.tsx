@@ -1,12 +1,12 @@
-import { Badge } from "react-bootstrap";
 import "./FullPostPage.css";
 
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import RouteToServer from "../infos";
+
 import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
-import Stack from "react-bootstrap/Stack";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
 
 import MapContainer from "../components/posts/full-post/MapContainer";
 import Description from "../components/posts/full-post/Description";
@@ -50,6 +50,27 @@ const mockPost: Post = {
 };
 
 export default function FullPost() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [post, setPost] = useState<Post | null>(null);
+
+  useEffect(() => {
+    async function fetchPost() {
+      const resp = await axios.get(RouteToServer("/post/get"), { params: { id } });
+      if (resp.data.redirect) {
+        navigate(resp.data.redirect);
+      } else {
+        console.log(resp.data);
+        setPost(resp.data); 
+      }
+    }
+    fetchPost();
+  }, [id]);
+
+  if (!post) {
+    return null;
+  }
+
   return (
     <div id="full-post">
       <Row
