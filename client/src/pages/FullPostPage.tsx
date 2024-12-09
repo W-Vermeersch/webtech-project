@@ -76,7 +76,7 @@ export default function FullPost() {
         </Col>
         <Col xs={12} md={6} className="order-md-3 order-4">
           <Row>
-            <MapContainer post={mockPost} zoom={6} className="shadow-lg" />
+            <MapContainer post={mockPost} zoom={10} className="shadow-lg" />
           </Row>
         </Col>
       </Row>
