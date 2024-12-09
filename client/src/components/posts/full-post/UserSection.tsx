@@ -15,16 +15,22 @@ export default function UserSection({
   level,
 }: UserSectionProps) {
   return (
-    <Row className="">
+    <Row>
       <Col xs="auto">
         <Image src={profile_pic} alt="profile pic" roundedCircle />
       </Col>
-      <Col>
-        <h2 className="text-light mt-2">{username}</h2>
-        <h3 className="text-light">{"Level " + level}</h3>
-      </Col>
-      <Col xs="auto" className="ms-auto mt-auto">
-        <Button variant="outline-light">Follow</Button>
+      <Col className="p-1">
+        <Row>
+          <h2 className="text-light mt-2">{username}</h2>
+        </Row>
+        <Row>
+          <Col>
+            <h3 className="text-light">{"Level " + level}</h3>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <Button className="me-3" variant="outline-light">Follow</Button>
+          </Col>
+        </Row>
       </Col>
     </Row>
   );

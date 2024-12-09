@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
 import MapContainer from "../components/posts/full-post/MapContainer";
-import Description from "../components/posts/full-post/description";
+import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
 
