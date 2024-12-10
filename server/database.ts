@@ -69,7 +69,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM user_table WHERE username = $1',
             values: [username],
-            rowMode: 'array',
         }
         const res = await this.executeQuery(query);
         console.log(res.rows);
@@ -83,7 +82,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
-            rowMode: 'array',
         }
         const res = await this.executeQuery(query);
         console.log(res.rows);
@@ -94,7 +92,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM user_table WHERE email = $1 OR username = $1',
             values: [input],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -134,7 +131,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM comment_table WHERE post_id = $1',
             values: [post_id],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -145,7 +141,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM comment_table WHERE user_id = $1',
             values: [user_id],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -195,7 +190,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM post_table WHERE user_id = $1',
             values: [user_id],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -206,7 +200,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM post_table WHERE $1 = ANY(likes)',
             values: [username],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -217,7 +210,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM post_table WHERE $1 = ANY(tags)', // Tag search in the "tags" array.
             values: [tag],
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -230,7 +222,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: 'SELECT * FROM post_table WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)',
             values: [longitude, latitude, radius], // radius is in meters
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;
@@ -243,7 +234,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const query = {
             text: `SELECT * FROM post_table ORDER BY ST_Distance(location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) LIMIT $3`,
             values: [longitude, latitude, limit], // Limit for the number of nearest posts
-            rowMode: 'array',
         };
         const res = await this.executeQuery(query);
         return res.rows;

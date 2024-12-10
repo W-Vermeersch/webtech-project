@@ -6,8 +6,27 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Image from "react-bootstrap/Image";
+import Button from "react-bootstrap/Button";
+
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import axios from "axios";
+import RouteToServer from "../../infos";
 
 export default function NavBar() {
+  const signOut = useSignOut();
+  const authHeader = useAuthHeader();
+
+  async function handleLogOut() {
+    console.log("Logging out");
+    const resp = await axios.post(RouteToServer("/user/log-in"), {authHeader: authHeader});
+    // deal with error handling maybe
+    if (resp.status === 204) {
+      signOut();
+      console.log("Logged out");
+    }
+  }
+
   return (
     <Navbar expand="md" bg="dark" data-bs-theme="dark" fixed="top">
       <Container>
@@ -18,24 +37,28 @@ export default function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav>
             <NavItem to="/home">Home</NavItem>
-            <NavItem to="/create-post">Create Post</NavItem>
-            <NavItem to="/user/sign-up">Sign Up</NavItem>
+
             <NavItem to="/map">Map</NavItem>
           </Nav>
           <Nav className="ms-auto">
-            <NavItem to="/user/profile">
-              {/* Change this to /user/*current-user* */}
-              <Image src="https://dummyimage.com/35" roundedCircle />
+            <NavItem to="/create-post">
+              <Button variant="success">Create Post</Button>
             </NavItem>
           </Nav>
+          <NavItem to="/user/profile">
+            {/* Change this to /user/*current-user* */}
+            <Image src="https://dummyimage.com/35" roundedCircle />
+          </NavItem>
           <Nav>
             <NavDropdown title="*user name*" id="user-dropdown">
               <NavItem to="/user/profile">Profile</NavItem>
               {/* Change this to /user/*current-user* */}
-              <NavItem to="/user/sign-up">Log In</NavItem>
+              <NavItem to="/user/log-in">Log In</NavItem>
               <NavItem to="/user/sign-up">Sign Up</NavItem>
               <NavDropdown.Divider />
-              <NavItem to="/home">Log Out</NavItem>
+              <div onClick={handleLogOut}>
+                <NavItem to="/home">Log Out</NavItem>
+              </div>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

@@ -25,10 +25,12 @@ export class SignInController extends UserAuthentificationController{
             errors.username = "Please enter your username.";
             inputs.username = "";
         }
-        if (this._isEmailValid(inputs.email)) {
-            errors.email = "Please enter a valid email address.";
-            inputs.email = "";
-        }
+
+        //if (this._isEmailValid(inputs.email)) {
+        //    errors.email = "Please enter a valid email address.";
+        //    inputs.email = "";
+        //}
+
         if (!this._isGiven(inputs.password)) {
             errors.password = "Please enter a password.";
             inputs.password = "";
@@ -43,7 +45,16 @@ export class SignInController extends UserAuthentificationController{
             inputs.passwordConfirm = "";
             errors.passwordConfirm = "Please repeat the same password.";
         }
-
+        const lookupUsername = await this.db.fetchUserUsingEmailOrUsername(inputs.username)
+        if (lookupUsername.length != 0) {
+            errors.username = "This username is taken.";
+            inputs.username = "";
+        }
+        const lookupEmail = await this.db.fetchUserUsingEmailOrUsername(inputs.email)
+        if (lookupEmail.length != 0) {
+            errors.email = "This E-mail already has an account linked to it.";
+            inputs.email = "";
+        }
         if (errors.hasErrors()) {
             res.status(206).json({
                 errors: errors.toObject(),
@@ -53,7 +64,7 @@ export class SignInController extends UserAuthentificationController{
             await this.db.storeUser(inputs.username, inputs.email, inputs.password)
             const user_id = await this.db.getUserID(inputs.username);
             await this.db.storeProfileDecoration(user_id, inputs.username, "")
-            res.json({redirect: '/home'});
+            res.json({ redirect: '/log-in' });
         }
     }
 }

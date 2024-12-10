@@ -3,6 +3,8 @@ import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import FileUploader from "./FileUploader";
+import axios from "axios";
+import RouteToServer from "../../infos";
 
 interface PostFormValues {
   caption: string;
@@ -24,13 +26,7 @@ const PostForm = () => {
 
   async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
     console.log("Form data:", values);
-    console.log("Caption:", values.caption);
-    console.log("File:", values.file ? values.file : "No file selected");
-    if (values.tags.length > 0) {
-      console.log("Tags:", values.tags.join(", "));
-    } else {
-      console.log("No tags selected");
-    }
+    const resp = await axios.post(RouteToServer("post/add"), values);
     actions.setSubmitting(false);
   }  
 
@@ -43,6 +39,11 @@ const PostForm = () => {
         
         
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
+
+        <FormGroup className="mb-4 " controlId="reactFile">
+            <FileUploader setFieldValue={setFieldValue}/>
+          </FormGroup>  
+
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
             Caption
@@ -55,11 +56,7 @@ const PostForm = () => {
               placeholder="Write your caption here"
               autoComplete="off"
             />
-          </FormGroup>
-
-          <FormGroup className="mb-4 " controlId="reactFile">
-            <FileUploader setFieldValue={setFieldValue}/>
-          </FormGroup>  
+          </FormGroup> 
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
