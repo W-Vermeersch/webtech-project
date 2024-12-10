@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import SinglePost from "./SinglePost";
-import { Post, PostComment} from "../posts/PostInterface"
+import { Post, PostComment } from "../posts/PostInterface";
 
 // mock comments
 const mockcomments: PostComment[] = [
@@ -25,68 +25,67 @@ const mockcomments: PostComment[] = [
 ];
 // Mock posts data (replace with actual database fetch later)
 const posts: Post[] = [
-    {
-      idx: 1,
-      title: "post 1",
-      image_url: "https://dummyimage.com/180",
-      tags: ["Cat", "Feline"],
-      user: "kel",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments,
-      longitude: 0,
-      latitude: 0,
-      description: ""
-    },
-    {
-      idx: 2,
-      title: "post 2",
-      image_url: "https://dummyimage.com/180",
-      tags: ["Dog", "Canine"],
-      user: "Ozioma",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments,
-      longitude: 0,
-      latitude: 0,
-      description: ""
-    },
-    {
-      idx: 3,
-      image_url: "https://dummyimage.com/180",
-      title: "the Bee movie",
-      tags: ["Bee", "FlyingInsect"],
-      user: "Timo",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments,
-      longitude: 0,
-      latitude: 0,
-      description: ""
-    },
-    {
-      idx: 4,
-      image_url: "https://dummyimage.com/180",
-      title: "Catch this pokemon!",
-      tags: ["Wurmple", "Pokemon"],
-      user: "Lol",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments,
-      longitude: 0,
-      latitude: 0,
-      description: ""
-    },
-      {
-        idx: 5,
-        image_url: "https://dummyimage.com/180",
-        title: "Guess this pokemon ",
-        tags: ["Pikachu", "Pokemon"],
-        user: "Lol",
-        profilepicurl: "https://dummyimage.com/180",
-        commentsection: mockcomments,
-        longitude: 0,
-        latitude: 0,
-        description: ""
-      }
-  ];
-
+  {
+    idx: 1,
+    title: "post 1",
+    image_url: "https://dummyimage.com/180",
+    tags: ["Cat", "Feline"],
+    user: "kel",
+    profilepicurl: "https://dummyimage.com/180",
+    commentsection: mockcomments,
+    longitude: 0,
+    latitude: 0,
+    description: "",
+  },
+  {
+    idx: 2,
+    title: "post 2",
+    image_url: "https://dummyimage.com/180",
+    tags: ["Dog", "Canine"],
+    user: "Ozioma",
+    profilepicurl: "https://dummyimage.com/180",
+    commentsection: mockcomments,
+    longitude: 0,
+    latitude: 0,
+    description: "",
+  },
+  {
+    idx: 3,
+    image_url: "https://dummyimage.com/180",
+    title: "the Bee movie",
+    tags: ["Bee", "FlyingInsect"],
+    user: "Timo",
+    profilepicurl: "https://dummyimage.com/180",
+    commentsection: mockcomments,
+    longitude: 0,
+    latitude: 0,
+    description: "",
+  },
+  {
+    idx: 4,
+    image_url: "https://dummyimage.com/180",
+    title: "Catch this pokemon!",
+    tags: ["Wurmple", "Pokemon"],
+    user: "Lol",
+    profilepicurl: "https://dummyimage.com/180",
+    commentsection: mockcomments,
+    longitude: 0,
+    latitude: 0,
+    description: "",
+  },
+  {
+    idx: 5,
+    image_url: "https://dummyimage.com/180",
+    title: "Guess this pokemon ",
+    tags: ["Pikachu", "Pokemon"],
+    user: "Lol",
+    profilepicurl: "https://dummyimage.com/180",
+    commentsection: mockcomments,
+    longitude: 0,
+    latitude: 0,
+    description: "",
+  },
+];
 
 // Mock a database fetch function
 const fetchPost = async (page: number): Promise<Post[]> => {
