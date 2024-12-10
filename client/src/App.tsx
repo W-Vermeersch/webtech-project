@@ -30,6 +30,7 @@ function App() {
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
         </Route>
+          <Route path="create" element={<CreatePost/>}/>
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
       </Routes>
