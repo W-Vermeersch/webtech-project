@@ -59,11 +59,11 @@ export class SignInController extends UserAuthentificationController{
             res.status(206).json({
                 errors: errors.toObject(),
                 inputs: inputs.toObject()
-            })
+            });
         } else {
-            await this.db.storeUser(inputs.username, inputs.email, inputs.password)
+            await this.db.storeUser(inputs.username, inputs.email, inputs.password);
             const user_id = await this.db.getUserID(inputs.username);
-            await this.db.storeProfileDecoration(user_id, inputs.username, "")
+            await this.db.storeProfileDecoration(user_id, inputs.username, "");
             res.json({ redirect: '/user/log-in' });
         }
     }

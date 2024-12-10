@@ -27,7 +27,7 @@ export class LogInController extends UserAuthentificationController {
         this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
         //console.log("logging out, new list: " + this.refreshTokens);
         return res.status(204).send("Succesfully deleted refresh token");
-    })
+    });
     }
 
     private generateAccessToken(user) {
@@ -57,15 +57,15 @@ export class LogInController extends UserAuthentificationController {
         const usernameOrEmail = inputs.usernameOrEmail;
         const password = inputs.password;
 
-    //check if input fields are filled
-    if (!this._isGiven(inputs.usernameOrEmail)) {
-      errors.usernameOrEmail = "Please enter your username or e-mail.";
-      inputs.usernameOrEmail = "";
-    }
-    if (!this._isGiven(inputs.password)) {
-      errors.password = "Please enter a password.";
-      inputs.password = "";
-    }
+        //check if input fields are filled
+        if (!this._isGiven(inputs.usernameOrEmail)) {
+        errors.usernameOrEmail = "Please enter your username or e-mail.";
+        inputs.usernameOrEmail = "";
+        }
+        if (!this._isGiven(inputs.password)) {
+        errors.password = "Please enter a password.";
+        inputs.password = "";
+        }
 
         //authenticate user (we might want to add hashed passwords in the future)
         const user: any = await this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);

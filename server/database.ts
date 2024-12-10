@@ -71,7 +71,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             values: [username],
         }
         const res = await this.executeQuery(query);
-        console.log(res.rows);
+        //console.log(res.rows);
         return res.rows; // resulting array contains a lot of query metadata.
                          // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
     };                   // if you need that metadata you can remove .rows and extract what you need.
@@ -99,8 +99,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     /* Returns the ID of a user given their username*/
     public async getUserID(username: string): Promise<number> {
-        const userInfo = this.fetchUserUsingUsername(username);
-        return userInfo[0]
+        const userInfo = await this.fetchUserUsingUsername(username);
+        return userInfo[0].user_id;
     };
 
     /* Deletes a user form the BD given their identifier (username and id). All posts that belong to this user will automatically be deleted as well as its comments and the users comments. */
@@ -253,7 +253,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     ) {
         const query = {
             text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
-            values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, "ARRAY[]::TEXT[]"],
+            values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, []],
         };
         await this.executeQuery(query);
     }
