@@ -2,8 +2,7 @@ import "./login.css";
 import axios from "axios";
 import RouteToServer from "../../infos.ts";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import useAuth from "../../hooks/useAuth.tsx";
-
+import useSignIn from "../../react-auth-kit/useSignIn.tsx";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
@@ -16,7 +15,7 @@ import { logInSchema } from "./logInSchema.ts";
 
 export default function LogIn() {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const signIn = useSignIn();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
 
@@ -56,16 +55,16 @@ export default function LogIn() {
       const refreshToken = resp.data.refreshToken;
       const username = resp.data.username;
       const userID = resp.data.userID;
-      setAuth({ token, refreshToken, username, userID });
+      signIn( token, refreshToken, username, userID );
 
       console.log("Logged in successfully");
       if (resp.data.redirect) {
         // use data.redirect?
         actions.resetForm();
-        navigate(from, {replace: true}); // to the user was going or /home
+        navigate(from, { replace: true }); // to the user was going or /home
         window.location.reload();
       }
-    } 
+    }
   }
 
   return (
