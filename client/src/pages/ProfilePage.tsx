@@ -19,9 +19,13 @@ import { Post, PostComment} from "../components/posts/PostInterface";
 
 
 interface User {
-  username: string;
-  profile_pic: string;
-  level: number;
+  username: string,
+  user_id: number,
+  displayname: string,
+  profilepicture: string,
+  bio: string,
+  totalexp: number,
+  badges: string[],
 }
 
 // Create more realistic mock data with coordinates
@@ -45,7 +49,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchUser() {
-      const resp = await axios.get(RouteToServer("/user/get"), {
+      console.log(username);
+      const resp = await axios.get(RouteToServer("/user/get-profile-information"), {
         params: { username },
       });
       if (resp.data.redirect) {
@@ -65,9 +70,9 @@ export default function ProfilePage() {
     }
 
     fetchUser();
-    if (user) {
-      fetchPosts();
-    }
+    //if (user) {
+    //  fetchPosts();
+    //}
     
   }, [username]);
 
@@ -90,8 +95,8 @@ export default function ProfilePage() {
               alt="profile pic"
               className="rounded-circle"
             />
-            <h3>Username</h3>
-            <h4>Level 1</h4>
+            <h3>{user.username}</h3>
+            <h4>{user.totalexp}</h4>
             <div className="w-100">
               <ProgressBar
                 variant="success"
@@ -102,10 +107,7 @@ export default function ProfilePage() {
             </div>
             <Container className="p-3">
               <p className="text-center">
-                Morbi feugiat lectus at luctus porta. Nunc interdum varius leo
-                eget cursus. Etiam et massa et diam sagittis pretium suscipit
-                sit amet purus. Nullam nec nunc nec nunc ultricies. Morbi
-                feugiat lectus at luctus.
+                {user.bio}
               </p>
             </Container>
           </Stack>
