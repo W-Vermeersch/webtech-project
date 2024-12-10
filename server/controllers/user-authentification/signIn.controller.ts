@@ -61,7 +61,6 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             })
         } else {
-            this.db.storeUser(inputs.username, inputs.email, inputs.password)
             await this.db.storeUser(inputs.username, inputs.email, inputs.password)
             const user_id = await this.db.getUserID(inputs.username);
             await this.db.storeProfileDecoration(user_id, inputs.username, "")

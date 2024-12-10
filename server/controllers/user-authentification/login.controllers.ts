@@ -21,13 +21,13 @@ export class LogInController extends UserAuthentificationController {
       return this.handleRefreshToken(req, res);
     });
 
-        this.router.delete("/log-out", (req, res) => {
-            const refresh_token = req.headers['refresh-token'];
-            //console.log("logging out, list before: " + this.refreshTokens);
-            this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
-            //console.log("logging out, new list: " + this.refreshTokens);
-            return res.status(204).send("Succesfully deleted refresh token");
-        })
+    this.router.delete("/log-out", (req, res) => {
+        const refresh_token = req.headers['refresh-token'];
+        //console.log("logging out, list before: " + this.refreshTokens);
+        this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
+        //console.log("logging out, new list: " + this.refreshTokens);
+        return res.status(204).send("Succesfully deleted refresh token");
+    })
     }
 
     private generateAccessToken(user) {
