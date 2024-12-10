@@ -15,6 +15,7 @@ import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
 
 
+
 function App() {
   return (
     <>
