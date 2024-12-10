@@ -95,9 +95,13 @@ export class LogInController extends UserAuthentificationController {
         } else {
             // handle sessions
             console.log("handling tokens")
-            const userID = user[0].user_id
+            const user_id = user[0].user_id
             const username = user[0].username
-            const userObject = {username: username}
+            const userObject = 
+            {
+                username: username,
+                user_id: user_id
+            }
             const accessToken = this.generateAccessToken(userObject);
             const refreshToken = jwt.sign({userObject}, process.env.REFRESH_TOKEN_SECRET , { expiresIn: '7d' });
             this.refreshTokens.push(refreshToken);
@@ -107,7 +111,7 @@ export class LogInController extends UserAuthentificationController {
                 expires: 15,
 
                 username: username,
-                userID: userID,
+                userID: user_id,
                 redirect: '/home'
             });
         }
@@ -124,7 +128,8 @@ export function authenticateToken(req, res, next) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).send("Unauthorized, provided token is no longer valid");
         //we now know the user is validated
-        req.user = user;
+        req.user = user; //user is a object, to get the values do user.user.username or user_id
+        //console.log(user.user.user_id)
         next();
     })
 }
