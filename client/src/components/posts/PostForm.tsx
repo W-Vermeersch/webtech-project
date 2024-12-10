@@ -3,8 +3,7 @@ import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import FileUploader from "./FileUploader";
-import axios from "axios";
-import RouteToServer from "../../infos";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 interface PostFormValues {
   caption: string;
@@ -17,6 +16,7 @@ const animalTags: string[] = ["Cat", "Dog", "Lion"];
 
 
 const PostForm = () => {
+  const axios = useAxiosPrivate();
 
   const initialValues: PostFormValues = {
     caption: "",
@@ -29,7 +29,7 @@ const PostForm = () => {
   async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
     console.log("Form data:", values);
     try {
-    const resp = await axios.post(RouteToServer("/post/add"), values);
+    const resp = await axios.post("/post/add", values);
       console.log("Response:", resp.data);
     } catch (error) {
       console.error("Error submitting form:", error);

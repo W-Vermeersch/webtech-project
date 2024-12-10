@@ -1,6 +1,5 @@
 import "./login.css";
-import axios from "axios";
-import RouteToServer from "../../infos.ts";
+import axios from "../../api/axios.ts";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "react-bootstrap/Stack";
@@ -28,7 +27,7 @@ export default function SignIn() {
     actions: FormikHelpers<FormValues>
   ) {
     console.log(values);
-    const resp = await axios.post(RouteToServer("/user/sign-in"), values);
+    const resp = await axios.post("/user/sign-in", values);
     console.log(resp);
 
     if (resp.status === 206) {

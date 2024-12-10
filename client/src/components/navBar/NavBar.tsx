@@ -25,10 +25,10 @@ export default function NavBar() {
       return;
     }
     console.log("Logging out");
-    signOut();
+    await signOut();
     console.log("Logged out");
     navigate("/user/log-in");
-    // deal with error handling maybe
+    // deal with error handling
   }
 
   return (
