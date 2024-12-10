@@ -18,7 +18,9 @@ export default function Homepage() {
 
   return (
     <Container>
-      <FeedPage/>
+      <Col xs={12} md={8} className="mx-auto">
+        <FeedPage/>
+      </Col>
     </Container>
   );
 }
