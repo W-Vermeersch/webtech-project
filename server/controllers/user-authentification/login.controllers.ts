@@ -23,9 +23,9 @@ export class LogInController extends UserAuthentificationController {
 
         this.router.delete("/log-out", (req, res) => {
             const refresh_token = req.headers['refresh-token'];
-            console.log("logging out, list before: " + this.refreshTokens);
+            //console.log("logging out, list before: " + this.refreshTokens);
             this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
-            console.log("logging out, new list: " + this.refreshTokens);
+            //console.log("logging out, new list: " + this.refreshTokens);
             return res.status(204).send("Succesfully deleted refresh token");
         })
     }
@@ -51,7 +51,7 @@ export class LogInController extends UserAuthentificationController {
 
     async logIn(req: express.Request, res: express.Response): Promise<void> {
         const inputs: LogInForm = new LogInForm();
-        console.log(req.body);
+        //console.log(req.body);
         inputs.fill(req.body);
         const errors: ErrorInLogInForm = new ErrorInLogInForm();
         const usernameOrEmail = inputs.usernameOrEmail;
@@ -71,30 +71,30 @@ export class LogInController extends UserAuthentificationController {
         const user: any = await this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);
         //console.log("user[0].username: "+ user[0].username)
         if (user.length === 0) {
-            console.log("username or email not found")
+            //console.log("username or email not found")
             errors.usernameOrEmail = "Username or e-mail not found."
             inputs.usernameOrEmail = "";
         }
         if (user.length != 0) {
             const userPassword = user[0].password
-            console.log("user password: " + user[0].password + "Given password: " + password)
+            //console.log("user password: " + user[0].password + "Given password: " + password)
             if (password != userPassword) {
-                console.log("password incorrect")
+                //console.log("password incorrect")
                 errors.password = "Password incorrect!"
                 inputs.password = "";
             }
         }
 
         if (errors.hasErrors()) {
-            console.log("has errors")
-            console.log(errors)
+            //console.log("has errors")
+            //console.log(errors)
             res.status(206).json({  //moet verandert worden waarschijnlijk
                 errors: errors.toObject(),
                 inputs: inputs.toObject()
             })
         } else {
             // handle sessions
-            console.log("handling tokens")
+            // console.log("handling tokens")
             const user_id = user[0].user_id
             const username = user[0].username
             const userObject = 
