@@ -27,7 +27,7 @@ export class PostController extends BaseController {
 
     initializeRoutes(): void {
 
-        this.router.post("/add", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/add", (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
         });
 
@@ -69,15 +69,17 @@ export class PostController extends BaseController {
 
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
+                    const tags = await this.imageApi.scanImage(imageUrl);
                     const post = new Post(body);
                     post.title = body.caption;
                     post.longitude = longitude;
                     post.latitude = latitude;
                     post.image_url = imageUrl;
+                    post.tags = tags;
                     fs.unlinkSync(tempFilePath);
 
                     // @ts-ignore
-                    const userID = await this.db.fetchUserUsingUsername(req.user);
+                    const userID = req.user.user_id;
                     console.log(userID);
                     post.user = userID;
 
