@@ -1,6 +1,6 @@
-import { UserAuthentificationController } from "./base.user.controller";
+import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
-import { LogInForm, ErrorInLogInForm } from "../../../Global/log-in-forms";
+import {LogInForm, ErrorInLogInForm} from "../../../Global/log-in-forms"
 import Database from "../../database";
 import * as jwt from "jsonwebtoken";
 import { ref } from "yup";
@@ -23,9 +23,9 @@ export class LogInController extends UserAuthentificationController {
 
         this.router.delete("/log-out", (req, res) => {
             const refresh_token = req.headers['refresh-token'];
-            console.log("logging out, list before: " + this.refreshTokens);
+            //console.log("logging out, list before: " + this.refreshTokens);
             this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
-            console.log("logging out, new list: " + this.refreshTokens);
+            //console.log("logging out, new list: " + this.refreshTokens);
             return res.status(204).send("Succesfully deleted refresh token");
         })
     }
@@ -49,13 +49,13 @@ export class LogInController extends UserAuthentificationController {
         })
     }
 
-  async logIn(req: express.Request, res: express.Response): Promise<void> {
-    const inputs: LogInForm = new LogInForm();
-    console.log(req.body);
-    inputs.fill(req.body);
-    const errors: ErrorInLogInForm = new ErrorInLogInForm();
-    const usernameOrEmail = inputs.usernameOrEmail;
-    const password = inputs.password;
+    async logIn(req: express.Request, res: express.Response): Promise<void> {
+        const inputs: LogInForm = new LogInForm();
+        //console.log(req.body);
+        inputs.fill(req.body);
+        const errors: ErrorInLogInForm = new ErrorInLogInForm();
+        const usernameOrEmail = inputs.usernameOrEmail;
+        const password = inputs.password;
 
     //check if input fields are filled
     if (!this._isGiven(inputs.usernameOrEmail)) {
@@ -67,41 +67,41 @@ export class LogInController extends UserAuthentificationController {
       inputs.password = "";
     }
 
-    //authenticate user (we might want to add hashed passwords in the future)
-    const user: any = await this.db.fetchUserUsingEmailOrUsername(
-      usernameOrEmail
-    );
-    //console.log("user[0].username: "+ user[0].username)
-    if (user.length === 0) {
-      console.log("username or email not found");
-      errors.usernameOrEmail = "Username or e-mail not found.";
-      inputs.usernameOrEmail = "";
-    }
-    if (user.length != 0) {
-      const userPassword = user[0].password;
-      console.log(
-        "user password: " + user[0].password + "Given password: " + password
-      );
-      if (password != userPassword) {
-        console.log("password incorrect");
-        errors.password = "Password incorrect!";
-        inputs.password = "";
-      }
-    }
+        //authenticate user (we might want to add hashed passwords in the future)
+        const user: any = await this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);
+        //console.log("user[0].username: "+ user[0].username)
+        if (user.length === 0) {
+            //console.log("username or email not found")
+            errors.usernameOrEmail = "Username or e-mail not found."
+            inputs.usernameOrEmail = "";
+        }
+        if (user.length != 0) {
+            const userPassword = user[0].password
+            //console.log("user password: " + user[0].password + "Given password: " + password)
+            if (password != userPassword) {
+                //console.log("password incorrect")
+                errors.password = "Password incorrect!"
+                inputs.password = "";
+            }
+        }
 
         if (errors.hasErrors()) {
-            console.log("has errors")
-            console.log(errors)
+            //console.log("has errors")
+            //console.log(errors)
             res.status(206).json({  //moet verandert worden waarschijnlijk
                 errors: errors.toObject(),
                 inputs: inputs.toObject()
             })
         } else {
             // handle sessions
-            console.log("handling tokens")
-            const userID = user[0].user_id
+            // console.log("handling tokens")
+            const user_id = user[0].user_id
             const username = user[0].username
-            const userObject = {username: username}
+            const userObject =
+            {
+                username: username,
+                user_id: user_id
+            }
             const accessToken = this.generateAccessToken(userObject);
             const refreshToken = jwt.sign({userObject}, process.env.REFRESH_TOKEN_SECRET , { expiresIn: '7d' });
             this.refreshTokens.push(refreshToken);
@@ -110,13 +110,14 @@ export class LogInController extends UserAuthentificationController {
                 refreshToken: refreshToken,
                 expires: 15,
 
-        username: username,
-        userID: userID,
-        redirect: "/home",
-      });
+                username: username,
+                userID: user_id,
+                redirect: '/home'
+            });
+        }
     }
-  }
 }
+
 
 export function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
@@ -127,7 +128,16 @@ export function authenticateToken(req, res, next) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).send("Unauthorized, provided token is no longer valid");
         //we now know the user is validated
-        req.user = user;
+        req.user = user; //user is a object, to get the values do user.user.username or user_id
+        //console.log(user.user.user_id)
         next();
     })
 }
+
+
+
+
+
+
+
+

@@ -16,22 +16,33 @@ import Tab from "react-bootstrap/Tab";
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 
+
 interface User {
   username: string;
   profile_pic: string;
   level: number;
+  {
+
+interface PostComment{
+  idx: number; // index to refer to Post
+  user: string;
+  comment: string;
+
 }
 
 interface Post {
   title?: string;
   user?: string;
-  image_url: string;
-  idx?: number;
+  image_url: string; // url to the storage api
+  idx?: number; // index of Post
   description?: string;
-  tags?: string[];
-  likes?: number;
+  tags: string[];
+  likes?: number; // in DB each posts has a list of all Users who liked
   longitude: number;
   latitude: number;
+  // added because profile pictures also exist
+  profilepicurl?: string;
+  commentsection?: PostComment[];
 }
 
 // Create more realistic mock data with coordinates
@@ -42,6 +53,7 @@ const mockPosts: Post[] = Array(15)
     latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
     longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
     title: `Post ${index + 1}`,
+    tags: ["tag1", "tag2"],
     description: `This is post number ${index + 1}`,
   }));
 

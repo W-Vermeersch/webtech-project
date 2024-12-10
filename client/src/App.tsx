@@ -2,8 +2,6 @@ import { Map, Reroute } from "./components";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
-import RequireAuth from "@auth-kit/react-router/RequireAuth";
 
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogInPage from "./pages/LogInPage.tsx";
@@ -14,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
 import FullPost from "./pages/FullPostPage.tsx";
+
 
 function App() {
   return (
