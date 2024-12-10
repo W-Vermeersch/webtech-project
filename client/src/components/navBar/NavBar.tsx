@@ -9,38 +9,34 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
 import { useNavigate } from "react-router-dom";
+import useAuthUser from "../../react-auth-kit/useAuthUser";
+import useSignOut from "../../react-auth-kit/useSignOut";
+import useRefreshToken from "../../react-auth-kit/useRefreshToken";
 import axios from "axios";
 import RouteToServer from "../../infos";
 import Cookies from "js-cookie";
 
-interface IUserData {
-  username: string;
-  userID: string;
-}
-
 export default function NavBar() {
-//  const signOut = useSignOut();
-//  const authUser = useAuthUser<IUserData>();
+  const signOut = useSignOut();
+  const authUser = useAuthUser();
   const navigate = useNavigate();
+  const refreshToken = useRefreshToken();
 
   async function handleLogOut() {
-    if (//!authUser
-false
-    ) {
+    if (!authUser) {
       return;
     }
     console.log("Logging out");
     const resp = await axios.delete(RouteToServer("/user/log-out"), {
       headers: {
-        "refresh-token": Cookies.get("_auth_refresh"),
+        "refresh-token": refreshToken
       },
     });
     // deal with error handling maybe
     if (resp.status === 204) {
-      //signOut();
+      signOut();
       console.log("Logged out");
       navigate("/user/log-in");
-      window.location.reload();
     }
   }
 

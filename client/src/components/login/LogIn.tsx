@@ -62,7 +62,6 @@ export default function LogIn() {
         // use data.redirect?
         actions.resetForm();
         navigate(from, { replace: true }); // to the user was going or /home
-        window.location.reload();
       }
     }
   }
