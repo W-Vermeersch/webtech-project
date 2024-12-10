@@ -1,0 +1,10 @@
+#full-post-row {
+  flex-direction: column;
+}
+
+#user {
+  margin-top: 0 !important;
+  padding: 15px !important;
+  background-color: rgba(0, 0, 0, 0.284);
+}
+

@@ -266,7 +266,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /*Update a user's profile picture given their ID*/
     public async updateProfilePicture(user_id: number, newImageUrl: string): Promise<void> {
         const query = {
-            text: 'UPDATE user_profile SET profile_picture_image_url = $1 WHERE user_id = $2',
+            text: 'UPDATE user_profile_decoration_table SET profile_picture_image_url = $1 WHERE user_id = $2',
             values: [newImageUrl, user_id],
         };
         await this.executeQuery(query);
@@ -275,7 +275,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /*Update the total EXP count of a user given their ID*/
     public async updateTotalExp(user_id: number, newExp: number): Promise<void> {
         const query = {
-            text: 'UPDATE user_profile SET total_exp = $1 WHERE user_id = $2',
+            text: 'UPDATE user_profile_decoration_table SET total_exp = $1 WHERE user_id = $2',
             values: [newExp, user_id],
         };
         await this.executeQuery(query);
@@ -284,7 +284,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /*Updates a user's badge list (replaces the entire list)*/
     public async updateBadges(user_id: number, newBadges: string[]): Promise<void> {
         const query = {
-            text: 'UPDATE user_profile SET badges = $1 WHERE user_id = $2',
+            text: 'UPDATE user_profile_decoration_table SET badges = $1 WHERE user_id = $2',
             values: [JSON.stringify(newBadges), user_id],
         };
         await this.executeQuery(query);
@@ -292,14 +292,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /*Updates a user's bio description*/
     public async updateBio(user_id: number, newBio: string): Promise<void> {
         const query = {
-            text: 'UPDATE user_profile SET bio = $1 WHERE user_id = $2',
+            text: 'UPDATE user_profile_decoration_table SET bio = $1 WHERE user_id = $2',
             values: [newBio, user_id],
         };
         await this.executeQuery(query);
     }
     public async updateDisplayName(user_id: number, newName: string): Promise<void> {
         const query = {
-            text: 'UPDATE user_profile SET display_name = $1 WHERE user_id = $2',
+            text: 'UPDATE user_profile_decoration_table SET display_name = $1 WHERE user_id = $2',
             values: [newName, user_id],
         };
         await this.executeQuery(query);
