@@ -22,6 +22,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
         const binarystring = reader.result
         setPreviewUrl(binarystring as string)
         setFieldValue('file', binarystring);
+        setFieldValue('image_type', file.type);
       };
       reader.readAsDataURL(file);
     }
@@ -30,7 +31,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
   
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: {
-    "image/*": [".png", ".jpeg", ".jpg"],},
+    "image/*": [".png", ".jpeg", ".jpg", ".heic"],},
     maxFiles: 1, });
 
   return (
@@ -55,7 +56,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
           />
 
           <h3 className="dropzone-text">Click or drag</h3>
-          <p className="file-subtitle">JPEG, PNG, JPG</p>
+          <p className="file-subtitle">JPEG, PNG, JPG, HEIC</p>
         </div>
       )}
     </div>

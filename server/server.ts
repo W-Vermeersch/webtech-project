@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as session from 'express-session';
-import { BaseController, SignInController } from './controllers';
+import { BaseController,LogInController, SignInController, PostController, UserProfileController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
@@ -55,8 +55,8 @@ export class App {
         //}));
         this.app.use(cors());
 
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.json({ limit: "150mb" }));
+        this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
         this.app.use(express.static(path.join(__dirname, "../static")));
 
         this.database.init()

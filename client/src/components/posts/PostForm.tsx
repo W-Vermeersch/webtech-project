@@ -10,6 +10,7 @@ interface PostFormValues {
   caption: string;
   file: string;
   tags: string[];
+  image_type: string;
 } 
 
 const animalTags: string[] = ["Cat", "Dog", "Lion"];
@@ -21,17 +22,25 @@ const PostForm = () => {
     caption: "",
     file: "",
     tags: [],
+    image_type: "",
   };
   
 
   async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
     console.log("Form data:", values);
-    const resp = await axios.post(RouteToServer("post/add"), values);
-    actions.setSubmitting(false);
+    try {
+    const resp = await axios.post(RouteToServer("/post/add"), values);
+      console.log("Response:", resp.data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      actions.setSubmitting(false);
+    }
   }  
 
   return (
     <Formik
+        type
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
@@ -92,6 +101,7 @@ const PostForm = () => {
                 setFieldValue("caption", "");
                 setFieldValue("file", null);
                 setFieldValue("tags", []);
+                setFieldValue("image_type", "");
               }}
             >
               Cancel
