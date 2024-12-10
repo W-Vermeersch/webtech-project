@@ -13,21 +13,12 @@ import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
 import FullPost from "./pages/FullPostPage.tsx";
 
-
 function App() {
   return (
     <>
       <NavBar />
       <Routes>
-        <Route
-          path="/home"
-          element={
-            <>
-              <HomePage />
-              <FullPost />
-            </>
-          }
-        />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/user">
