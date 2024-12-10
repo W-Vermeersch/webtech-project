@@ -12,6 +12,7 @@ import MapContainer from "../components/posts/full-post/MapContainer";
 import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
+import { Post, PostComment } from "../components/posts/PostInterface"
 
 // later make modules of components
 
@@ -21,16 +22,6 @@ interface User {
   level: number;
 }
 
-interface Post {
-  user?: string;
-  image_url: string; // url to the storage api
-  idx?: number; // index of Post
-  description: string;
-  tags: string[];
-  likes?: number; // in DB each posts has a list of all Users who liked
-  longitude: number;
-  latitude: number;
-}
 
 const mockUser: User = {
   username: "username",
