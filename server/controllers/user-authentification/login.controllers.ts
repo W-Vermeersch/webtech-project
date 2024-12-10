@@ -24,7 +24,7 @@ export class LogInController extends UserAuthentificationController {
     this.router.delete("/log-out", (req, res) => {
         const refresh_token = req.headers['refresh-token'];
         //console.log("logging out, list before: " + this.refreshTokens);
-        this.refreshTokens = this.refreshTokens.filter(token => token !== refresh_token);
+        this.refreshTokens = this.refreshTokens.filter(({username, refreshToken}) => refreshToken !== refresh_token);
         //console.log("logging out, new list: " + this.refreshTokens);
         return res.status(204).send("Succesfully deleted refresh token");
     });
@@ -34,7 +34,8 @@ export class LogInController extends UserAuthentificationController {
         return jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }) 
     }
     
-    refreshTokens = []  //needs to be replaced with the DB later
+    // need to save the refreshtoken - user relationship in the backend !
+    refreshTokens: { username: string; refreshToken: string }[] = [];  //needs to be replaced with the DB later
 
     private handleRefreshToken(req, res) {
         const refreshToken = req.body.token
@@ -104,12 +105,10 @@ export class LogInController extends UserAuthentificationController {
             }
             const accessToken = this.generateAccessToken(userObject);
             const refreshToken = jwt.sign({userObject}, process.env.REFRESH_TOKEN_SECRET , { expiresIn: '7d' });
-            this.refreshTokens.push(refreshToken);
+            this.refreshTokens.push({ username, refreshToken }); // adding username to array
+            res.cookie('refresh-token', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 * 7}); // 7 days
             res.json({
                 accessToken: accessToken,
-                refreshToken: refreshToken,
-                expires: 15,
-
                 username: username,
                 userID: user_id,
                 redirect: '/home'
