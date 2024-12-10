@@ -15,34 +15,13 @@ import Tab from "react-bootstrap/Tab";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
+import { Post, PostComment} from "../components/posts/PostInterface";
 
 
 interface User {
   username: string;
   profile_pic: string;
   level: number;
-}
-
-interface PostComment{
-  idx: number; // index to refer to Post
-  user: string;
-  comment: string;
-
-}
-
-interface Post {
-  title?: string;
-  user?: string;
-  image_url: string; // url to the storage api
-  idx?: number; // index of Post
-  description?: string;
-  tags: string[];
-  likes?: number; // in DB each posts has a list of all Users who liked
-  longitude: number;
-  latitude: number;
-  // added because profile pictures also exist
-  profilepicurl?: string;
-  commentsection?: PostComment[];
 }
 
 // Create more realistic mock data with coordinates

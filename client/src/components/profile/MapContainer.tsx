@@ -7,29 +7,9 @@ import "./map.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import { Post, PostComment} from "../posts/PostInterface"
 
 
-interface PostComment{
-  idx: number; // index to refer to Post
-  user: string;
-  comment: string;
-}
-
-
-interface Post {
-  title?: string;
-  user?: string;
-  image_url: string; // url to the storage api
-  idx?: number; // index of Post
-  description?: string;
-  tags: string[];
-  likes?: number; // in DB each posts has a list of all Users who liked
-  longitude: number;
-  latitude: number;
-  // added because profile pictures also exist
-  profilepicurl?: string;
-  commentsection?: PostComment[];
-}
 
 interface MapContainerProps {
   posts: Post[];
