@@ -38,7 +38,6 @@ export default function NavBar() {
     // deal with error handling maybe
     if (resp.status === 204) {
       signOut();
-      Cookies.remove("_auth_refresh");
       console.log("Logged out");
       navigate("/user/log-in");
       window.location.reload();

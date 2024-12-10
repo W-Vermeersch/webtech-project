@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
-    </list>
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,7 +53,7 @@
   "keyToString": {
     "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "sql",
+    "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

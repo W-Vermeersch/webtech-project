@@ -3,7 +3,6 @@ import axios from "axios";
 import RouteToServer from "../../infos.ts";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
@@ -57,11 +56,11 @@ export default function LogIn() {
           token: resp.data.accessToken,
           type: "Bearer",
         },
+        refresh: resp.data.refreshToken,
         userState: { username: resp.data.username, userID: resp.data.userID },
       })
     ) {
       console.log("Logged in successfully");
-      Cookies.set("_auth_refresh", resp.data.refreshToken)
       if (resp.data.redirect) {
         actions.resetForm();
         navigate(resp.data.redirect); // to home
