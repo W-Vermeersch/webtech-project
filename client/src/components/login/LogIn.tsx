@@ -1,8 +1,7 @@
 import "./login.css";
-import axios from "axios";
-import RouteToServer from "../../infos.ts";
+import axios from "../../api/axios.ts";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import useSignIn from "../../react-auth-kit/useSignIn.tsx";
+import useSignIn from "../../hooks/useSignIn.tsx";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
@@ -33,7 +32,7 @@ export default function LogIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    const resp = await axios.post(RouteToServer("/user/log-in"), {
+    const resp = await axios.post("/user/log-in", {
       ...values,
       withCredentials: true,
     });

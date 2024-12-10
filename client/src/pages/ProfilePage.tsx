@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ProfilePage.css";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import RouteToServer from "../infos";
+import axios from "../api/axios";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -54,7 +53,7 @@ export default function ProfilePage() {
     async function fetchUser() {
       try {
         const resp = await axios.get(
-          RouteToServer("/user/get-profile-information"),
+          "/user/get-profile-information",
           {
             params: { username },
             //signal: controller.signal,
@@ -73,7 +72,7 @@ export default function ProfilePage() {
     }
 
     async function fetchPosts() {
-      const resp = await axios.get(RouteToServer("/post/get"), {
+      const resp = await axios.get("/post/get", {
         params: { username },
       });
       console.log(resp.data);

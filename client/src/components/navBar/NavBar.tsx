@@ -9,11 +9,10 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
 import { useNavigate } from "react-router-dom";
-import useAuthUser from "../../react-auth-kit/useAuthUser";
-import useSignOut from "../../react-auth-kit/useSignOut";
-import getRefreshToken from "../../react-auth-kit/getRefreshToken";
-import axios from "axios";
-import RouteToServer from "../../infos";
+import useAuthUser from "../../hooks/useAuthUser";
+import useSignOut from "../../hooks/useSignOut";
+import getRefreshToken from "../../hooks/getRefreshToken";
+import axios from "../../api/axios";
 
 export default function NavBar() {
   const signOut = useSignOut();
@@ -26,9 +25,9 @@ export default function NavBar() {
       return;
     }
     console.log("Logging out");
-    const resp = await axios.delete(RouteToServer("/user/log-out"), {
+    const resp = await axios.delete("/user/log-out", {
       headers: {
-        "refresh-token": refreshToken
+        "refresh-token": refreshToken,
       },
     });
     // deal with error handling maybe
@@ -86,7 +85,10 @@ export default function NavBar() {
               id="user-dropdown"
             >
               <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                <NavItem to={`/user/profile/${authUser && authUser.username}`}  eventKey="Profile">
+                <NavItem
+                  to={`/user/profile/${authUser && authUser.username}`}
+                  eventKey="Profile"
+                >
                   Profile
                 </NavItem>
               </NavDropdown.Item>

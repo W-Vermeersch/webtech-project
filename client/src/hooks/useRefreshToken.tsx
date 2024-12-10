@@ -1,12 +1,11 @@
 import useAuth from "./useAuth";
-import axios from "axios";
-import RouteToServer from "../infos";
+import axios from "../api/axios";
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
 
   const refresh = async () => {
-    const response = await axios.post(RouteToServer("/user/token"), {
+    const response = await axios.post("/user/token", {
       withCredentials: true,
     });
     setAuth((prev) => {

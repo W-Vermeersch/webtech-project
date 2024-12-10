@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import useIsAuthenticated from "../../react-auth-kit/useIsAuthenticated";
-import useAuthUser from "../../react-auth-kit/useAuthUser";
+import useIsAuthenticated from "../../hooks/useIsAuthenticated";
+import useAuthUser from "../../hooks/useAuthUser";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -9,14 +9,12 @@ import PostForm from "./PostForm";
 
 const CreatePost = () => {
   const isAuthenticated = useIsAuthenticated();
-  const authUser = useAuthUser()
+  const authUser = useAuthUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-
     //check in the backend if the user is authenticated
-  }
-);
+  });
 
   return (
     <Container>
