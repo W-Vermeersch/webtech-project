@@ -300,6 +300,16 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         await this.executeQuery(query);
     }
 
+    public async fetchProfileDecoration(user_id: number): Promise<any> {
+        const query = {
+            text: 'SELECT * FROM user_profile_decoration_table WHERE user_id = $1',
+            values: [user_id],
+        };
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+    
+
 
     public async init(): Promise<void> {
         // Adding the extensions to the DB
