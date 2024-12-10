@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import SinglePost from "./SinglePost";
-import { Post, PostComment} from "../posts/PostInterface"
+import { Post, PostComment } from "../posts/PostInterface";
 
 // mock comments
 const mockcomments: PostComment[] = [
@@ -73,20 +73,19 @@ const posts: Post[] = [
       latitude: 0,
       description: ""
     },
-      {
-        idx: 5,
-        image_url: "https://dummyimage.com/180",
-        title: "Guess this pokemon ",
-        tags: ["Pikachu", "Pokemon"],
-        user: "Lol",
-        profilepicurl: "https://dummyimage.com/180",
-        commentsection: mockcomments,
-        longitude: 0,
-        latitude: 0,
-        description: ""
-      }
+    {
+      idx: 5,
+      image_url: "https://dummyimage.com/180",
+      title: "Guess this pokemon ",
+      tags: ["Pikachu", "Pokemon"],
+      user: "Lol",
+      profilepicurl: "https://dummyimage.com/180",
+      commentsection: mockcomments,
+      longitude: 0,
+      latitude: 0,
+      description: ""
+    }  
   ];
-
 
 // Mock a database fetch function
 const fetchPost = async (page: number): Promise<Post[]> => {

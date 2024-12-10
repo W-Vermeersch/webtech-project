@@ -15,8 +15,7 @@ import Tab from "react-bootstrap/Tab";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
-import { Post, PostComment} from "../components/posts/PostInterface";
-
+import { Post, PostComment } from "../components/posts/PostInterface";
 
 interface User {
   username: string;
@@ -45,30 +44,38 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchUser() {
-      const resp = await axios.get(RouteToServer("/user/get"), {
-        params: { username },
-      });
-      if (resp.data.redirect) {
-        navigate(resp.data.redirect);
-      } else {
-        console.log(resp.data);
-        setUser(resp.data);
+      try {
+        const resp = await axios.get(RouteToServer("/user/get"), {
+          params: { username },
+        });
+        if (resp.data.redirect) {
+          navigate(resp.data.redirect);
+        } else {
+          console.log(resp.data);
+          setUser(resp.data);
+        }
+      } catch (err) {
+        console.error(err);
+        console.log("User not found");
       }
     }
 
     async function fetchPosts() {
+      try {
       const resp = await axios.get(RouteToServer("/post/get"), {
         params: { username },
       });
       console.log(resp.data);
       setPosts(resp.data);
+    } catch (err) {
+      console.error(err);
     }
+  }
 
     fetchUser();
     if (user) {
       fetchPosts();
     }
-    
   }, [username]);
 
   if (!user) {
