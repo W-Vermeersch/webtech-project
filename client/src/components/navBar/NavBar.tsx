@@ -25,17 +25,10 @@ export default function NavBar() {
       return;
     }
     console.log("Logging out");
-    const resp = await axios.delete("/user/log-out", {
-      headers: {
-        "refresh-token": refreshToken,
-      },
-    });
+    signOut();
+    console.log("Logged out");
+    navigate("/user/log-in");
     // deal with error handling maybe
-    if (resp.status === 204) {
-      signOut();
-      console.log("Logged out");
-      navigate("/user/log-in");
-    }
   }
 
   return (

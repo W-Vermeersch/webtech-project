@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ProfilePage.css";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -44,6 +44,8 @@ export default function ProfilePage() {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
   const navigate = useNavigate();
+  const location = useLocation();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     // Abort fetch if component is unmounted
@@ -52,7 +54,7 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axios.get(
+        const resp = await axiosPrivate.get(
           "/user/get-profile-information",
           {
             params: { username },
@@ -68,11 +70,12 @@ export default function ProfilePage() {
         }
       } catch (error) {
         console.error(error);
+        navigate("/login", { state: { from: location }, replace: true });
       }
     }
 
     async function fetchPosts() {
-      const resp = await axios.get("/post/get", {
+      const resp = await axiosPrivate.get("/post/get", {
         params: { username },
       });
       console.log(resp.data);

@@ -32,11 +32,8 @@ export default function LogIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    const resp = await axios.post("/user/log-in", {
-      ...values,
-      withCredentials: true,
-    });
-
+    const resp = await axios.post("/user/log-in", values);
+    
     if (resp.status === 206) {
       if (resp.data.errors) {
         if (resp.data.inputs) {
