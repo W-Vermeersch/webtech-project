@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import SinglePost from "./SinglePost";
-import { Post, PostComment }  from "../profile/PostGallery";
+import { Post, PostComment } from "../profile/PostGallery";
 
 // mock comments
 const mockcomments: PostComment[] = [
@@ -15,63 +15,72 @@ const mockcomments: PostComment[] = [
   {
     idx: 2,
     user: "Bob",
-    comment: "Whatever bruh"
+    comment: "Whatever bruh",
   },
   {
     idx: 3,
     user: "aubrey",
-    comment:"I want to see it too."
-  }
-]
+    comment: "I want to see it too.",
+  },
+];
 // Mock posts data (replace with actual database fetch later)
 const posts: Post[] = [
-    {
-      idx: 1,
-      title: "post 1",
-      image_url: "https://dummyimage.com/180",
-      tags: ["Cat", "Feline"],
-      user: "kel",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments
-    },
-    {
-      idx: 2,
-      title: "post 2",
-      image_url: "https://dummyimage.com/180",
-      tags: ["Dog", "Canine"],
-      user: "Ozioma",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments
-    },
-    {
-      idx:3,
-      image_url: "https://dummyimage.com/180",
-      title: "the Bee movie",
-      tags: ["Bee", "FlyingInsect"],
-      user: "Timo",
-      profilepicurl: "https://dummyimage.com/180",
-      commentsection: mockcomments
-    },
-    {
-        idx:4,
-        image_url: "https://dummyimage.com/180",
-        title: "Catch this pokemon!",
-        tags: ["Wurmple", "Pokemon"],
-        user: "Lol",
-        profilepicurl: "https://dummyimage.com/180",
-        commentsection: mockcomments
-      },
-      {
-        idx:5,
-        image_url: "https://dummyimage.com/180",
-        title: "Guess this pokemon ",
-        tags: ["Pikachu", "Pokemon"],
-        user: "Lol",
-        profilepicurl: "https://dummyimage.com/180",
-        commentsection: mockcomments
-      }
-  ];
-
+  {
+    idx: 1,
+    title: "post 1",
+    image_url: "https://dummyimage.com/180",
+    tags: ["Cat", "Feline"],
+    user: "kel",
+    profilepicurl: "https://dummyimage.com/180",
+    longitude: 4.395356,
+    latitude: 50.822376,
+    commentsection: mockcomments,
+  },
+  {
+    idx: 2,
+    title: "post 2",
+    image_url: "https://dummyimage.com/180",
+    tags: ["Dog", "Canine"],
+    user: "Ozioma",
+    profilepicurl: "https://dummyimage.com/180",
+    longitude: 4.395356,
+    latitude: 50.822376,
+    commentsection: mockcomments,
+  },
+  {
+    idx: 3,
+    image_url: "https://dummyimage.com/180",
+    title: "the Bee movie",
+    tags: ["Bee", "FlyingInsect"],
+    user: "Timo",
+    profilepicurl: "https://dummyimage.com/180",
+    longitude: 4.395356,
+    latitude: 50.822376,
+    commentsection: mockcomments,
+  },
+  {
+    idx: 4,
+    image_url: "https://dummyimage.com/180",
+    title: "Catch this pokemon!",
+    tags: ["Wurmple", "Pokemon"],
+    user: "Lol",
+    profilepicurl: "https://dummyimage.com/180",
+    longitude: 4.395356,
+    latitude: 50.822376,
+    commentsection: mockcomments,
+  },
+  {
+    idx: 5,
+    image_url: "https://dummyimage.com/180",
+    title: "Guess this pokemon ",
+    tags: ["Pikachu", "Pokemon"],
+    user: "Lol",
+    profilepicurl: "https://dummyimage.com/180",
+    longitude: 4.395356,
+    latitude: 50.822376,
+    commentsection: mockcomments,
+  },
+];
 
 // Mock a database fetch function
 const fetchPost = async (page: number): Promise<Post[]> => {
@@ -81,11 +90,7 @@ const fetchPost = async (page: number): Promise<Post[]> => {
 
 const FeedPage = () => {
   // Properly using useInfiniteQuery in React Query v5
-  const {
-    data,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["query"],
     queryFn: async ({ pageParam = 1 }) => {
       const resp = await fetchPost(pageParam);
@@ -97,28 +102,29 @@ const FeedPage = () => {
     initialPageParam: 1,
   });
 
-  const lastPostRef = useRef<HTMLElement>(null)
-  const {ref, entry} = useIntersection({
+  const lastPostRef = useRef<HTMLElement>(null);
+  const { ref, entry } = useIntersection({
     root: lastPostRef.current,
-    threshold: 1
-  })
+    threshold: 1,
+  });
 
   useEffect(() => {
-    if(entry?.isIntersecting) fetchNextPage()
-  }, [entry])
+    if (entry?.isIntersecting) fetchNextPage();
+  }, [entry]);
 
-  const _posts = data?.pages.flatMap((page) => page)
+  const _posts = data?.pages.flatMap((page) => page);
 
   return (
     <>
-        {_posts?.map((post, i)=> {
-            if(i === _posts.length - 1) return(
-                <div ref={ref} key={post.idx}>
+      {_posts?.map((post, i) => {
+        if (i === _posts.length - 1)
+          return (
+            <div ref={ref} key={post.idx}>
               <SinglePost post={post} />
-                </div>
-            )
-            return <SinglePost key={post.idx} post={post} />
-        })}
+            </div>
+          );
+        return <SinglePost key={post.idx} post={post} />;
+      })}
       <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
         {isFetchingNextPage
           ? "Loading more"
