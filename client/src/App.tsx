@@ -2,6 +2,7 @@ import { Map, Reroute } from "./components";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+import RequireAuth from "./components/RequireAuth.tsx";
 
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogInPage from "./pages/LogInPage.tsx";
@@ -19,7 +20,9 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/home" element={<HomePage />} />
-        <Route path="/create-post" element={<CreatePost />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/create-post" element={<CreatePost />} />
+        </Route>
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/user">
           <Route path="sign-up" element={<SignUpPage />} />

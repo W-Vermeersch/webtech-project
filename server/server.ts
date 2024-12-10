@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as session from 'express-session';
 import { BaseController,LogInController, SignInController, PostController } from './controllers';
 import * as path from 'path';
-import cors = require("cors");
+import * as cors from "cors";
 import Database from "./database";
 import { CreatePostController} from './controllers/post/create-post.controllers';
 import { UserProfileController } from './controllers/user-profile.controllers';
