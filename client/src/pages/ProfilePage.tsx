@@ -21,7 +21,7 @@ interface User {
   username: string;
   profile_pic: string;
   level: number;
-  {
+}
 
 interface PostComment{
   idx: number; // index to refer to Post
