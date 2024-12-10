@@ -73,18 +73,18 @@ const posts: Post[] = [
       latitude: 0,
       description: ""
     },
-      {
-        idx: 5,
-        image_url: "https://dummyimage.com/180",
-        title: "Guess this pokemon ",
-        tags: ["Pikachu", "Pokemon"],
-        user: "Lol",
-        profilepicurl: "https://dummyimage.com/180",
-        commentsection: mockcomments,
-        longitude: 0,
-        latitude: 0,
-        description: ""
-      }
+    {
+      idx: 5,
+      image_url: "https://dummyimage.com/180",
+      title: "Guess this pokemon ",
+      tags: ["Pikachu", "Pokemon"],
+      user: "Lol",
+      profilepicurl: "https://dummyimage.com/180",
+      commentsection: mockcomments,
+      longitude: 0,
+      latitude: 0,
+      description: ""
+    }  
   ];
 
 

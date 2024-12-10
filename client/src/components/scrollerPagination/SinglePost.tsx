@@ -1,7 +1,7 @@
 import { CardHeader, Row, Col, Container, CardBody, CardText, CardImg} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./SinglePost.css"
-import { Post } from "../profile/PostGallery";
+import { Post } from "../posts/PostInterface";
 
 interface SinglePostProps {
     post: Post;
