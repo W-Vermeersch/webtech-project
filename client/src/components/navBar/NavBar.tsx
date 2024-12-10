@@ -11,16 +11,15 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../react-auth-kit/useAuthUser";
 import useSignOut from "../../react-auth-kit/useSignOut";
-import useRefreshToken from "../../react-auth-kit/useRefreshToken";
+import getRefreshToken from "../../react-auth-kit/getRefreshToken";
 import axios from "axios";
 import RouteToServer from "../../infos";
-import Cookies from "js-cookie";
 
 export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
-  const refreshToken = useRefreshToken();
+  const refreshToken = getRefreshToken();
 
   async function handleLogOut() {
     if (!authUser) {

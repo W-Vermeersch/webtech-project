@@ -33,7 +33,10 @@ export default function LogIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    const resp = await axios.post(RouteToServer("/user/log-in"), values);
+    const resp = await axios.post(RouteToServer("/user/log-in"), {
+      ...values,
+      withCredentials: true,
+    });
 
     if (resp.status === 206) {
       if (resp.data.errors) {
@@ -55,7 +58,7 @@ export default function LogIn() {
       const refreshToken = resp.data.refreshToken;
       const username = resp.data.username;
       const userID = resp.data.userID;
-      signIn( token, refreshToken, username, userID );
+      signIn(token, refreshToken, username, userID);
 
       console.log("Logged in successfully");
       if (resp.data.redirect) {

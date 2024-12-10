@@ -11,6 +11,7 @@ import HomePage from "./pages/Homepage.tsx";
 import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
+import PageNotFound from "./pages/PageNotFound.tsx";
 
 import FullPost from "./pages/FullPostPage.tsx";
 
@@ -31,7 +32,7 @@ function App() {
         </Route>
         <Route path="/post/:id" element={<FullPost />} />
         <Route path="/map" element={<Map />} />
-        <Route path="*" element={<Reroute />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );
