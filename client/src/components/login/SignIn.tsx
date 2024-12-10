@@ -1,6 +1,7 @@
 import "./login.css";
 import axios from "axios";
 import RouteToServer from "../../infos.ts";
+import { useNavigate } from "react-router-dom";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
@@ -12,8 +13,8 @@ import { Formik, Form, FormikHelpers } from "formik";
 import CustomInput from "./CustomInput.tsx";
 import { signUpSchema } from "./signUpSchema.ts";
 
-
 export default function SignIn() {
+  const navigate = useNavigate();
 
   interface FormValues {
     username: string;
@@ -32,20 +33,23 @@ export default function SignIn() {
 
     if (resp.status === 206) {
       if (resp.data.errors) {
-
         if (resp.data.inputs) {
           actions.setValues(resp.data.inputs);
         }
-        const touchedFields = Object.keys(resp.data.errors).reduce((acc: { [key: string]: boolean }, key) => {
-          acc[key] = true;
-          return acc;
-        }, {});
+        const touchedFields = Object.keys(resp.data.errors).reduce(
+          (acc: { [key: string]: boolean }, key) => {
+            acc[key] = true;
+            return acc;
+          },
+          {}
+        );
         actions.setTouched(touchedFields);
         actions.setStatus(resp.data.errors);
       }
     } else {
       if (resp.data.redirect) {
-        window.location.href = resp.data.redirect; // Redirect on the frontend
+        navigate(resp.data.redirect); // Redirect on the frontend
+        console.log("redirected");
         actions.resetForm();
       }
     }
@@ -61,20 +65,19 @@ export default function SignIn() {
       }}
       validationSchema={signUpSchema}
       onSubmit={onSubmit}
-
     >
       {({ isSubmitting, status }) => (
         <Form>
           <Stack gap={4}>
-              <FormGroup as={Col} controlId="validationFormik01">
-                <CustomInput
-                  label="Username"
-                  name="username"
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                />
-              </FormGroup>
+            <FormGroup as={Col} controlId="validationFormik01">
+              <CustomInput
+                label="Username"
+                name="username"
+                id="username"
+                type="text"
+                placeholder="Enter your username"
+              />
+            </FormGroup>
 
             <FormGroup controlId="validationFormik03">
               <CustomInput
@@ -110,10 +113,14 @@ export default function SignIn() {
               Sign Up
             </Button>
             {status &&
-              Object.values(status).map((value, idx) => (
-                value && <div key={String(idx)} className="text-danger small">{value as string}</div>
-              ))
-            }
+              Object.values(status).map(
+                (value, idx) =>
+                  value && (
+                    <div key={String(idx)} className="text-danger small">
+                      {value as string}
+                    </div>
+                  )
+              )}
           </Stack>
         </Form>
       )}

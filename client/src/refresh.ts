@@ -6,12 +6,13 @@ export const refresh = createRefresh({
   refreshApiCallback: async (param) => {
     try {
       const response = await axios.post("/token", param, {
-        headers: { Authorization: `Bearer ${param.authToken}` },
+        headers: { Authorization: `Bearer ${param.refreshToken}` },
       });
       console.log("Refreshing");
       return {
         isSuccess: true,
         newAuthToken: response.data.token,
+        newAuthTokenExpireIn: response.data.expires,
       };
     } catch (error) {
       console.error(error);

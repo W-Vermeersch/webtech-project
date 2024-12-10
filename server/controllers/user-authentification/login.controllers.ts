@@ -2,24 +2,24 @@ import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
 import {LogInForm, ErrorInLogInForm} from "../../../Global/log-in-forms"
 import Database from "../../database";
-import jwt = require("jsonwebtoken");
+import * as jwt from "jsonwebtoken";
 import { ref } from "yup";
 require("dotenv").config();
 
 export class LogInController extends UserAuthentificationController {
-    public constructor(private db: Database) {
-        super();
-    }
+  public constructor(private db: Database) {
+    super();
+  }
 
-    initializeRoutes(): void {
-        //post request because we are generating and passing a token
-        this.router.post("/log-in", (req, res) => {
-            return this.logIn(req, res);
-        });
+  initializeRoutes(): void {
+    //post request because we are generating and passing a token
+    this.router.post("/log-in", (req, res) => {
+      return this.logIn(req, res);
+    });
 
-        this.router.post("/token", (req, res) => {
-            return this.handleRefreshToken(req, res);
-        });
+    this.router.post("/token", (req, res) => {
+      return this.handleRefreshToken(req, res);
+    });
 
         this.router.delete("/log-out", (req, res) => {
             const refresh_token = req.headers['refresh-token'];
@@ -57,15 +57,15 @@ export class LogInController extends UserAuthentificationController {
         const usernameOrEmail = inputs.usernameOrEmail;
         const password = inputs.password;
 
-        //check if input fields are filled
-        if (!this._isGiven(inputs.usernameOrEmail)) {
-            errors.usernameOrEmail = "Please enter your username or e-mail.";
-            inputs.usernameOrEmail = "";
-        }
-        if (!this._isGiven(inputs.password)) {
-            errors.password = "Please enter a password.";
-            inputs.password = "";
-        }
+    //check if input fields are filled
+    if (!this._isGiven(inputs.usernameOrEmail)) {
+      errors.usernameOrEmail = "Please enter your username or e-mail.";
+      inputs.usernameOrEmail = "";
+    }
+    if (!this._isGiven(inputs.password)) {
+      errors.password = "Please enter a password.";
+      inputs.password = "";
+    }
 
         //authenticate user (we might want to add hashed passwords in the future)
         const user: any = await this.db.fetchUserUsingEmailOrUsername(usernameOrEmail);
@@ -97,7 +97,7 @@ export class LogInController extends UserAuthentificationController {
             // console.log("handling tokens")
             const user_id = user[0].user_id
             const username = user[0].username
-            const userObject = 
+            const userObject =
             {
                 username: username,
                 user_id: user_id
