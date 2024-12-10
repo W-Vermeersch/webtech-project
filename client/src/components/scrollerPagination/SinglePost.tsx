@@ -29,7 +29,7 @@ const SinglePost = ({ post }: SinglePostProps) =>{
                 </Col>
                 <Col>
                 <Link style={{textDecoration: "none", color: "inherit"}} to={`/user/${post.user}`}> 
-                    <div className="d-flex flex-column"> 
+                    <div className=" username d-flex flex-column"> 
                         {post.user}
                     </div>
                     </Link> 
@@ -54,9 +54,9 @@ const SinglePost = ({ post }: SinglePostProps) =>{
             ))}
           </div>
           {/* comment section */}
-          <div className="comments-section p-3">
+          <div className="comments-section">
           {commentsToDisplay.map((comment, index) => (
-            <div key={index} className="comment mb-2">
+            <div key={index} className="comment">
               <strong>{comment.user}:</strong> {comment.comment}
             </div>
           ))}
