@@ -159,11 +159,6 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
 
     //Operations for the post table
-
-    //all post fetch functions will return an array of posts.
-    //and each post will be an array of all the columns of the post table.
-    //so the resulting array will be an array of arrays.
-
     /* Stores a post into the DB, ID of the user needs to be given */
     public async storePost(user_id: number,
                            post_title: string,
