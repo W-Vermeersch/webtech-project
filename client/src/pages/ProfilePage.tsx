@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ProfilePage.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import RouteToServer from "../infos";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -14,10 +16,18 @@ import Tab from "react-bootstrap/Tab";
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 
+
+interface User {
+  username: string;
+  profile_pic: string;
+  level: number;
+  {
+
 interface PostComment{
   idx: number; // index to refer to Post
   user: string;
   comment: string;
+
 }
 
 interface Post {
@@ -48,7 +58,43 @@ const mockPosts: Post[] = Array(15)
   }));
 
 export default function ProfilePage() {
+  const { username } = useParams();
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchUser() {
+      const resp = await axios.get(RouteToServer("/user/get"), {
+        params: { username },
+      });
+      if (resp.data.redirect) {
+        navigate(resp.data.redirect);
+      } else {
+        console.log(resp.data);
+        setUser(resp.data);
+      }
+    }
+
+    async function fetchPosts() {
+      const resp = await axios.get(RouteToServer("/post/get"), {
+        params: { username },
+      });
+      console.log(resp.data);
+      setPosts(resp.data);
+    }
+
+    fetchUser();
+    if (user) {
+      fetchPosts();
+    }
+    
+  }, [username]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Container className="text-white rounded overflow-hidden border border-light shadow">
