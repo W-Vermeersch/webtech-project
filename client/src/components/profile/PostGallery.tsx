@@ -14,7 +14,7 @@ export interface Post {
   latitude?: number | undefined;
   // added because profile pictures also exist
   profilepicurl?: string;
-  commentsection: PostComment[];
+  commentsection?: PostComment[];
 }
 
 interface PostGalleryProps {
