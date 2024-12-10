@@ -8,6 +8,7 @@ export class Post{
     likes: number = 0; // in DB each posts has a list of all Users who liked
     longitude: number | undefined;
     latitude: number | undefined;
+    commentsection: Comment[];
 
     constructor(body: any) {
         for (const key in body) {

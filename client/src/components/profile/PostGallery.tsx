@@ -8,16 +8,23 @@ export interface Post {
   image_url: string; // url to the storage api
   idx?: number; // index of Post
   description?: string;
-  tags?: string[];
+  tags: string[];
   likes?: number; // in DB each posts has a list of all Users who liked
   longitude?: number | undefined;
   latitude?: number | undefined;
   // added because profile pictures also exist
   profilepicurl?: string;
+  commentsection: PostComment[];
 }
 
 interface PostGalleryProps {
   posts: Post[];
+}
+
+export interface PostComment{
+  idx: number; // index to refer to Post
+  user: string;
+  comment: string;
 }
 
 export default function PostGallery({ posts }: PostGalleryProps) {

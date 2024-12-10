@@ -1,13 +1,22 @@
-import { CardHeader, Row, Col, NavLink, Container, CardBody, CardText, CardImg} from "react-bootstrap";
-import PostGallery, { Post } from "../profile/PostGallery";
-import { Link } from "react-router-dom";
+import { CardHeader, Row, Col, Container, CardBody, CardText, CardImg} from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import "./SinglePost.css"
+import { Post } from "../profile/PostGallery";
 
 interface SinglePostProps {
     post: Post;
 }
 
 const SinglePost = ({ post }: SinglePostProps) =>{
+  const navigate = useNavigate();
+  const handleViewAllComments = () => {
+    navigate("/log-in")
+  }
+
+  // For each post, display the first two comments,
+  // otherwhise click on more to open up the comments section
+  const commentsToDisplay = post.commentsection ? post.commentsection.slice(0, 2) : [];
+
     return(
         <Container className="post">
         <CardHeader className="d-flex justify-content-between align-items-center">
@@ -23,7 +32,7 @@ const SinglePost = ({ post }: SinglePostProps) =>{
                     <div className="d-flex flex-column"> 
                         {post.user}
                     </div>
-                    </Link>
+                    </Link> 
                 </Col>
              </Row>
         </CardHeader>
@@ -44,6 +53,23 @@ const SinglePost = ({ post }: SinglePostProps) =>{
               </span>
             ))}
           </div>
+          {/* comment section */}
+          <div className="comments-section p-3">
+          {commentsToDisplay.map((comment, index) => (
+            <div key={index} className="comment mb-2">
+              <strong>{comment.user}:</strong> {comment.comment}
+            </div>
+          ))}
+
+          {post.commentsection && post.commentsection.length > 2 && 
+            <div className="load-more-comments muted"
+            style={{cursor: "pointer"}}
+            onClick={handleViewAllComments}>
+              View all comments
+            </div>  
+          }
+
+         </div>
         </div>
       </CardBody>
         </Container>
