@@ -91,7 +91,7 @@ export default function NavBar() {
               id="user-dropdown"
             >
               <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                <NavItem to={`/user/${authUser && authUser.username}`}  eventKey="Profile">
+                <NavItem to={`/user/profile/${authUser && authUser.username}`}  eventKey="Profile">
                   Profile
                 </NavItem>
               </NavDropdown.Item>

@@ -24,7 +24,7 @@ function App() {
         <Route path="/user">
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
-          <Route path=":username" element={<ProfilePage />} />
+          <Route path="profile/:username" element={<ProfilePage />} />
         </Route>
         <Route path="/post/:id" element={<FullPost />} />
         <Route path="/map" element={<Map />} />
