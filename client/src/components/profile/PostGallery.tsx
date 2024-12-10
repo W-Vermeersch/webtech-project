@@ -2,6 +2,7 @@
 import Image from "react-bootstrap/Image";
 import { NavLink } from "react-router-dom";
 
+
 export interface Post {
   title?: string;
   user?: string;
@@ -10,8 +11,8 @@ export interface Post {
   description?: string;
   tags: string[];
   likes?: number; // in DB each posts has a list of all Users who liked
-  longitude?: number | undefined;
-  latitude?: number | undefined;
+  longitude: number;
+  latitude: number;
   // added because profile pictures also exist
   profilepicurl?: string;
   commentsection?: PostComment[];

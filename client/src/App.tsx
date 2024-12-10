@@ -11,7 +11,7 @@ import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 
-
+import FullPost from "./pages/FullPostPage.tsx";
 
 
 function App() {
@@ -19,15 +19,23 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route
+          path="/home"
+          element={
+            <>
+              <HomePage />
+              <FullPost />
+            </>
+          }
+        />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/user">
-          {/*<Route path ="userId" element={<HomePage />} />*/}
-          <Route path="profile" element={<ProfilePage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
+          <Route path=":username" element={<ProfilePage />} />
         </Route>
+        <Route path="/post/:id" element={<FullPost />} />
         <Route path="/map" element={<Map />} />
         <Route path="*" element={<Reroute />} />
       </Routes>

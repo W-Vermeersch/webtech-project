@@ -4,6 +4,10 @@
   padding: 2rem;
 }
 
+body.modal-open {
+  padding-right: 0px !important;
+}
+
 Link {
   text-underline: None;
 }
