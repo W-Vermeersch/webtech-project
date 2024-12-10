@@ -1,11 +1,9 @@
 import * as express from 'express';
 import * as session from 'express-session';
-import { BaseController,LogInController, SignInController, PostController, UserProfileController } from './controllers';
+import { BaseController,LogInController, SignInController, PostController } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
-import {PostController} from "./controllers/post/post.controller";
-import { LogInController } from './controllers/user-authentification/login.controllers';
 import { CreatePostController} from './controllers/post/create-post.controllers';
 import { UserProfileController } from './controllers/user-profile.controllers';
 const swaggerUi = require('swagger-ui-express') ;
