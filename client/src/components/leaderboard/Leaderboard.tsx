@@ -31,7 +31,6 @@ export default function Leaderboard({ users }: LeaderboardProps) {
 
     return (
         <>
-            <h2>Leaderboard</h2>
             <ol>
                 {sortedUsers.map((user, index) => (
                     <li key={index}>

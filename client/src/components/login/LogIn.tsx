@@ -2,6 +2,9 @@ import "./login.css";
 import axios from "axios";
 import RouteToServer from "../../infos.ts";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { useNavigate } from "react-router-dom";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
@@ -13,7 +16,13 @@ import CustomInput from "./CustomInput.tsx";
 import { logInSchema } from "./logInSchema.ts";
 
 export default function LogIn() {
+  interface IUserData {
+    username: string;
+    UserID: string;
+  }
+
   const signIn = useSignIn();
+  const navigate = useNavigate();
 
   interface FormValues {
     usernameOrEmail: string;
@@ -51,9 +60,11 @@ export default function LogIn() {
         userState: { username: resp.data.username, userID: resp.data.userID },
       })
     ) {
+      console.log("Logged in successfully");
       if (resp.data.redirect) {
-        window.location.href = resp.data.redirect; // to home
         actions.resetForm();
+        navigate(resp.data.redirect); // to home
+        window.location.reload();
       }
     } else {
       console.log("refresh token issue");

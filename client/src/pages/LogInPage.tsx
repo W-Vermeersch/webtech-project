@@ -4,6 +4,7 @@ import "./SignUpPage.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import NavItem from "../components/navBar/NavItem";
 
 export default function LogInPage() {
   return (
@@ -16,6 +17,7 @@ export default function LogInPage() {
         <Col xs={6}>
           <Container id="form-container" className="rounded shadow-sm">
             <LogIn />
+            <NavItem to="/user/sign-up" className="text-light mt-3">Don't have an account? Sign up here</NavItem>
           </Container>
         </Col>
       </Row>
