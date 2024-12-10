@@ -6,7 +6,7 @@ import {Post} from "../../../Global/post";
 import * as ExifReader from 'exifreader';
 import { authenticateToken } from "../user-authentification/login.controllers";
 import * as multer from "multer";
-import path = require("path");
+import * as path from "path";
 import * as fs from "fs";
 import {GPSDataExtractor} from "./gps.data.extractor";
 
