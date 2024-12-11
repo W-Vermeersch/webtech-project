@@ -23,25 +23,13 @@ function App() {
       <Routes>
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth />}>
-            <Route path="/home" element={<HomePage />} />
-          </Route>
-          <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />
           </Route>
-          <Route element={<RequireAuth />}>
-            <Route path="/leaderboard" element={<LeaderboardPage />} />
-          </Route>
-
-          <Route element={<RequireAuth />}>
-            <Route path="/profile/:username" element={<ProfilePage />} />
-          </Route>
-          <Route element={<RequireAuth />}>
-            <Route path="/post/:id" element={<FullPost />} />
-          </Route>
-
-          <Route element={<RequireAuth />}>
-            <Route path="/map" element={<Map />} />
-          </Route>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/profile/:username" element={<ProfilePage />} />
+          <Route path="/post/:id" element={<FullPost />} />
+          <Route path="/map" element={<Map />} />
         </Route>
 
         <Route path="/user">
