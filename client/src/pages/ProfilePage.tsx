@@ -68,7 +68,7 @@ export default function ProfilePage() {
         }
       } catch (error) {
         console.error(error);
-        navigate("/log-in", { state: { from: location }, replace: true });
+        navigate("/user/log-in", { state: { from: location }, replace: true });
       }
     }
 
