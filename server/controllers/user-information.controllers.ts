@@ -11,7 +11,7 @@ export class UserInfoController extends UserAuthentificationController {
 
     initializeRoutes(): void {
         // /user/get 
-        this.router.get("/get-profile-information", (req: express.Request, response: express.Response) => {
+        this.router.get("/get-profile-information", authenticateToken, (req: express.Request, response: express.Response) => {
            console.log("authenticated")
            return this.getUserInformation(req, response);
         });
