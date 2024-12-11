@@ -1,32 +1,20 @@
 import { useEffect } from "react";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import useAuthUser from 'react-auth-kit/hooks/useAuthUser'
+import useIsAuthenticated from "../../hooks/useIsAuthenticated";
+import useAuthUser from "../../hooks/useAuthUser";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PostForm from "./PostForm";
 
-interface IUserData {
-    username: string;
-    userID: string;
-   };
-
 const CreatePost = () => {
   const isAuthenticated = useIsAuthenticated();
-  const authUser = useAuthUser<IUserData>()
+  const authUser = useAuthUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    if (!isAuthenticated) {
-      navigate("/user/log-in");
-    }
-  }, [isAuthenticated, navigate]);
-
-  if (!isAuthenticated) {
-    return null;
-  }
+    //check in the backend if the user is authenticated
+  });
 
   return (
     <Container>

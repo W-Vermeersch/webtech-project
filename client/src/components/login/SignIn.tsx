@@ -1,6 +1,5 @@
 import "./login.css";
-import axios from "axios";
-import RouteToServer from "../../infos.ts";
+import axios from "../../api/axios.ts";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "react-bootstrap/Stack";
@@ -27,9 +26,7 @@ export default function SignIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    console.log(values);
-    const resp = await axios.post(RouteToServer("/user/sign-in"), values);
-    console.log(resp);
+    const resp = await axios.post("/user/sign-in", values);
 
     if (resp.status === 206) {
       if (resp.data.errors) {
@@ -49,7 +46,6 @@ export default function SignIn() {
     } else {
       if (resp.data.redirect) {
         navigate(resp.data.redirect); // Redirect on the frontend
-        console.log("redirected");
         actions.resetForm();
       }
     }

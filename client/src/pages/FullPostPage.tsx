@@ -2,8 +2,7 @@ import "./FullPostPage.css";
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import RouteToServer from "../infos";
+import axios from "../api/axios";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -47,11 +46,10 @@ export default function FullPost() {
 
   useEffect(() => {
     async function fetchPost() {
-      const resp = await axios.get(RouteToServer("/post/get"), { params: { id } });
+      const resp = await axios.get("/post/get", { params: { id } });
       if (resp.data.redirect) {
         navigate(resp.data.redirect);
       } else {
-        console.log(resp.data);
         setPost(resp.data); 
       }
     }

@@ -35,12 +35,12 @@ L.Icon.Default.mergeOptions({
 
 export default function MapContainer({ post, zoom, className }: MapContainerProps) {
   return (
-    <div className={"map-wrapper mb-3 mb-md-0 " + className}>
+    <div className={"map-wrapper-fp mb-3 mb-md-0 " + className}>
       <LeafletMapContainer
         center={[post.latitude, post.longitude]}
         zoom={zoom}
         scrollWheelZoom={true}
-        className="map-container"
+        className="map-container-fp"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

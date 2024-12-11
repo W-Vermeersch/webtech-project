@@ -2,13 +2,14 @@ import * as express from 'express';
 import * as session from 'express-session';
 import { BaseController,LogInController, SignInController, PostController } from './controllers';
 import * as path from 'path';
-import cors = require("cors");
+import * as cors from "cors";
 import Database from "./database";
 import { CreatePostController} from './controllers/post/create-post.controllers';
 import { UserProfileController } from './controllers/user-profile.controllers';
 import { UserInfoController } from './controllers/user-information.controllers';
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
+const cookieParser = require('cookie-parser');
 
 export class App {
     app: express.Application;
@@ -53,7 +54,14 @@ export class App {
         //    resave: true,
         //    saveUninitialized: true
         //}));
-        this.app.use(cors());
+        this.app.use(cors(
+            {
+                origin: "http://localhost:5173",
+                credentials: true
+                
+            }
+        ));
+        this.app.use(cookieParser());
 
         this.app.use(express.json({ limit: "150mb" }));
         this.app.use(express.urlencoded({ limit: "150mb", extended: true }));

@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ProfilePage.css";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import RouteToServer from "../infos";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -15,17 +14,16 @@ import Tab from "react-bootstrap/Tab";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
-import { Post, PostComment} from "../components/posts/PostInterface";
-
+import { Post, PostComment } from "../components/posts/PostInterface";
 
 interface User {
-  username: string,
-  user_id: number,
-  displayname: string,
-  profilepicture: string,
-  bio: string,
-  totalexp: number,
-  badges: string[],
+  username: string;
+  user_id: number;
+  displayname: string;
+  profilepicture: string;
+  bio: string;
+  totalexp: number;
+  badges: string[];
 }
 
 // Create more realistic mock data with coordinates
@@ -46,23 +44,36 @@ export default function ProfilePage() {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
   const navigate = useNavigate();
+  const location = useLocation();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    // Abort fetch if component is unmounted
+    // let isMounted = true;
+    // const controller = new AbortController();
+
     async function fetchUser() {
-      console.log(username);
-      const resp = await axios.get(RouteToServer("/user/get-profile-information"), {
-        params: { username },
-      });
-      if (resp.data.redirect) {
-        navigate(resp.data.redirect);
-      } else {
-        console.log(resp.data);
-        setUser(resp.data);
+      try {
+        const resp = await axiosPrivate.get("/user/get-profile-information", {
+          params: { username },
+
+          //signal: controller.signal,
+        });
+        if (resp.data.redirect) {
+          // user not found
+          navigate(resp.data.redirect);
+        } else {
+          //isMounted &&
+          setUser(resp.data);
+        }
+      } catch (error) {
+        console.error(error);
+        navigate("/user/log-in", { state: { from: location }, replace: true });
       }
     }
 
     async function fetchPosts() {
-      const resp = await axios.get(RouteToServer("/post/get"), {
+      const resp = await axiosPrivate.get("/post/get", {
         params: { username },
       });
       console.log(resp.data);
@@ -73,7 +84,13 @@ export default function ProfilePage() {
     //if (user) {
     //  fetchPosts();
     //}
-    
+
+    // runs if the component unmounts
+    // return () => {
+    //   isMounted = false;
+    //   controller.abort();
+    // }
+
   }, [username]);
 
   if (!user) {
@@ -105,10 +122,8 @@ export default function ProfilePage() {
                 label={"current progress"}
               />
             </div>
-            <Container className="p-3">
-              <p className="text-center">
-                {user.bio}
-              </p>
+            <Container className="p-3 bio-container">
+              <p className="text-center">{user.bio}</p>
             </Container>
           </Stack>
         </Col>
@@ -132,9 +147,9 @@ export default function ProfilePage() {
             <Tab eventKey="map" title="Map">
               {activeTab === "map" && (
                 <MapContainer
-                  posts={mockPosts}
-                  center={[50.822376, 4.395356]}
-                />
+                posts={mockPosts}
+                center={[50.822376, 4.395356]}
+              />
               )}
             </Tab>
           </Tabs>

@@ -32,7 +32,8 @@ export class UserInfoController extends UserAuthentificationController {
             });
         } else {
             const userObject = users[0]
-            const userProfileDecoration = (await this.db.fetchProfileDecoration(userObject.user_id))[0]
+            const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
+            //console.log(userProfileDecoration); // empty array??
             res.json({
                 username: userObject.username,
                 user_id: userObject.user_id,

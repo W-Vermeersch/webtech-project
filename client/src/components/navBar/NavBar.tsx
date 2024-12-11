@@ -8,40 +8,22 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 
-import useSignOut from "react-auth-kit/hooks/useSignOut";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import RouteToServer from "../../infos";
-import Cookies from "js-cookie";
-
-interface IUserData {
-  username: string;
-  userID: string;
-}
+import useAuthUser from "../../hooks/useAuthUser";
+import useSignOut from "../../hooks/useSignOut";
 
 export default function NavBar() {
   const signOut = useSignOut();
-  const authUser = useAuthUser<IUserData>();
+  const authUser = useAuthUser();
   const navigate = useNavigate();
 
   async function handleLogOut() {
     if (!authUser) {
       return;
     }
-    console.log("Logging out");
-    const resp = await axios.delete(RouteToServer("/user/log-out"), {
-      headers: {
-        "refresh-token": Cookies.get("_auth_refresh"),
-      },
-    });
-    // deal with error handling maybe
-    if (resp.status === 204) {
-      signOut();
-      console.log("Logged out");
-      navigate("/user/log-in");
-      window.location.reload();
-    }
+    await signOut();
+    navigate("/user/log-in");
+    // deal with error handling
   }
 
   return (
@@ -91,7 +73,10 @@ export default function NavBar() {
               id="user-dropdown"
             >
               <NavDropdown.Item className={authUser ? "" : "disabled"}>
-                <NavItem to={`/user/profile/${authUser && authUser.username}`}  eventKey="Profile">
+                <NavItem
+                  to={`/profile/${authUser && authUser.username}`}
+                  eventKey="Profile"
+                >
                   Profile
                 </NavItem>
               </NavDropdown.Item>

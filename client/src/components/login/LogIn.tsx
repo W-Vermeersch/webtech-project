@@ -1,10 +1,7 @@
 import "./login.css";
-import axios from "axios";
-import RouteToServer from "../../infos.ts";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useNavigate } from "react-router-dom";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import axios from "../../api/axios.ts";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import useSignIn from "../../hooks/useSignIn.tsx";
 
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
@@ -16,13 +13,15 @@ import CustomInput from "./CustomInput.tsx";
 import { logInSchema } from "./logInSchema.ts";
 
 export default function LogIn() {
+  const navigate = useNavigate();
+  const signIn = useSignIn();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/home";
+
   interface IUserData {
     username: string;
     UserID: string;
   }
-
-  const signIn = useSignIn();
-  const navigate = useNavigate();
 
   interface FormValues {
     usernameOrEmail: string;
@@ -33,7 +32,7 @@ export default function LogIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    const resp = await axios.post(RouteToServer("/user/log-in"), values);
+    const resp = await axios.post("/user/log-in", values);
 
     if (resp.status === 206) {
       if (resp.data.errors) {
@@ -50,24 +49,17 @@ export default function LogIn() {
         actions.setTouched(touchedFields);
         actions.setStatus(resp.data.errors);
       }
-    } else if (
-      signIn({
-        auth: {
-          token: resp.data.accessToken,
-          type: "Bearer",
-        },
-        refresh: resp.data.refreshToken,
-        userState: { username: resp.data.username, userID: resp.data.userID },
-      })
-    ) {
-      console.log("Logged in successfully");
-      if (resp.data.redirect) {
-        actions.resetForm();
-        navigate(resp.data.redirect); // to home
-        window.location.reload();
-      }
     } else {
-      console.log("refresh token issue");
+      const token = resp.data.accessToken;
+      const username = resp.data.username;
+      const userID = resp.data.userID;
+      signIn(token, username, userID);
+
+      if (resp.data.redirect) {
+        // use data.redirect?
+        actions.resetForm();
+        navigate(from, { replace: true }); // to the user was going or /home
+      }
     }
   }
 

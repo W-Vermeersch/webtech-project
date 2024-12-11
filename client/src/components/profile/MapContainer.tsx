@@ -10,7 +10,6 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { Post, PostComment} from "../posts/PostInterface"
 
 
-
 interface MapContainerProps {
   posts: Post[];
   center: [number, number];
@@ -27,12 +26,12 @@ L.Icon.Default.mergeOptions({
 export default function MapContainer({ posts, center }: MapContainerProps) {
 
   return (
-    <div className="map-wrapper">
+    <div className="map-wrapper-pp">
       <LeafletMapContainer
         center={center}
         zoom={13}
         scrollWheelZoom={true}
-        className="map-container"
+        className="map-container-pp"
       >
         <TileLayer 
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
