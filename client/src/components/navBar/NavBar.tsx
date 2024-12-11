@@ -11,8 +11,6 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
-import getRefreshToken from "../../hooks/getRefreshToken";
-import axios from "../../api/axios";
 
 export default function NavBar() {
   const signOut = useSignOut();
