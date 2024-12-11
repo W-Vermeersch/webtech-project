@@ -90,6 +90,7 @@ export default function ProfilePage() {
     //   isMounted = false;
     //   controller.abort();
     // }
+
   }, [username]);
 
   if (!user) {

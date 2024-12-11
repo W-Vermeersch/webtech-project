@@ -31,8 +31,14 @@ export class PostController extends BaseController {
             return this.addPost(req, response);
         });
 
-        this.router.get("/get", authenticateToken, (req: express.Request, response: express.Response) => {
-            return this.getPost(req, response);
+        this.router.get("/get-user-posts", authenticateToken, (req: express.Request, response: express.Response) => {
+            console.log("authenticated")
+            return this.getUserPosts(req, response);
+        });
+
+        this.router.get("/get-user-liked-posts", authenticateToken, (req: express.Request, response: express.Response) => {
+            console.log("authenticated")
+            return this.getUserLikedPosts(req, response);
         });
     }
 
@@ -101,8 +107,36 @@ export class PostController extends BaseController {
         }
     }
 
-    private getPost(req: express.Request, res: express.Response) {
-        console.log("Get post/get request: " +req.body);
-        return res
+    private async getUserPosts(req: express.Request, res: express.Response) {
+        const username = (req.query.username ) ? req.query.username : " ";
+        const users = await this.db.fetchUserUsingUsername(username.toString())
+        if (users.length === 0) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+        } else {
+            const userObject = users[0]
+            const userPosts = (await this.db.fetchPostsOfUser(userObject.user_id))
+            res.json({
+                user_posts: userPosts
+            });
+        }
+    }
+
+    private async getUserLikedPosts(req: express.Request, res: express.Response) {
+        const username = (req.query.username ) ? req.query.username : " ";
+        const users = await this.db.fetchUserUsingUsername(username.toString())
+        if (users.length === 0) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+        } else {
+            const userObject = users[0]
+            const likedPosts = (await this.db.fetchLikedPostsOfUser(userObject.username))
+            res.json({
+                user_posts: likedPosts
+            });
+        }
     }
 }
+

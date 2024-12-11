@@ -190,14 +190,28 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         return res.rows;
     }
 
-    /* Returns an array of posts that a user has liked given their username. */
-    public async fetchLikedPostsOfUser(username: string): Promise<any[]> {
+    /* Returns an array of post IDs that a user has liked given their user ID. */
+    public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM post_table WHERE $1 = ANY(likes)',
-            values: [username],
+            text: 'SELECT post_id FROM likes_table WHERE user_id = $1',
+            values: [user_id],
+        };
+        const res = await this.executeQuery(query);  //returns a list of post ids, not the actual posts
+        return await this.fetchPostsByIds(res.rows);
+    }
+
+        /* Returns an array of all posts that match with the given list of post IDs. */
+    public async fetchPostsByIds(postIds: number[]): Promise<any[]> {
+        if (postIds.length === 0) {
+            return []; // giving empty list can cause errors so manually return a empty list in that case
+        }
+    
+        const query = {
+            text: 'SELECT * FROM post_table WHERE post_id = ANY($1)',
+            values: [postIds], 
         };
         const res = await this.executeQuery(query);
-        return res.rows;
+        return res.rows; 
     }
 
     /* Returns an array of all posts belonging to a tag given the tag's name. */
