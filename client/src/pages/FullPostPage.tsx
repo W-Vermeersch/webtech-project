@@ -50,7 +50,6 @@ export default function FullPost() {
       if (resp.data.redirect) {
         navigate(resp.data.redirect);
       } else {
-        console.log(resp.data);
         setPost(resp.data); 
       }
     }

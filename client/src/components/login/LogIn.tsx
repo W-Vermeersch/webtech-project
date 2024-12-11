@@ -55,7 +55,6 @@ export default function LogIn() {
       const userID = resp.data.userID;
       signIn(token, username, userID);
 
-      console.log("Logged in successfully");
       if (resp.data.redirect) {
         // use data.redirect?
         actions.resetForm();

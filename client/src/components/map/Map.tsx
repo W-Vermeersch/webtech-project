@@ -4,7 +4,6 @@ import './map.css';
 
 function TheMap() {
     const map = useMap()
-    console.log('map center:', map.getCenter())
     return (<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>)
 }
 

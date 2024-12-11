@@ -26,9 +26,7 @@ export default function SignIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    console.log(values);
     const resp = await axios.post("/user/sign-in", values);
-    console.log(resp);
 
     if (resp.status === 206) {
       if (resp.data.errors) {
@@ -48,7 +46,6 @@ export default function SignIn() {
     } else {
       if (resp.data.redirect) {
         navigate(resp.data.redirect); // Redirect on the frontend
-        console.log("redirected");
         actions.resetForm();
       }
     }

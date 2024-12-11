@@ -21,9 +21,7 @@ export default function NavBar() {
     if (!authUser) {
       return;
     }
-    console.log("Logging out");
     await signOut();
-    console.log("Logged out");
     navigate("/user/log-in");
     // deal with error handling
   }
