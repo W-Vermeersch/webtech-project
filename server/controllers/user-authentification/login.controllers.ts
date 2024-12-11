@@ -119,7 +119,8 @@ export class LogInController extends UserAuthentificationController {
 
 
 export function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
+    console.log("authenticating token");
+    const authHeader = req.headers['Authorization'];
     const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
     //check if we have a valid token
     if (token == null) return res.status(401).send("Unauthorized, no authentication header found");

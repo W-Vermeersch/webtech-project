@@ -54,23 +54,21 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axiosPrivate.get(
-          "/user/get-profile-information",
-          {
-            params: { username },
-            //signal: controller.signal,
-          }
-        );
+        const resp = await axiosPrivate.get("/user/get-profile-information", {
+          params: { username },
+
+          //signal: controller.signal,
+        });
         if (resp.data.redirect) {
           // user not found
           navigate(resp.data.redirect);
         } else {
-          //isMounted && 
+          //isMounted &&
           setUser(resp.data);
         }
       } catch (error) {
         console.error(error);
-        navigate("/login", { state: { from: location }, replace: true });
+        navigate("/log-in", { state: { from: location }, replace: true });
       }
     }
 
@@ -92,7 +90,6 @@ export default function ProfilePage() {
     //   isMounted = false;
     //   controller.abort();
     // }
-
   }, [username]);
 
   if (!user) {

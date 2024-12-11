@@ -53,7 +53,13 @@ export class App {
         //    resave: true,
         //    saveUninitialized: true
         //}));
-        this.app.use(cors());
+        this.app.use(cors(
+            {
+                origin: "http://localhost:5173",
+                credentials: true
+                
+            }
+        ));
 
         this.app.use(express.json({ limit: "150mb" }));
         this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
