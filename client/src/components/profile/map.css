@@ -1,74 +1,74 @@
-.map-wrapper {
-    position: relative;
-    width: 100%;
-    height: 450px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .map-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* Fix z-index issues with controls */
-  .leaflet-top,
-  .leaflet-bottom {
-    z-index: 999 !important;
-  }
-  
-  /* Fix marker icon positioning */
-  .leaflet-marker-icon {
-    z-index: 999 !important;
-  }
-  
-  /* Fix map pane positioning */
-  .leaflet-map-pane {
-    z-index: 1 !important;
-  }
-  
-  .leaflet-tile-pane {
-    z-index: 0 !important;
-  }
-  
-  /* Fix popup styling */
-  .leaflet-popup-content-wrapper {
-    border-radius: 8px;
-  }
-  
-  .leaflet-popup-content {
-    margin: 8px;
-    min-width: 200px;
-  }
-  
-  /* Marker Cluster Custom Styles */
-  .marker-cluster-small {
-    background-color: rgba(31, 41, 55, 0.6);
-  }
-  
-  .marker-cluster-small div {
-    background-color: rgba(31, 41, 55, 0.8);
-  }
-  
-  .marker-cluster-medium {
-    background-color: rgba(31, 41, 55, 0.6);
-  }
-  
-  .marker-cluster-medium div {
-    background-color: rgba(31, 41, 55, 0.8);
-  }
-  
-  .marker-cluster-large {
-    background-color: rgba(31, 41, 55, 0.6);
-  }
-  
-  .marker-cluster-large div {
-    background-color: rgba(31, 41, 55, 0.8);
-  }
-  
-  .marker-cluster {
-    color: #fff;
-  }
+.map-wrapper-pp {
+  position: relative;
+  width: 100%;
+  height: 62vh;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-container-pp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fix z-index issues with controls */
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 999 !important;
+}
+
+/* Fix marker icon positioning */
+.leaflet-marker-icon {
+  z-index: 999 !important;
+}
+
+/* Fix map pane positioning */
+.leaflet-map-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-tile-pane {
+  z-index: 0 !important;
+}
+
+/* Fix popup styling */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 8px;
+  min-width: 200px;
+}
+
+/* Marker Cluster Custom Styles */
+.marker-cluster-small {
+  background-color: rgba(31, 41, 55, 0.6);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+.marker-cluster-medium {
+  background-color: rgba(31, 41, 55, 0.6);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+.marker-cluster-large {
+  background-color: rgba(31, 41, 55, 0.6);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+.marker-cluster {
+  color: #fff;
+}

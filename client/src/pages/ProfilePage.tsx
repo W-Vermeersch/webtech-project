@@ -121,7 +121,7 @@ export default function ProfilePage() {
                 label={"current progress"}
               />
             </div>
-            <Container className="p-3">
+            <Container className="p-3 bio-container">
               <p className="text-center">{user.bio}</p>
             </Container>
           </Stack>
@@ -146,9 +146,9 @@ export default function ProfilePage() {
             <Tab eventKey="map" title="Map">
               {activeTab === "map" && (
                 <MapContainer
-                  posts={mockPosts}
-                  center={[50.822376, 4.395356]}
-                />
+                posts={mockPosts}
+                center={[50.822376, 4.395356]}
+              />
               )}
             </Tab>
           </Tabs>
