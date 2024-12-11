@@ -11,27 +11,16 @@ export class UserInfoController extends UserAuthentificationController {
 
     initializeRoutes(): void {
         // /user/get 
-        this.router.get("/get-profile-information", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/get-profile-information", (req: express.Request, response: express.Response) => {
            console.log("authenticated")
            return this.getUserInformation(req, response);
         });
 
-        this.router.get("/get-user-posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            console.log("authenticated")
-            return this.getUserInformation(req, response);
-        });
-
-        this.router.get("/get-user-liked-posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            console.log("authenticated")
-            return this.getUserInformation(req, response);
-        });
-
          this.router.get("/get-user-comments", authenticateToken, (req: express.Request, response: express.Response) => {
             console.log("authenticated")
-            return this.getUserInformation(req, response);
+            return this.getUserComments(req, response);
         });
     }
-
 
     private async getUserInformation(req: express.Request, res: express.Response) {
         const username = (req.query.username ) ? req.query.username : " ";
@@ -39,7 +28,7 @@ export class UserInfoController extends UserAuthentificationController {
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
-                redirect: '/pageNotFound'
+                redirect: '/home'
             });
         } else {
             const userObject = users[0]
@@ -54,8 +43,21 @@ export class UserInfoController extends UserAuthentificationController {
                 badges: userProfileDecoration.badges
             });
         }
-        res.json
-        console.log("Get post/get request: " +req.query.username);
-        return res
+    }
+
+    private async getUserComments(req: express.Request, res: express.Response) {
+        const username = (req.query.username ) ? req.query.username : " ";
+        const users = await this.db.fetchUserUsingUsername(username.toString())
+        if (users.length === 0) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+        } else {
+            const userObject = users[0]
+            const userComments = (await this.db.fetchCommentsOfUser(userObject.user_id))
+            res.json({
+                user_posts: userComments
+            });
+        }
     }
 }
