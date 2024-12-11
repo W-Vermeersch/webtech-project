@@ -8,6 +8,7 @@ const useSignOut = () => {
     setAuth({ token: "", username: "", userID: 0 });
     try {
       const response = await axios.delete("/user/log-out");
+      console.log(response.status);
     } catch (err) {
       console.error(err);
     }

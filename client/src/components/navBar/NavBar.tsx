@@ -18,7 +18,6 @@ export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
-  const refreshToken = getRefreshToken();
 
   async function handleLogOut() {
     if (!authUser) {
@@ -79,7 +78,7 @@ export default function NavBar() {
             >
               <NavDropdown.Item className={authUser ? "" : "disabled"}>
                 <NavItem
-                  to={`/user/profile/${authUser && authUser.username}`}
+                  to={`/profile/${authUser && authUser.username}`}
                   eventKey="Profile"
                 >
                   Profile

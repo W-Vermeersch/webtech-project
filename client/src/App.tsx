@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import RequireAuth from "./components/RequireAuth.tsx";
+import PersistLogin from "./components/PersistLogin.tsx";
 
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogInPage from "./pages/LogInPage.tsx";
@@ -20,18 +21,33 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route element={<RequireAuth />}>
-          <Route path="/create-post" element={<CreatePost />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/home" element={<HomePage />} />
+          </Route>
+          <Route element={<RequireAuth />}>
+            <Route path="/create-post" element={<CreatePost />} />
+          </Route>
+          <Route element={<RequireAuth />}>
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
+          </Route>
+
+          <Route element={<RequireAuth />}>
+            <Route path="/profile/:username" element={<ProfilePage />} />
+          </Route>
+          <Route element={<RequireAuth />}>
+            <Route path="/post/:id" element={<FullPost />} />
+          </Route>
+
+          <Route element={<RequireAuth />}>
+            <Route path="/map" element={<Map />} />
+          </Route>
         </Route>
-        <Route path="/leaderboard" element={<LeaderboardPage />} />
+
         <Route path="/user">
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="log-in" element={<LogInPage />} />
-          <Route path="profile/:username" element={<ProfilePage />} />
         </Route>
-        <Route path="/post/:id" element={<FullPost />} />
-        <Route path="/map" element={<Map />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>

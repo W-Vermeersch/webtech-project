@@ -9,6 +9,7 @@ import { UserProfileController } from './controllers/user-profile.controllers';
 import { UserInfoController } from './controllers/user-information.controllers';
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
+const cookieParser = require('cookie-parser');
 
 export class App {
     app: express.Application;
@@ -60,6 +61,7 @@ export class App {
                 
             }
         ));
+        this.app.use(cookieParser());
 
         this.app.use(express.json({ limit: "150mb" }));
         this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
