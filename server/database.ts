@@ -334,6 +334,26 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const res = await this.executeQuery(query);
         return res.rows;
     }
+
+    public async storeLike(
+        user_id: number,
+        post_id: number,
+    ) {
+        const query = {
+            text: 'INSERT INTO likes_table (user_id, post_id) VALUES ($1, $2)',
+            values: [user_id, post_id],
+        };
+        await this.executeQuery(query);
+    }
+
+    public async deleteLike(user_id: number,
+                            post_id: string): Promise<void> {
+        const query = {
+            text: 'DELETE FROM likes_table WHERE user_id = $1 AND post_id = $2',
+            values: [user_id, post_id],
+        };
+        await this.executeQuery(query);
+    }
     
 
 
