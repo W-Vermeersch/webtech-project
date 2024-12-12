@@ -62,7 +62,7 @@ export default function ProfilePage() {
         });
         if (resp.data.redirect) {
           // user not found
-          navigate(resp.data.redirect);
+          navigate("/pageNotFound", { replace: true });
         } else {
           //isMounted &&
           setUser(resp.data);
