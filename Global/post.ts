@@ -1,7 +1,7 @@
 export class Post {
     title:string;
     user: string;
-    image_url: string; // url to the storage api
+    image_url: string[]; // url to the storage api
     idx: number; // index of Post
     description: string = "";
     tags: string[] = [];

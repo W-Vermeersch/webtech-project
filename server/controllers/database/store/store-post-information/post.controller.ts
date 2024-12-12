@@ -28,7 +28,7 @@ export class StorePostInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.post("/store/post", (req: express.Request, response: express.Response) => {
+        this.router.post("/store/post", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
         });
     }
@@ -61,19 +61,18 @@ export class StorePostInformationController extends BaseDatabaseController {
             fs.writeFileSync(tempFilePath, base64Data, { encoding: "base64" });
 
             // Optionally extract longitude and latitude
-            const { longitude, latitude } = await GPSDataExtractor(tempFilePath);
+            const GeoData = GPSDataExtractor(tempFilePath);
 
 
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
-                    const tags = await this.imageApi.scanImage(imageUrl);
+                    const tags = this.imageApi.scanImage(imageUrl);
                     const post = new Post(body);
                     post.title = body.caption;
-                    post.longitude = longitude;
-                    post.latitude = latitude;
-                    post.image_url = imageUrl;
-                    post.tags = tags;
-                    fs.unlinkSync(tempFilePath);
+                    post.longitude = (await GeoData).longitude;
+                    post.latitude = (await GeoData).latitude;
+                    post.image_url = [imageUrl];
+                    post.tags = await tags;
 
                     // @ts-ignore
                     const userID = req.user.user_id;
@@ -81,9 +80,10 @@ export class StorePostInformationController extends BaseDatabaseController {
                     post.user = userID;
 
                     // Store the post in the database
-                    // await this.db.storePost(post);
+                    await this.db.storePost(post);
                     console.log(post);
 
+                    fs.unlinkSync(tempFilePath);
                     return res.status(200).send(post);
                 }
             ).catch((error) => {

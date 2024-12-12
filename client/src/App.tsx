@@ -26,6 +26,7 @@ function App() {
             <Route path="/create-post" element={<CreatePost />} />
           </Route>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/post/:id" element={<FullPost />} />

@@ -2,13 +2,15 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
+import useSignOut from "../hooks/useSignOut";
+import Spinner from 'react-bootstrap/Spinner';
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
     const { auth } = useAuth();
+    const signOut = useSignOut();
 
-    // modify to keep persistent everywhere
     useEffect(() => {
         const verifyRefreshToken = async () => {
             try {
@@ -16,6 +18,7 @@ const PersistLogin = () => {
             }
             catch (err) {
                 console.error(err);
+                signOut();
             }
             finally {
                 setIsLoading(false);
@@ -28,7 +31,7 @@ const PersistLogin = () => {
 
     return (
         <>
-        {isLoading ? <p>Loading...</p> : <Outlet />}
+        {isLoading ? <Spinner animation="border" /> : <Outlet />}
         </>
     )
 

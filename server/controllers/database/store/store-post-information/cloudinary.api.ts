@@ -1,42 +1,42 @@
 import {v2 as cloudinary} from "cloudinary";
-import path = require("path");
-import { request } from "http";
 const axios = require('axios');
 require('dotenv').config();
 
 export class CloudinaryApi {
-    cloud_name = process.env.CLOUDINARY_NAME;
-    api_key = process.env.CLOUDINARY_API_KEY;
-    api_secret = process.env.CLOUDINARY_SECRET;
-    cloudinary = cloudinary.config({
-        cloud_name: this.cloud_name,
-        api_key: this.api_key,
-        api_secret: this.api_secret,
+    cloudinary_config = cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_SECRET,
 });
     public async postImage(url: string){
-        return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1733511202/dqycycbapowumepok4ev.jpg"
+        return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1734000010/ovhwrjxrcjdakh8zysqg.jpg"
+        try {
+            const response = await cloudinary.uploader.upload(url, {
+                resource_type: "image",
+                transformation: [
+                    {width: 1000, crop: "scale"},
+                    {quality: "auto"},
+                    {fetch_format: "auto"}
+                ]
+            }).then((url) => {
+                return url
+            })
+            if (!response){
+                console.log(response)
+                throw new Error(response.statusText);
+            } else {
+                console.log(response);
+                return response.url;
+            }
+        }
 
-        const response = await this.cloudinary.uploader.upload(url, {
-            resource_type: "image",
-            transformation: [
-                {width: 1000, crop: "scale"},
-                {quality: "auto"},
-                {fetch_format: "auto"}
-            ]
-        }).then((url) => {
-            return url
-        })
-        if (!response){
-            console.log(response)
-            throw new Error(response.statusText);
-        } else {
-            console.log(response);
-            return response.url;
+        catch (error) {
+            throw error;
         }
     }
 
     public async scanImage(imageUrl: string): Promise<string[]> {
-        const url = `https://${this.api_key}:${this.api_secret}@api.cloudinary.com/v2/analysis/${this.cloud_name}/analyze/ai_vision_general`;
+        const url = `https://${this.cloudinary_config.api_key}:${this.cloudinary_config.api_secret}@api.cloudinary.com/v2/analysis/${this.cloudinary_config.cloud_name}/analyze/ai_vision_general`;
 
         const payload = {
             source: {
