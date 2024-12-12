@@ -1,5 +1,6 @@
-import NavItem from "./NavItem";
 import "./NavBar.css";
+import NavItem from "./NavItem";
+import Search from "./Search";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -52,6 +53,9 @@ export default function NavBar() {
             <NavItem to="/leaderboard" eventKey="Leaderboard">
               Leaderboard
             </NavItem>
+          </Nav>
+          <Nav>
+            <Search/>
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">
