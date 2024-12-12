@@ -66,6 +66,7 @@ export class CloudinaryApi {
     }
 
     public async identifyImage(imageUrl: string): Promise<string[]> {
+        return new Promise(async (resolve, reject) => {return []})
         const prompts = [
             "Tell me in one word what animal is in this picture, if there is none say 'None'.",
             "If there is any animal, can you specify the specific animal race in one word."
@@ -74,6 +75,7 @@ export class CloudinaryApi {
     }
 
     public async appraiseImage(imageUrl: string): Promise<number> {
+        return new Promise(async (resolve, reject) => {return 50})
         const prompts = [
             "Rate this image based on the scenery and the animal by only outputting a number on a scala of 1 to 100, if no animal give '0'.",
             "Rate the rarity rarity of the animal in the picture by only outputting a number with a scala of 1.0 to 5.0, if no animal give '0'."

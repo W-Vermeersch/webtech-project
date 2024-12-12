@@ -12,6 +12,7 @@ import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
 import { Post, PostComment } from "../components/posts/PostInterface"
+import { FETCH_POST } from "../api/urls";
 
 // later make modules of components
 
@@ -46,7 +47,7 @@ export default function FullPost() {
 
   useEffect(() => {
     async function fetchPost() {
-      const resp = await axios.get("/post/get", { params: { id } });
+      const resp = await axios.get(FETCH_POST, { params: { id } });
       if (resp.data.redirect) {
         navigate(resp.data.redirect);
       } else {

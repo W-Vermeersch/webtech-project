@@ -4,6 +4,7 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { ADD_POST } from "../../api/urls";
 
 interface PostFormValues {
   caption: string;
@@ -30,7 +31,7 @@ const PostForm = () => {
   ) {
     console.log("Form data:", values);
     try {
-      const resp = await axios.post("/db/store/post", values);
+      const resp = await axios.post(ADD_POST, values);
       console.log("Response:", resp.data);
     } catch (error) {
       console.error("Error submitting form:", error);

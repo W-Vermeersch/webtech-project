@@ -1,6 +1,7 @@
 import useAuth from "./useAuth";
 import axios from "../api/axios";
 import useSignOut from "./useSignOut";
+import { REFRESH_TOKEN } from "../api/urls";
 
 const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
@@ -8,7 +9,7 @@ const useRefreshToken = () => {
 
   const refresh = async () => {
     try {
-      const response = await axios.post("/user/token", {
+      const response = await axios.post(REFRESH_TOKEN, {
         user: auth?.username,
       });
 

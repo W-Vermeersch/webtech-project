@@ -15,6 +15,7 @@ import Tab from "react-bootstrap/Tab";
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 import { Post, PostComment } from "../components/posts/PostInterface";
+import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
 
 interface User {
   username: string;
@@ -54,7 +55,7 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axiosPrivate.get("/user/get-profile-information", {
+        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
 
           //signal: controller.signal,
@@ -73,7 +74,7 @@ export default function ProfilePage() {
     }
 
     async function fetchPosts() {
-      const resp = await axiosPrivate.get("/post/get", {
+      const resp = await axiosPrivate.get(FETCH_POST, {
         params: { username },
       });
       console.log(resp.data);
