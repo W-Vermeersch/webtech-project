@@ -1,5 +1,6 @@
-import NavItem from "./NavItem";
 import "./NavBar.css";
+import NavItem from "./NavItem";
+import Search from "./Search";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -11,6 +12,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
+import { LOG_IN } from "../../api/urls";
 
 export default function NavBar() {
   const signOut = useSignOut();
@@ -22,7 +24,7 @@ export default function NavBar() {
       return;
     }
     await signOut();
-    navigate("/user/log-in");
+    navigate(LOG_IN);
     // deal with error handling
   }
 
@@ -52,6 +54,9 @@ export default function NavBar() {
             <NavItem to="/leaderboard" eventKey="Leaderboard">
               Leaderboard
             </NavItem>
+          </Nav>
+          <Nav>
+            <Search/>
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">
