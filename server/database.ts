@@ -1,12 +1,13 @@
 import { Pool } from 'pg';
 import {Post} from "../Global/post";
+require('dotenv').config();
 
 class Database {
     pool = new Pool({
         host: "pg-14b692ff-webtech.b.aivencloud.com",  //location of the database, here localhost because we don't have any servers
         user: "avnadmin",
         port: 15545,   //default port for postgresql
-        password: "AVNS_fBxdMHN8jb4EYdOS0ir",
+        password: process.env.DB_PASSWORD,
         database: "defaultdb", //name of postgresql databse
         max: 10, //maximum amount of clients in the pool
         idleTimeout: 60000,   //close idle clients after 1 minute
@@ -126,6 +127,19 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         await this.executeQuery(query);
     }
 
+    /* Returns an array of all comments that match with the given list of comment IDs. */
+    public async fetchCommentByIds(commentIds: number[]): Promise<any[]> {
+        if (commentIds.length === 0) {
+            return [];
+        }
+        const query = {
+            text: 'SELECT * FROM comment_table WHERE comment_id = ANY($1)',
+            values: [commentIds],
+        };
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+
     /* Returns an array with all the comments of a given post using its ID. */
     public async fetchCommentsOfPost(post_id: number): Promise<any[]> {
         const query = {
@@ -147,37 +161,61 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Deletes a comment from the DB given the ID of itself and its user. */
-    public async deleteComment(comment_id: number,
-                               user_id: string): Promise<void> {
+    public async deleteComment(comment_id: number): Promise<void> {
         const query = {
-            text: 'DELETE FROM comment_table WHERE comment_id = $1 AND user_id = $2',
-            values: [comment_id, user_id],
+            text: 'DELETE FROM comment_table WHERE comment_id = $1',
+            values: [comment_id],
         };
         await this.executeQuery(query);
     }
 
-
-
     //Operations for the post table
-    /* Stores a post into the DB, ID of the user needs to be given */
-    public async storePost(user_id: number,
-                           post_title: string,
-                           image_url: string[],
-                           description: string,
-                           tags: string[],
-                           latitude: number,
-                           longitude: number): Promise<void> {
-        var query = {
-            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
-            values: [user_id, post_title, image_url, description, tags, longitude, latitude],
-        };
-        if (longitude === undefined) {
-            query = {
-                text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes) VALUES ($1, $2, $3, $4, $5)',
-                values: [post_title, image_url, description, tags],
-            };
+    /* Stores a post into the DB*/
+    public async storePost(post: Post): Promise<void> {
+        try {
+            let query;
+            if (post.longitude !== undefined && post.latitude !== undefined) {
+                // Insert with geospatial data
+                query = {
+                    text: `
+                        INSERT INTO post_table
+                        (user_id, image_url, description, tags, location)
+                        VALUES ($1, $2, $3, $4, ST_SetSRID(ST_MakePoint($5, $6), 4326))
+                    `,
+                    values: [
+                        post.user,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                        post.longitude,
+                        post.latitude,
+                    ],
+                };
+            } else {
+                // Insert without geospatial data
+                query = {
+                    text: `
+                        INSERT INTO post_table
+                        (user_id, image_url, description, tags)
+                        VALUES ($1, $2, $3, $4)
+                    `,
+                    values: [
+                        post.user,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                    ],
+                };
+            }
+
+            // Execute the query
+            await this.executeQuery(query);
+
+            console.log('Post stored successfully.');
+        } catch (error) {
+            console.error('Error storing post:', error);
+            throw error; // Re-throw the error for upstream handling
         }
-        await this.executeQuery(query);
     }
 
     /* Returns an array with all the posts made by a user given their ID. */
@@ -282,12 +320,18 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /*Update the total EXP count of a user given their ID*/
-    public async updateTotalExp(user_id: number, newExp: number): Promise<void> {
-        const query = {
-            text: 'UPDATE user_profile_decoration_table SET total_exp = $1 WHERE user_id = $2',
-            values: [newExp, user_id],
-        };
-        await this.executeQuery(query);
+    public async addUserExp(user_id: number, newExp: number): Promise<void> {
+        try {
+
+            const query = {
+                text: 'UPDATE user_profile_decoration_table SET total_exp =  total_exp + $1 WHERE user_id = $2',
+                values: [Math.trunc(newExp), user_id],
+            };
+            await this.executeQuery(query);
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     /*Updates a user's badge list (replaces the entire list)*/
@@ -322,7 +366,36 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         const res = await this.executeQuery(query);
         return res.rows;
     }
-    
+
+    public async deleteUserDecoration(user_id: number) {
+        const query = {
+            text: 'DELETE FROM user_profile_decoration_table WHERE user_id = $1',
+            values: [user_id],
+        };
+        await this.executeQuery(query);
+    }
+
+
+    public async storeLike(
+        user_id: number,
+        post_id: number,
+    ) {
+        const query = {
+            text: 'INSERT INTO likes_table (user_id, post_id) VALUES ($1, $2)',
+            values: [user_id, post_id],
+        };
+        await this.executeQuery(query);
+    }
+
+    public async deleteLike(user_id: number,
+                            post_id: number): Promise<void> {
+        const query = {
+            text: 'DELETE FROM likes_table WHERE user_id = $1 AND post_id = $2',
+            values: [user_id, post_id],
+        };
+        await this.executeQuery(query);
+    }
+
 
 
     public async init(): Promise<void> {
@@ -340,7 +413,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 
@@ -358,7 +431,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for user decoration
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,display_name TEXT NOT NULL,bio TEXT,profile_picture_image_url TEXT,total_exp INT NOT NULL, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,display_name TEXT NOT NULL,bio TEXT,profile_picture_image_url TEXT,total_exp INT NOT NULL DEFAULT 0, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 

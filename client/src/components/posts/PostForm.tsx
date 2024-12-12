@@ -1,7 +1,7 @@
-import { Formik, Form, Field, FormikHelpers} from "formik";
+import { Formik, Form, Field, FormikHelpers } from "formik";
 import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
-import 'react-bootstrap-typeahead/css/Typeahead.css';
+import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
@@ -10,10 +10,9 @@ interface PostFormValues {
   file: string;
   tags: string[];
   image_type: string;
-} 
+}
 
 const animalTags: string[] = ["Cat", "Dog", "Lion"];
-
 
 const PostForm = () => {
   const axios = useAxiosPrivate();
@@ -24,34 +23,29 @@ const PostForm = () => {
     tags: [],
     image_type: "",
   };
-  
 
-  async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
+  async function onSubmit(
+    values: PostFormValues,
+    actions: FormikHelpers<PostFormValues>
+  ) {
     console.log("Form data:", values);
     try {
-    const resp = await axios.post("/post/add", values);
+      const resp = await axios.post("/db/store/post", values);
       console.log("Response:", resp.data);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
       actions.setSubmitting(false);
     }
-  }  
+  }
 
   return (
-    <Formik
-        type
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
+    <Formik type initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, isSubmitting }) => (
-        
-        
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
-
-        <FormGroup className="mb-4 " controlId="reactFile">
-            <FileUploader setFieldValue={setFieldValue}/>
-          </FormGroup>  
+          <FormGroup className="mb-4 " controlId="reactFile">
+            <FileUploader setFieldValue={setFieldValue} />
+          </FormGroup>
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
@@ -65,7 +59,7 @@ const PostForm = () => {
               placeholder="Write your caption here"
               autoComplete="off"
             />
-          </FormGroup> 
+          </FormGroup>
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
@@ -80,10 +74,18 @@ const PostForm = () => {
                 const newTags = selected.map((item) => {
                   if (typeof item === "string") {
                     return item;
-                  } else if (item && typeof item === "object" && "label" in item) {
+                  } else if (
+                    item &&
+                    typeof item === "object" &&
+                    "label" in item
+                  ) {
                     return item.label;
-                  }});
-                setFieldValue("tags", newTags.filter(tag => tag));
+                  }
+                });
+                setFieldValue(
+                  "tags",
+                  newTags.filter((tag) => tag)
+                );
               }}
               selected={values.tags}
             />
@@ -91,9 +93,6 @@ const PostForm = () => {
 
           {/* Buttons */}
           <div className="d-flex justify-content-between">
-            <Button variant="dark" type="submit" disabled={isSubmitting}>
-              Post
-            </Button>
             <Button
               variant="outline-secondary"
               type="reset"
@@ -105,6 +104,10 @@ const PostForm = () => {
               }}
             >
               Cancel
+            </Button>
+
+            <Button variant="dark" type="submit" disabled={isSubmitting}>
+              Post
             </Button>
           </div>
         </Form>
