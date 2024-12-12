@@ -66,7 +66,8 @@ export class StorePostInformationController extends BaseDatabaseController {
 
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
-                    const tags = this.imageApi.scanImage(imageUrl);
+                    const tags = this.imageApi.identifyImage(imageUrl);
+                    const evaluation = this.imageApi.appraiseImage(imageUrl);
                     const post = new Post(body);
                     post.description = body.caption;
                     post.longitude = (await GeoData).longitude;
@@ -76,12 +77,13 @@ export class StorePostInformationController extends BaseDatabaseController {
 
                     // @ts-ignore
                     const userID = req.user.user_id;
-                    console.log(userID);
+                    console.log("User who posted :", userID);
                     post.user = userID;
 
                     // Store the post in the database
                     await this.db.storePost(post);
                     console.log(post);
+                    console.log("Evaluation of the post: ", await evaluation)
 
                     fs.unlinkSync(tempFilePath);
                     return res.status(200).send(post);

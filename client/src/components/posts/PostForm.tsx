@@ -29,7 +29,7 @@ const PostForm = () => {
   async function onSubmit(values: PostFormValues, actions: FormikHelpers<PostFormValues>){
     console.log("Form data:", values);
     try {
-    const resp = await axios.post("/post/add", values);
+    const resp = await axios.post("/db/store/post", values);
       console.log("Response:", resp.data);
     } catch (error) {
       console.error("Error submitting form:", error);

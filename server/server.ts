@@ -6,6 +6,7 @@ import {
     SignInController,
     CreatePostController,
     UserProfileController,
+    StorePostInformationController
 } from './controllers';
 import * as path from 'path';
 import cors = require("cors");
@@ -16,7 +17,6 @@ import {FetchPostInformationController} from "./controllers/database/fetch/fetch
 import {FetchCommentInformationController} from "./controllers/database/fetch/fetch-comment-information.controllers";
 import {StoreUserInformationController} from "./controllers/database/store/store-user-information.controllers";
 import {StoreCommentInformationController} from "./controllers/database/store/store-comment-information.controllers";
-import {StorePostInformationController} from "./controllers";
 
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
