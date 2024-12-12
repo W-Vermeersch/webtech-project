@@ -1,18 +1,19 @@
-import {BaseController} from "../base.controller";
+import {BaseController} from "../../../base.controller";
 import * as express from "express";
-import Database from "../../database";
+import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
-import {Post} from "../../../Global/post";
+import {Post} from "../../../../../Global/post";
 import * as ExifReader from 'exifreader';
-import { authenticateToken } from "../user-authentification/login.controllers";
+import { authenticateToken } from "../../../user-authentification/login.controllers";
 import * as multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
 import {GPSDataExtractor} from "./gps.data.extractor";
+import {BaseDatabaseController} from "../../base.database.controller";
 
 
 
-export class PostController extends BaseController {
+export class StorePostInformationController extends BaseDatabaseController {
 
     imageApi = new CloudinaryApi();
 
@@ -22,23 +23,13 @@ export class PostController extends BaseController {
     });
 
     constructor(private db: Database) {
-        super("/post");
+        super();
     }
 
     initializeRoutes(): void {
 
-        this.router.post("/add", (req: express.Request, response: express.Response) => {
+        this.router.post("/store/post", (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
-        });
-
-        this.router.get("/get-user-posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            console.log("authenticated")
-            return this.getUserPosts(req, response);
-        });
-
-        this.router.get("/get-user-liked-posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            console.log("authenticated")
-            return this.getUserLikedPosts(req, response);
         });
     }
 
@@ -104,38 +95,6 @@ export class PostController extends BaseController {
         } catch (error) {
             console.error("Error processing post:", error);
             return res.status(500).send("Something went wrong");
-        }
-    }
-
-    private async getUserPosts(req: express.Request, res: express.Response) {
-        const username = (req.query.username ) ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const userPosts = (await this.db.fetchPostsOfUser(userObject.user_id))
-            res.json({
-                user_posts: userPosts
-            });
-        }
-    }
-
-    private async getUserLikedPosts(req: express.Request, res: express.Response) {
-        const username = (req.query.username ) ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const likedPosts = (await this.db.fetchLikedPostsOfUser(userObject.username))
-            res.json({
-                user_posts: likedPosts
-            });
         }
     }
 }

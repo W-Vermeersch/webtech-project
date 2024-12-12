@@ -1,12 +1,22 @@
 import * as express from 'express';
 import * as session from 'express-session';
-import { BaseController,LogInController, SignInController, PostController } from './controllers';
+import {
+    BaseController,
+    LogInController,
+    SignInController,
+    StorePostInformationController
+} from './controllers';
 import * as path from 'path';
 import * as cors from "cors";
 import Database from "./database";
-import { CreatePostController} from './controllers/post/create-post.controllers';
+import { CreatePostController} from './controllers/database/store/store-post-information/create-post.controllers';
 import { UserProfileController } from './controllers/user-profile.controllers';
-import { UserInfoController } from './controllers/user-information.controllers';
+import {DeleteController} from "./controllers/database/delete/delete.controllers";
+import {FetchUserInformationController} from "./controllers/database/fetch/fetch-user-information.controllers";
+import {FetchPostInformationController} from "./controllers/database/fetch/fetch-post-information";
+import {FetchCommentInformationController} from "./controllers/database/fetch/fetch-comment-information.controllers";
+import {StoreUserInformationController} from "./controllers/database/store/store-user-information.controllers";
+import {StoreCommentInformationController} from "./controllers/database/store/store-comment-information.controllers";
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
@@ -32,11 +42,18 @@ export class App {
     private _initializeControllers(): void {
         // Add new controllers here
         this.addController(new SignInController(this.database));
-        this.addController(new PostController(this.database));
         this.addController(new LogInController(this.database));
-        this.addController(new CreatePostController());
+
+        this.addController(new DeleteController(this.database));
+        this.addController(new FetchUserInformationController(this.database));
+        this.addController(new FetchCommentInformationController(this.database));
+        this.addController(new FetchPostInformationController(this.database));
+        this.addController(new StoreUserInformationController(this.database));
+        this.addController(new StoreCommentInformationController(this.database));
+        this.addController(new StorePostInformationController(this.database));
+
         this.addController(new UserProfileController());
-        this.addController(new UserInfoController(this.database))
+
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
             this.app.use(`${this.path}${controller.path}`, controller.router);

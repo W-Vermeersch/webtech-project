@@ -160,11 +160,10 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Deletes a comment from the DB given the ID of itself and its user. */
-    public async deleteComment(comment_id: number,
-                               user_id: string): Promise<void> {
+    public async deleteComment(comment_id: number): Promise<void> {
         const query = {
-            text: 'DELETE FROM comment_table WHERE comment_id = $1 AND user_id = $2',
-            values: [comment_id, user_id],
+            text: 'DELETE FROM comment_table WHERE comment_id = $1',
+            values: [comment_id],
         };
         await this.executeQuery(query);
     }
@@ -347,7 +346,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     public async deleteLike(user_id: number,
-                            post_id: string): Promise<void> {
+                            post_id: number): Promise<void> {
         const query = {
             text: 'DELETE FROM likes_table WHERE user_id = $1 AND post_id = $2',
             values: [user_id, post_id],
