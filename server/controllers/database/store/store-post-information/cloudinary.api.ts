@@ -11,6 +11,7 @@ export class CloudinaryApi {
     });
 
     public async postImage(url: string) {
+        // return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1733591932/kztj6vw6yavvz3u6cmrd.jpg";
         return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1734000010/ovhwrjxrcjdakh8zysqg.jpg"
         try {
             const response = await cloudinary.uploader.upload(url, {
@@ -52,9 +53,10 @@ export class CloudinaryApi {
                 })
                 if (this.debugging)
                     console.log('Response:', tag);
-                if (tag === undefined) {
+                if (tag === undefined || tag[0].split('.')[0] == "None") {
                     return []
-                } else return tag;
+                }
+                else return tag;
             })
             .catch(error => {
                 if (this.debugging)
@@ -71,11 +73,15 @@ export class CloudinaryApi {
         return this.scanImage(imageUrl, prompts);
     }
 
-    public async appraiseImage(imageUrl: string): Promise<string[]> {
+    public async appraiseImage(imageUrl: string): Promise<number> {
         const prompts = [
-            "Rate this image based on the scenery and the animal by only outputting a number on a scala of 1 to 100.",
+            "Rate this image based on the scenery and the animal by only outputting a number on a scala of 1 to 100, if no animal give '0'.",
             "Rate the rarity rarity of the animal in the picture by only outputting a number with a scala of 1.0 to 5.0, if no animal give '0'."
         ]
-        return this.scanImage(imageUrl, prompts);
+        return this.scanImage(imageUrl, prompts).then((res: string[]) => {
+            if (res.length === 2) {
+                return Number(+res[0] * +res[1])
+            }
+        });
     }
 }

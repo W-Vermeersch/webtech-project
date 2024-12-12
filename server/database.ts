@@ -320,12 +320,18 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /*Update the total EXP count of a user given their ID*/
-    public async updateTotalExp(user_id: number, newExp: number): Promise<void> {
-        const query = {
-            text: 'UPDATE user_profile_decoration_table SET total_exp = $1 WHERE user_id = $2',
-            values: [newExp, user_id],
-        };
-        await this.executeQuery(query);
+    public async addUserExp(user_id: number, newExp: number): Promise<void> {
+        try {
+
+            const query = {
+                text: 'UPDATE user_profile_decoration_table SET total_exp =  total_exp + $1 WHERE user_id = $2',
+                values: [Math.trunc(newExp), user_id],
+            };
+            await this.executeQuery(query);
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     /*Updates a user's badge list (replaces the entire list)*/
@@ -425,7 +431,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for user decoration
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,display_name TEXT NOT NULL,bio TEXT,profile_picture_image_url TEXT,total_exp INT NOT NULL, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS user_profile_decoration_table (user_id INT NOT NULL,display_name TEXT NOT NULL,bio TEXT,profile_picture_image_url TEXT,total_exp INT NOT NULL DEFAULT 0, badges TEXT[],FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 

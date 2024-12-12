@@ -66,27 +66,32 @@ export class StorePostInformationController extends BaseDatabaseController {
 
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
-                    const tags = this.imageApi.identifyImage(imageUrl);
-                    const evaluation = this.imageApi.appraiseImage(imageUrl);
-                    const post = new Post(body);
-                    post.description = body.caption;
-                    post.longitude = (await GeoData).longitude;
-                    post.latitude = (await GeoData).latitude;
-                    post.image_url = [imageUrl];
+                const tags = this.imageApi.identifyImage(imageUrl);
+                const evaluation = this.imageApi.appraiseImage(imageUrl);
+                const post = new Post(body);
+                post.description = body.caption;
+                post.image_url = [imageUrl];
+
+                // @ts-ignore
+                const userID = req.user.user_id;
+                console.log("User who posted :", userID);
+                post.user = userID;
+
+                post.longitude = (await GeoData).longitude;
+                post.latitude = (await GeoData).latitude;
+                if ((await tags).length !== 0) {
                     post.tags = await tags;
+                }
 
-                    // @ts-ignore
-                    const userID = req.user.user_id;
-                    console.log("User who posted :", userID);
-                    post.user = userID;
+                // Store the post in the database
+                await this.db.storePost(post);
+                console.log(post);
+                const reward: number = await evaluation
+                console.log("Evaluation of the post: ", reward)
+                await this.db.addUserExp(userID, reward);
 
-                    // Store the post in the database
-                    await this.db.storePost(post);
-                    console.log(post);
-                    console.log("Evaluation of the post: ", await evaluation)
-
-                    fs.unlinkSync(tempFilePath);
-                    return res.status(200).send(post);
+                fs.unlinkSync(tempFilePath);
+                return res.status(200).send(post);
                 }
             ).catch((error) => {
                 fs.unlinkSync(tempFilePath);
