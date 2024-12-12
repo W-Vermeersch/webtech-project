@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
 import { useState } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
+import CommentModal from "./Comment";
 
 interface SinglePostProps {
   post: Post;
 }
 
 const SinglePost = ({ post }: SinglePostProps) => {
+  const axios = useAxiosPrivate();
   const navigate = useNavigate();
   const handleViewAllComments = () => {
     navigate("/log-in");
@@ -17,10 +21,31 @@ const SinglePost = ({ post }: SinglePostProps) => {
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
 
-  const handleLike = () => {
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-    setIsLiked(!isLiked);
+  const handleLike = async () => {
+    try {
+      if (isLiked) {
+        // Unlike the post
+        await axios.post(DELETE_LIKE, (post.user, post.idx));
+        setLikes((prev) => prev - 1);
+      } else {
+        // Like the post, this sends the wrong user for now
+        await axios.post(LIKE_POST, (post.user, post.idx));
+        setLikes((prev) => prev + 1);
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+    }
+  };
+
+  const handleOpenCommentModal = () => {
+    setShowCommentModal(true);
+  };
+
+  const handleCloseCommentModal = () => {
+    setShowCommentModal(false);
   };
 
   const handleComment = () => {
@@ -72,8 +97,8 @@ const SinglePost = ({ post }: SinglePostProps) => {
             {isLiked ? "Unlike" : "Like"} ({likes})
           </Button>
 
-          <Button className="comment-button" onClick={handleComment}>
-            Comment
+          <Button className="comment-button" onClick={handleOpenCommentModal}>
+            Comment section
           </Button>
         </div>
 
@@ -114,6 +139,15 @@ const SinglePost = ({ post }: SinglePostProps) => {
           </div>
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <CommentModal
+          show={showCommentModal}
+          onHide={handleCloseCommentModal}
+          post={post}
+        />
+      )}
     </Container>
   );
 };
