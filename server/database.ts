@@ -1,12 +1,13 @@
 import { Pool } from 'pg';
 import {Post} from "../Global/post";
+require('dotenv').config();
 
 class Database {
     pool = new Pool({
         host: "pg-14b692ff-webtech.b.aivencloud.com",  //location of the database, here localhost because we don't have any servers
         user: "avnadmin",
         port: 15545,   //default port for postgresql
-        password: "AVNS_fBxdMHN8jb4EYdOS0ir",
+        password: process.env.DB_PASSWORD,
         database: "defaultdb", //name of postgresql databse
         max: 10, //maximum amount of clients in the pool
         idleTimeout: 60000,   //close idle clients after 1 minute
@@ -160,24 +161,53 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     //Operations for the post table
     /* Stores a post into the DB, ID of the user needs to be given */
-    public async storePost(user_id: number,
-                           post_title: string,
-                           image_url: string[],
-                           description: string,
-                           tags: string[],
-                           latitude: number,
-                           longitude: number): Promise<void> {
-        var query = {
-            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
-            values: [user_id, post_title, image_url, description, tags, longitude, latitude],
-        };
-        if (longitude === undefined) {
-            query = {
-                text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes) VALUES ($1, $2, $3, $4, $5)',
-                values: [post_title, image_url, description, tags],
-            };
+    public async storePost(post: Post): Promise<void> {
+        try {
+            let query;
+            if (post.longitude !== undefined && post.latitude !== undefined) {
+                // Insert with geospatial data
+                query = {
+                    text: `
+                    INSERT INTO post_table 
+                    (user_id, post_title, image_url, description, tags, location) 
+                    VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326))
+                `,
+                    values: [
+                        post.user,
+                        post.title,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                        post.longitude,
+                        post.latitude,
+                    ],
+                };
+            } else {
+                // Insert without geospatial data
+                query = {
+                    text: `
+                    INSERT INTO post_table 
+                    (user_id, post_title, image_url, description, tags) 
+                    VALUES ($1, $2, $3, $4, $5)
+                `,
+                    values: [
+                        post.user,
+                        post.title,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                    ],
+                };
+            }
+
+            // Execute the query
+            await this.executeQuery(query);
+
+            console.log('Post stored successfully.');
+        } catch (error) {
+            console.error('Error storing post:', error);
+            throw error; // Re-throw the error for upstream handling
         }
-        await this.executeQuery(query);
     }
 
     /* Returns an array with all the posts made by a user given their ID. */

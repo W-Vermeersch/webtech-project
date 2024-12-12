@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Automatic animal scanning from image&#10;&#10;Using AiVision, automatic tagging of post images.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Global/post.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Global/post.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/.env" beforeDir="false" afterPath="$PROJECT_DIR$/server/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/post/cloudinary.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/cloudinary.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/post/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="create-post" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -32,12 +42,12 @@
     &quot;assignee&quot;: &quot;ozioma147&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/W-Vermeersch/webtech-project.git&quot;,
-    &quot;accountId&quot;: &quot;0a2c7c12-1802-4446-8e8d-a48c78fc0fc9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/W-Vermeersch/webtech-project.git",
+    "accountId": "4bd1e9a6-8de6-4a40-ab3a-d8f21b95307a"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -49,20 +59,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.server.js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\timod\\WebstormProjects\\webtech-project\\client\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.server.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\liamv\\WebstormProjects\\webtech-project\\server\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\liamv\WebstormProjects\webtech-project\server" />
@@ -71,7 +81,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23339.15" />
       </set>
     </attachedChunks>
   </component>
@@ -93,6 +103,7 @@
       <workItem from="1732550147793" duration="5486000" />
       <workItem from="1733053466480" duration="10854000" />
       <workItem from="1733146706588" duration="671000" />
+      <workItem from="1733996927501" duration="4335000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
       <option name="closed" value="true" />
@@ -132,7 +143,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

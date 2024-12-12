@@ -1,12 +1,17 @@
 import * as express from 'express';
 import * as session from 'express-session';
-import { BaseController,LogInController, SignInController, PostController } from './controllers';
+import {
+    BaseController,
+    LogInController,
+    SignInController,
+    PostController,
+    UserProfileController,
+    UserInfoController,
+    CreatePostController
+} from './controllers';
 import * as path from 'path';
-import * as cors from "cors";
+import cors = require("cors");
 import Database from "./database";
-import { CreatePostController} from './controllers/post/create-post.controllers';
-import { UserProfileController } from './controllers/user-profile.controllers';
-import { UserInfoController } from './controllers/user-information.controllers';
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
@@ -34,8 +39,8 @@ export class App {
         this.addController(new SignInController(this.database));
         this.addController(new PostController(this.database));
         this.addController(new LogInController(this.database));
-        this.addController(new CreatePostController());
         this.addController(new UserProfileController());
+        this.addController(new CreatePostController());
         this.addController(new UserInfoController(this.database))
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
@@ -48,19 +53,19 @@ export class App {
     }
 
     private _initializeMiddleware(): void {
-        this.app.set('view engine', 'ejs');
+        // this.app.set('view engine', 'ejs');
         //this.app.use(session({
         //    secret: 'Maxim',
         //    resave: true,
         //    saveUninitialized: true
         //}));
-        this.app.use(cors(
-            {
-                origin: "http://localhost:5173",
-                credentials: true
-                
-            }
-        ));
+        this.app.use(cors({
+            origin: (origin, callback) => {
+                // Allow requests from any origin
+                callback(null, origin || '*');
+            },
+            credentials: true, // Allow cookies and credentials
+        }));
         this.app.use(cookieParser());
 
         this.app.use(express.json({ limit: "150mb" }));

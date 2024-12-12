@@ -4,7 +4,7 @@ import Database from "../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../Global/post";
 import * as ExifReader from 'exifreader';
-import { authenticateToken } from "../user-authentification/login.controllers";
+import { authenticateToken } from "../user-authentification";
 import * as multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
@@ -27,7 +27,7 @@ export class PostController extends BaseController {
 
     initializeRoutes(): void {
 
-        this.router.post("/add", (req: express.Request, response: express.Response) => {
+        this.router.post("/add", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.addPost(req, response);
         });
 
@@ -70,19 +70,18 @@ export class PostController extends BaseController {
             fs.writeFileSync(tempFilePath, base64Data, { encoding: "base64" });
 
             // Optionally extract longitude and latitude
-            const { longitude, latitude } = await GPSDataExtractor(tempFilePath);
+            const GeoData = GPSDataExtractor(tempFilePath);
 
 
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
-                    const tags = await this.imageApi.scanImage(imageUrl);
+                    const tags = this.imageApi.scanImage(imageUrl);
                     const post = new Post(body);
                     post.title = body.caption;
-                    post.longitude = longitude;
-                    post.latitude = latitude;
-                    post.image_url = imageUrl;
-                    post.tags = tags;
-                    fs.unlinkSync(tempFilePath);
+                    post.longitude = (await GeoData).longitude;
+                    post.latitude = (await GeoData).latitude;
+                    post.image_url = [imageUrl];
+                    post.tags = await tags;
 
                     // @ts-ignore
                     const userID = req.user.user_id;
@@ -90,9 +89,10 @@ export class PostController extends BaseController {
                     post.user = userID;
 
                     // Store the post in the database
-                    // await this.db.storePost(post);
+                    await this.db.storePost(post);
                     console.log(post);
 
+                    fs.unlinkSync(tempFilePath);
                     return res.status(200).send(post);
                 }
             ).catch((error) => {
