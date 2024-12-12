@@ -40,6 +40,7 @@ export class DeleteController extends BaseDatabaseController {
             const user_id = userObject.user_id
 
             await this.db.deleteUser(username.toString(), user_id)
+            await this.db.deleteUserDecoration(user_id)
         }
     }
 

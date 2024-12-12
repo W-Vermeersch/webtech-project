@@ -361,6 +361,15 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         return res.rows;
     }
 
+    public async deleteUserDecoration(user_id: number) {
+        const query = {
+            text: 'DELETE FROM user_profile_decoration_table WHERE user_id = $1',
+            values: [user_id],
+        };
+        await this.executeQuery(query);
+    }
+
+
     public async storeLike(
         user_id: number,
         post_id: number,
