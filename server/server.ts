@@ -1,23 +1,8 @@
 import * as express from 'express';
-import * as session from 'express-session';
-import {
-    BaseController,
-    LogInController,
-    SignInController,
-    CreatePostController,
-    UserProfileController,
-    StorePostInformationController
-} from './controllers';
+import * as controller from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
-import {DeleteController} from "./controllers/database/delete/delete.controllers";
-import {FetchUserInformationController} from "./controllers/database/fetch/fetch-user-information.controllers";
-import {FetchPostInformationController} from "./controllers/database/fetch/fetch-post-information";
-import {FetchCommentInformationController} from "./controllers/database/fetch/fetch-comment-information.controllers";
-import {StoreUserInformationController} from "./controllers/database/store/store-user-information.controllers";
-import {StoreCommentInformationController} from "./controllers/database/store/store-comment-information.controllers";
-
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
@@ -25,7 +10,7 @@ const cookieParser = require('cookie-parser');
 export class App {
     app: express.Application;
     port: number = 5000;
-    controllers: Map<string, BaseController> = new Map();
+    controllers: Map<string, controller.BaseController> = new Map();
     path: string = "";
 
     database: Database =  new Database();
@@ -42,19 +27,19 @@ export class App {
 
     private _initializeControllers(): void {
         // Add new controllers here
-        this.addController(new SignInController(this.database));
-        this.addController(new LogInController(this.database));
+        this.addController(new controller.SignInController(this.database));
+        this.addController(new controller.LogInController(this.database));
 
-        this.addController(new DeleteController(this.database));
-        this.addController(new FetchUserInformationController(this.database));
-        this.addController(new FetchCommentInformationController(this.database));
-        this.addController(new FetchPostInformationController(this.database));
-        this.addController(new StoreUserInformationController(this.database));
-        this.addController(new StoreCommentInformationController(this.database));
-        this.addController(new StorePostInformationController(this.database));
+        this.addController(new controller.DeleteController(this.database));
+        this.addController(new controller.FetchUserInformationController(this.database));
+        this.addController(new controller.FetchCommentInformationController(this.database));
+        this.addController(new controller.FetchPostInformationController(this.database));
+        this.addController(new controller.StoreUserInformationController(this.database));
+        this.addController(new controller.StoreCommentInformationController(this.database));
+        this.addController(new controller.StorePostInformationController(this.database));
 
-        this.addController(new UserProfileController());
-        this.addController(new CreatePostController());
+        this.addController(new controller.UserProfileController());
+        this.addController(new controller.CreatePostController());
 
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
@@ -62,23 +47,16 @@ export class App {
         });
     }
 
-    public addController(controller: BaseController): void {
+    public addController(controller: controller.BaseController): void {
         this.controllers.set(controller.constructor.name, controller);
     }
 
     private _initializeMiddleware(): void {
-        // this.app.set('view engine', 'ejs');
-        //this.app.use(session({
-        //    secret: 'Maxim',
-        //    resave: true,
-        //    saveUninitialized: true
-        //}));
         this.app.use(cors({
             origin: (origin, callback) => {
-                // Allow requests from any origin
                 callback(null, origin || '*');
             },
-            credentials: true, // Allow cookies and credentials
+            credentials: true,
         }));
         this.app.use(cookieParser());
 

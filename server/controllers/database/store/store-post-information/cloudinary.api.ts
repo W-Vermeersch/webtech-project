@@ -47,8 +47,8 @@ export class CloudinaryApi {
         };
         return axios
             .post(url, payload)
-            .then(response => {
-                const tag: string[] = response.data.data.analysis.responses.map((val) => {
+            .then((response: { data: { data: { analysis: { responses: { value: any; }[]; }; }; }; }) => {
+                const tag: string[] = response.data.data.analysis.responses.map((val: { value: any; }) => {
                     return val.value
                 })
                 if (this.debugging)
@@ -58,7 +58,7 @@ export class CloudinaryApi {
                 }
                 else return tag;
             })
-            .catch(error => {
+            .catch((error: { response: { data: any; }; message: any; }) => {
                 if (this.debugging)
                     console.error('Error:', error.response ? error.response.data : error.message);
                 return [];

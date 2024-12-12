@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Automatic animal scanning from image&#10;&#10;Using AiVision, automatic tagging of post images.">
+    <list default="true" id="1896779e-bb9e-424c-aa1b-8c762078e1bd" name="Changes" comment="Limit the random GeaData to only Belgium">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Global/post.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Global/post.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.env" beforeDir="false" afterPath="$PROJECT_DIR$/server/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/post/cloudinary.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/cloudinary.api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/post/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post/post.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/database/store/store-post-information/cloudinary.api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/database/store/store-post-information/cloudinary.api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/controllers/database/store/store-post-information/post.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/database/store/store-post-information/post.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/database.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,12 +37,12 @@
     &quot;assignee&quot;: &quot;ozioma147&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/W-Vermeersch/webtech-project.git",
-    "accountId": "4bd1e9a6-8de6-4a40-ab3a-d8f21b95307a"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/W-Vermeersch/webtech-project.git&quot;,
+    &quot;accountId&quot;: &quot;4bd1e9a6-8de6-4a40-ab3a-d8f21b95307a&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -103,7 +98,8 @@
       <workItem from="1732550147793" duration="5486000" />
       <workItem from="1733053466480" duration="10854000" />
       <workItem from="1733146706588" duration="671000" />
-      <workItem from="1733996927501" duration="4335000" />
+      <workItem from="1733996927501" duration="4489000" />
+      <workItem from="1734009767594" duration="4865000" />
     </task>
     <task id="LOCAL-00001" summary="Remove unnecessary functions and cleaned navbar with redirection">
       <option name="closed" value="true" />
@@ -129,7 +125,31 @@
       <option name="project" value="LOCAL" />
       <updated>1733064236250</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Resolved api&#10;&#10;Rerouting is working again&#10;Api stores new posts">
+      <option name="closed" value="true" />
+      <created>1734001489203</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734001489203</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Resolved the new bugs + added evaluation of posts&#10;&#10;Evaluate posts based on scenery and animal in picture + gives out a multiplier for the rarity of the animal.">
+      <option name="closed" value="true" />
+      <created>1734012243232</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1734012243232</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Limit the random GeaData to only Belgium">
+      <option name="closed" value="true" />
+      <created>1734012583185</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734012583185</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +186,9 @@
     <MESSAGE value="Remove unnecessary functions and cleaned navbar with redirection" />
     <MESSAGE value="Working sign-in with redirection to home if success" />
     <MESSAGE value="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started on JWT token management and the log-in controller. ran into issues though.&#10;&#10;NOT COMPLETE, HAS ERRORS" />
+    <MESSAGE value="Resolved api&#10;&#10;Rerouting is working again&#10;Api stores new posts" />
+    <MESSAGE value="Resolved the new bugs + added evaluation of posts&#10;&#10;Evaluate posts based on scenery and animal in picture + gives out a multiplier for the rarity of the animal." />
+    <MESSAGE value="Limit the random GeaData to only Belgium" />
+    <option name="LAST_COMMIT_MESSAGE" value="Limit the random GeaData to only Belgium" />
   </component>
 </project>
