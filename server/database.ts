@@ -161,20 +161,19 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     //Operations for the post table
     /* Stores a post into the DB, ID of the user needs to be given */
     public async storePost(user_id: number,
-                           post_title: string,
                            image_url: string[],
                            description: string,
                            tags: string[],
                            latitude: number,
                            longitude: number): Promise<void> {
         var query = {
-            text: 'INSERT INTO post_table (user_id, post_title, image_url, description, tags, location) VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($7, $8), 4326))',
-            values: [user_id, post_title, image_url, description, tags, longitude, latitude],
+            text: 'INSERT INTO post_table (user_id, image_url, description, tags, location) VALUES ($1, $2, $3, $4, ST_SetSRID(ST_MakePoint($5, $6), 4326))',
+            values: [user_id, image_url, description, tags, longitude, latitude],
         };
         if (longitude === undefined) {
             query = {
-                text: 'INSERT INTO post_table (post_title, image_url, description, tags, likes) VALUES ($1, $2, $3, $4, $5)',
-                values: [post_title, image_url, description, tags],
+                text: 'INSERT INTO post_table (user_id, image_url, description, tags) VALUES ($1, $2, $3, $4)',
+                values: [user_id, image_url, description, tags],
             };
         }
         await this.executeQuery(query);
@@ -340,7 +339,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,post_title VARCHAR(255) NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 
