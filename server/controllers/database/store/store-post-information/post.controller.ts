@@ -68,7 +68,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
                     const tags = this.imageApi.scanImage(imageUrl);
                     const post = new Post(body);
-                    post.title = body.caption;
+                    post.description = body.caption;
                     post.longitude = (await GeoData).longitude;
                     post.latitude = (await GeoData).latitude;
                     post.image_url = [imageUrl];

@@ -169,76 +169,54 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         await this.executeQuery(query);
     }
 
-
-
     //Operations for the post table
-    /* Stores a post into the DB, ID of the user needs to be given */
-    public async storePost(user_id: number,
-                           image_url: string[],
-                           description: string,
-                           tags: string[],
-                           latitude: number,
-                           longitude: number): Promise<void> {
-        var query = {
-            text: 'INSERT INTO post_table (user_id, image_url, description, tags, location) VALUES ($1, $2, $3, $4, ST_SetSRID(ST_MakePoint($5, $6), 4326))',
-            values: [user_id, image_url, description, tags, longitude, latitude],
-        };
-        if (longitude === undefined) {
-            query = {
-                text: 'INSERT INTO post_table (user_id, image_url, description, tags) VALUES ($1, $2, $3, $4)',
-                values: [user_id, image_url, description, tags],
-            };
-        }
-        await this.executeQuery(query);
-    }
+    /* Stores a post into the DB*/
+    public async storePost(post: Post): Promise<void> {
+        try {
+            let query;
+            if (post.longitude !== undefined && post.latitude !== undefined) {
+                // Insert with geospatial data
+                query = {
+                    text: `
+                        INSERT INTO post_table
+                        (user_id, image_url, description, tags, location)
+                        VALUES ($1, $2, $3, $4, ST_SetSRID(ST_MakePoint($5, $6), 4326))
+                    `,
+                    values: [
+                        post.user,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                        post.longitude,
+                        post.latitude,
+                    ],
+                };
+            } else {
+                // Insert without geospatial data
+                query = {
+                    text: `
+                        INSERT INTO post_table
+                        (user_id, image_url, description, tags)
+                        VALUES ($1, $2, $3, $4)
+                    `,
+                    values: [
+                        post.user,
+                        post.image_url,
+                        post.description,
+                        post.tags,
+                    ],
+                };
+            }
 
-    //public async storePost(post: Post): Promise<void> {
-    //         try {
-    //             let query;
-    //             if (post.longitude !== undefined && post.latitude !== undefined) {
-    //                 // Insert with geospatial data
-    //                 query = {
-    //                     text: `
-    //                     INSERT INTO post_table
-    //                     (user_id, post_title, image_url, description, tags, location)
-    //                     VALUES ($1, $2, $3, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326))
-    //                 `,
-    //                     values: [
-    //                         post.user,
-    //                         post.title,
-    //                         post.image_url,
-    //                         post.description,
-    //                         post.tags,
-    //                         post.longitude,
-    //                         post.latitude,
-    //                     ],
-    //                 };
-    //             } else {
-    //                 // Insert without geospatial data
-    //                 query = {
-    //                     text: `
-    //                     INSERT INTO post_table
-    //                     (user_id, post_title, image_url, description, tags)
-    //                     VALUES ($1, $2, $3, $4, $5)
-    //                 `,
-    //                     values: [
-    //                         post.user,
-    //                         post.title,
-    //                         post.image_url,
-    //                         post.description,
-    //                         post.tags,
-    //                     ],
-    //                 };
-    //             }
-    //
-    //             // Execute the query
-    //             await this.executeQuery(query);
-    //
-    //             console.log('Post stored successfully.');
-    //         } catch (error) {
-    //             console.error('Error storing post:', error);
-    //             throw error; // Re-throw the error for upstream handling
-    //         }
+            // Execute the query
+            await this.executeQuery(query);
+
+            console.log('Post stored successfully.');
+        } catch (error) {
+            console.error('Error storing post:', error);
+            throw error; // Re-throw the error for upstream handling
+        }
+    }
 
     /* Returns an array with all the posts made by a user given their ID. */
     public async fetchPostsOfUser(user_id: number): Promise<any[]> {
