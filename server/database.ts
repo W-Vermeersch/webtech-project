@@ -126,6 +126,19 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         await this.executeQuery(query);
     }
 
+    /* Returns an array of all comments that match with the given list of comment IDs. */
+    public async fetchCommentByIds(commentIds: number[]): Promise<any[]> {
+        if (commentIds.length === 0) {
+            return [];
+        }
+        const query = {
+            text: 'SELECT * FROM comment_table WHERE comment_id = ANY($1)',
+            values: [commentIds],
+        };
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+
     /* Returns an array with all the comments of a given post using its ID. */
     public async fetchCommentsOfPost(post_id: number): Promise<any[]> {
         const query = {
