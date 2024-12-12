@@ -1,7 +1,8 @@
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
+import { useState } from "react";
 
 interface SinglePostProps {
   post: Post;
@@ -11,6 +12,20 @@ const SinglePost = ({ post }: SinglePostProps) => {
   const navigate = useNavigate();
   const handleViewAllComments = () => {
     navigate("/log-in");
+  };
+
+  // initialise the likes and track if the post is liked
+  const [likes, setLikes] = useState(post.likes || 0);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLike = () => {
+    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLiked(!isLiked);
+  };
+
+  const handleComment = () => {
+    // Handle comment logic here
+    console.log("Comment button clicked");
   };
 
   // For each post, display the first two comments,
@@ -46,6 +61,20 @@ const SinglePost = ({ post }: SinglePostProps) => {
             alt="Post content"
             className="w-100 post-image"
           />
+        </div>
+
+        {/* Like and comment */}
+        <div className="post-actions">
+          <Button
+            className={`like-button ${isLiked ? "liked" : ""}`}
+            onClick={handleLike}
+          >
+            {isLiked ? "Unlike" : "Like"} ({likes})
+          </Button>
+
+          <Button className="comment-button" onClick={handleComment}>
+            Comment
+          </Button>
         </div>
 
         {/* Caption & Tags Section */}
