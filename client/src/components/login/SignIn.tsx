@@ -11,6 +11,7 @@ import FormGroup from "react-bootstrap/FormGroup";
 import { Formik, Form, FormikHelpers } from "formik";
 import CustomInput from "./CustomInput.tsx";
 import { signUpSchema } from "./signUpSchema.ts";
+import { SIGN_IN } from "../../api/urls.ts";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function SignIn() {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) {
-    const resp = await axios.post("/user/sign-in", values);
+    const resp = await axios.post(SIGN_IN, values);
 
     if (resp.status === 206) {
       if (resp.data.errors) {

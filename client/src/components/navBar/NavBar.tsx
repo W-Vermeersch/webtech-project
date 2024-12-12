@@ -12,6 +12,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
+import { LOG_IN } from "../../api/urls";
 
 export default function NavBar() {
   const signOut = useSignOut();
@@ -23,7 +24,7 @@ export default function NavBar() {
       return;
     }
     await signOut();
-    navigate("/user/log-in");
+    navigate(LOG_IN);
     // deal with error handling
   }
 
