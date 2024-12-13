@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -57,7 +58,6 @@ export default function ProfilePage() {
       try {
         const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
-
           //signal: controller.signal,
         });
         if (resp.data.redirect) {
