@@ -36,9 +36,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const postOwner = await this.db.fetchUserUsingID(postObject.user_id);
+            const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
+            const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
             res.json({
                 user: postOwner[0].username,
+                profile_picture: postOwnerDecoration[0].profile_picture_image_url,
                 image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
