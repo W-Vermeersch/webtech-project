@@ -56,7 +56,7 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
+        const resp = await axios.get(FETCH_USER_PROFILE, {
           params: { username },
           //signal: controller.signal,
         });
@@ -91,7 +91,6 @@ export default function ProfilePage() {
     //   isMounted = false;
     //   controller.abort();
     // }
-
   }, [username]);
 
   if (!user) {
@@ -148,9 +147,9 @@ export default function ProfilePage() {
             <Tab eventKey="map" title="Map">
               {activeTab === "map" && (
                 <MapContainer
-                posts={mockPosts}
-                center={[50.822376, 4.395356]}
-              />
+                  posts={mockPosts}
+                  center={[50.822376, 4.395356]}
+                />
               )}
             </Tab>
           </Tabs>
