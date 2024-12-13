@@ -27,11 +27,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
     try {
       if (isLiked) {
         // Unlike the post
-        await axios.post(DELETE_LIKE, (post.user, post.idx));
+        console.log("Im unliking the post")
+        // await axios.post(DELETE_LIKE, (post.user, post.idx));
         setLikes((prev) => prev - 1);
       } else {
+        console.log("Im liking the post.")
         // Like the post, this sends the wrong user for now
-        await axios.post(LIKE_POST, (post.user, post.idx));
+        // await axios.post(LIKE_POST, (post.user, post.idx));
         setLikes((prev) => prev + 1);
       }
       setIsLiked(!isLiked);
@@ -64,14 +66,14 @@ const SinglePost = ({ post }: SinglePostProps) => {
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
-            <Link to={`/user/${post.user}`}>
+            <Link to={`/profile/${post.user}`}>
               <img className="profilepic" src={post.image_url}></img>
             </Link>
           </Col>
           <Col>
             <Link
               style={{ textDecoration: "none", color: "inherit" }}
-              to={`/user/${post.user}`}
+              to={`/profile/${post.user}`}
             >
               <div className="username d-flex flex-column">{post.user}</div>
             </Link>
@@ -90,16 +92,22 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
         {/* Like and comment */}
         <div className="post-actions">
-          <Button
-            className={`like-button ${isLiked ? "liked" : ""}`}
+          <img
+            src={isLiked ? "src/assets/liked.svg" : "src/assets/like.svg"}
+            alt="Like"
+            className="action-icon"
             onClick={handleLike}
-          >
-            {isLiked ? "Unlike" : "Like"} ({likes})
-          </Button>
+            style={{ cursor: "pointer", width: "24px", marginRight: "10px" }}
+          />
+          <span>{likes}</span>
 
-          <Button className="comment-button" onClick={handleOpenCommentModal}>
-            Comment section
-          </Button>
+          <img
+            src="src/assets/comment.svg"
+            alt="Comment"
+            className="action-icon"
+            onClick={handleOpenCommentModal}
+            style={{ cursor: "pointer", width: "30px", marginLeft: "20px" }}
+          />
         </div>
 
         {/* Caption & Tags Section */}

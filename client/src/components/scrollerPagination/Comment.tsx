@@ -1,6 +1,7 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { Post } from "../posts/PostInterface";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface CommentModalProps {
   show: boolean;
@@ -19,15 +20,17 @@ const CommentModal: React.FC<CommentModalProps> = ({ show, onHide, post }) => {
 
   return (
     <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Comment</Modal.Title>
-      </Modal.Header>
       <Modal.Body>
         <div>
-          <p>
-            <strong>Post:</strong>
-          </p>
+          <Link to={`/profile/${post.user}`}>
+            <img className="profilepic" src={post.image_url}></img>
+          </Link>
           <p>{post.title}</p>
+          <img
+            src={post.image_url}
+            alt="Post content"
+            className="w-100 post-image"
+          />
         </div>
         <Form>
           <Form.Group controlId="commentInput">
@@ -46,7 +49,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ show, onHide, post }) => {
           Close
         </Button>
         <Button variant="primary" onClick={handleCommentSubmit}>
-          Submit
+          Reply
         </Button>
       </Modal.Footer>
     </Modal>

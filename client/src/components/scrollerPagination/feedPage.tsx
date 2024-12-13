@@ -30,7 +30,7 @@ const posts: Post[] = [
       title: "post 1",
       image_url: "https://dummyimage.com/180",
       tags: ["Cat", "Feline"],
-      user: "kel",
+      user: "kellism1",
       profilepicurl: "https://dummyimage.com/180",
       commentsection: mockcomments,
       longitude: 0,
