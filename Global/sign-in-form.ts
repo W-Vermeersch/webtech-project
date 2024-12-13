@@ -1,28 +1,12 @@
-export class SignInForm {
+import { BaseForms } from "./base-forms";
+
+export class SignInForm extends BaseForms{
   username: string = "";
   email: string = "";
   password: string = "";
   passwordConfirm: string = "";
-
-  public toObject(): object {
-    var result: any = {};
-    for (const key in this) {
-      const value = this[key as keyof this];
-      result[key] = String(value);
-    }
-    return result;
-  }
-
-  public fill(body: Record<string, any>): SignInForm {
-    for (const key in body) {
-      if (key in this) {
-        const value = body[key];
-        (this as any)[key] = value;
-      }
-    }
-    return this;
-  }
 }
+
 export class ErrorInSignInForm extends SignInForm {
   total: string = "";
 
