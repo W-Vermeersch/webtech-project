@@ -32,6 +32,7 @@ interface User {
 const mockPosts: Post[] = Array(15)
   .fill(null)
   .map((_, index) => ({
+    idx: index,
     user: "username",
     image_url: "https://dummyimage.com/180",
     location: {

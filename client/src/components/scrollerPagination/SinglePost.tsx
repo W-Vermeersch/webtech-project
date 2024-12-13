@@ -84,7 +84,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
       <div className="post-content">
         <div className="post-image-wrapper">
-          <NavLink to={`/profile/${post.user}`}>
+          <NavLink to={`/post/${post.idx}`}>
             <img
               src={post.image_url}
               alt="Post content"
@@ -139,7 +139,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
             ))}
 
             {post.commentsection && post.commentsection.length > 2 && (
-              <NavLink to={`/profile/${post.user}`}>
+              <NavLink to={`/post/${post.idx}`}>
                 <div
                   className="load-more-comments muted"
                   style={{ cursor: "pointer" }}
