@@ -27,7 +27,7 @@ export interface Location {
 }
 
 export interface PostComment {
-  idx: number; // index to refer to Post
-  user: string;
-  comment: string;
+  user_id: string;
+  post_id: number; // index to refer to Post
+  description: string;
 }

@@ -38,7 +38,7 @@ const posts: Post[] = [
     profile_picture: "https://dummyimage.com/180",
     commentsection: mockcomments,
     location: location,
-    description: "",
+    description: "kfjlksjfsdlkf",
   },
   {
     idx: 2,
@@ -48,7 +48,7 @@ const posts: Post[] = [
     profile_picture: "https://dummyimage.com/180",
     commentsection: mockcomments,
     location: location,
-    description: "",
+    description: "fsdjfklds",
   },
   {
     idx: 3,
@@ -58,7 +58,7 @@ const posts: Post[] = [
     profile_picture: "https://dummyimage.com/180",
     commentsection: mockcomments,
     location: location,
-    description: "",
+    description: "fadsf",
   },
   {
     idx: 4,
@@ -68,7 +68,7 @@ const posts: Post[] = [
     profile_picture: "https://dummyimage.com/180",
     commentsection: mockcomments,
     location: location,
-    description: "",
+    description: "dddd",
   },
   {
     idx: 5,
@@ -78,7 +78,7 @@ const posts: Post[] = [
     profile_picture: "https://dummyimage.com/180",
     commentsection: mockcomments,
     location: location,
-    description: "",
+    description: "qqqq",
   },
 ];
 

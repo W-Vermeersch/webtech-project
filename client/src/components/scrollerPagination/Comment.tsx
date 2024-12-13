@@ -1,5 +1,5 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { Post } from "../posts/PostInterface";
+import { Post, PostComment } from "../posts/PostInterface";
 import React from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -11,19 +11,18 @@ interface CommentModalProps {
   post: Post;
 }
 
-interface commentFormValues{
-  post_id: number | undefined;
-  description: string; 
-}
-
-const CommentModal= ({ show, onHide, post }: CommentModalProps) => {
-  const axios = useAxiosPrivate();
+const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
+  const axiosPrivate = useAxiosPrivate();
   const [comment, setComment] = React.useState("");
 
   const handleCommentSubmit = async () => {
     // handle comment submission here
-    const values: commentFormValues = {post_id: post.idx, description: comment}
-    //await axios.post(ADD_COMMENT, values)
+    const values: PostComment = {
+      user_id: post.user,
+      post_id: post.idx,
+      description: comment,
+    };
+    const resp = await axiosPrivate.get(ADD_COMMENT, { params: values });
     console.log("Comment Submitted: ", values);
     onHide(); // close the modal after submission
   };
@@ -32,10 +31,7 @@ const CommentModal= ({ show, onHide, post }: CommentModalProps) => {
     <Modal show={show} onHide={onHide} centered>
       <Modal.Body>
         <div>
-          <Link to={`/profile/${post.user}`}>
-            <img className="profilepic" src={post.image_url}></img>
-          </Link>
-          <p>{post.title}</p>
+          <p>{post.description}</p>
           <img
             src={post.image_url}
             alt="Post content"

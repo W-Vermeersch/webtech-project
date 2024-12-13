@@ -24,21 +24,34 @@ const SinglePost = ({ post }: SinglePostProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
 
-  const handleLike = async () => {
-    const current_postid = post.idx;
-    if (isLiked) {
-      // Unlike the post
-      console.log("Im unliking the post");
-      // await axiosPrivate.post(DELETE_LIKE, (post.user, post.idx));
-      setLikes((prev) => prev - 1);
-    } else {
-      console.log("Im liking the post.");
-      // Like the post, this sends the wrong user for now
-      //const resp = await axiosPrivate.get(LIKE_POST, { current_postid });
-      //console.log(resp);
+  const handleLiking = async () => {
+    const post_id = post.idx;
+    const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
+    if (resp.status === 200) {
       setLikes((prev) => prev + 1);
+      setIsLiked(!isLiked);
     }
-    setIsLiked(!isLiked);
+    console.log("Handlelike has been called");
+  };
+
+  const handleUnliking = async () => {
+    const post_id = post.idx;
+    console.log("handleunliking has been called");
+    const resp = await axiosPrivate.post(DELETE_LIKE, {
+      params: { post_id },
+    });
+    if (!(resp.status === 404)) {
+      setLikes((prev) => prev - 1);
+      setIsLiked(!isLiked);
+    } else {
+      console.log("Error post has not been liked yet");
+    }
+  };
+
+  const handleLike = () => {
+    if (isLiked) {
+      handleUnliking;
+    } else handleLiking;
   };
 
   const handleOpenCommentModal = () => {
@@ -97,7 +110,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
             src={isLiked ? "src/assets/liked.svg" : "src/assets/like.svg"}
             alt="Like"
             className="action-icon"
-            onClick={handleLike}
+            onClick={isLiked ? handleUnliking : handleLiking}
             style={{ cursor: "pointer", width: "24px", marginRight: "10px" }}
           />
           <span>{likes}</span>
