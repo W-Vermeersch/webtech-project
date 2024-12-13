@@ -50,28 +50,27 @@ export class FetchUserInformationController extends BaseDatabaseController {
   ) {
     const username = req.query.username ? req.query.username : " ";
 
-    const users = await this.db.fetchUserUsingUsername(username.toString());
-    if (users.length === 0) {
-      res.json({
-        redirect: "/home",
-      });
-    } else {
-      const userObject = users[0];
-      const userProfileDecoration = await this.db.fetchProfileDecoration(
-        userObject.user_id
-      );
-      //console.log(userProfileDecoration); // empty array??
-      res.json({
-        username: userObject.username,
-        user_id: userObject.user_id,
-        displayname: userProfileDecoration.display_name,
-        profilepicture: userProfileDecoration.profile_picture_image_url,
-        bio: userProfileDecoration.bio,
-        totalexp: userProfileDecoration.total_exp,
-        badges: userProfileDecoration.badges,
-      });
+        const users = await this.db.fetchUserUsingUsername(username.toString())
+        if (users.length === 0) {
+            res.json({
+                redirect: '/home'
+            });
+        } else {
+            const userObject = users[0]
+            const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
+            //console.log("user prifile decoration: "+ userProfileDecoration);
+            //console.log(userProfileDecoration[0].display_name)
+            res.json({
+                username: userObject.username,
+                user_id: userObject.user_id,
+                displayname: userProfileDecoration[0].display_name,
+                profilepicture: userProfileDecoration[0].profile_picture_image_url,
+                bio: userProfileDecoration[0].bio,
+                totalexp: userProfileDecoration[0].total_exp,
+                badges: userProfileDecoration[0].badges
+            });
+        }
     }
-  }
 
   private async getUserComments(req: express.Request, res: express.Response) {
     const username = req.query.username ? req.query.username : " ";

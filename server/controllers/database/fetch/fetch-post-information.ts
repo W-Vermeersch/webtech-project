@@ -29,17 +29,18 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return;
         }
         const post_id = parseInt(req.query.post_id.toString());
+        console.log("post_id: "+post_id)
 
-        const post = await this.db.fetchPostsByIds([post_id])
-        if (post.length === 0) {
+        const posts = await this.db.fetchPostsByIds([post_id])
+        if (posts.length === 0) {
             res.json({
                 redirect: '/pageNotFound'
             });
         } else {
-            const postObject = post[0]
-            const postOwner = this.db.fetchUserUsingID(postObject.user_id);
+            const postObject = posts[0]
+            const postOwner = await this.db.fetchUserUsingID(postObject.user_id);
             res.json({
-                user: postOwner,
+                user: postOwner[0].username,
                 image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
@@ -64,7 +65,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const postComments = (await this.db.fetchCommentsOfPost(postObject.post_id))
+            const postComments = await this.db.fetchCommentsOfPost(postObject.post_id)
             res.json({
                 post_comments: postComments
             });
