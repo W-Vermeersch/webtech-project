@@ -1,7 +1,7 @@
 export interface Post {
   user: string;
   image_url: string; // url to the storage api
-  idx?: number; // index of Post
+  idx: number; // index of Post
   description: string;
   tags: string[];
   likes?: number; // in DB each posts has a list of all Users who liked
