@@ -5,7 +5,7 @@
 }
 @media (max-width: 768px) {
   #root {
-    margin-top: -40px; /* Move further up for smaller screens */
+    margin-top: -10px;
   }
 }
 

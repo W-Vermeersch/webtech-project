@@ -18,7 +18,7 @@ interface NavBarProps {
   isMobile: boolean;
 }
 
-export default function NavBar({ isMobile }: NavBarProps) {
+export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();

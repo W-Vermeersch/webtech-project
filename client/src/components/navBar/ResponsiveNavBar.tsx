@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
+import FooterNavBar from "./FooterNavBar";
 
 export default function ResponsiveNavBar() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -15,5 +16,5 @@ export default function ResponsiveNavBar() {
     };
   }, []);
 
-  return <>{isMobile ? "sdklj" : <NavBar isMobile={isMobile} />}</>;
+  return <>{isMobile ? <FooterNavBar /> : <NavBar />}</>;
 }
