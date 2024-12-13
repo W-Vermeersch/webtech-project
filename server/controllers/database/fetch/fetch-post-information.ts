@@ -29,8 +29,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return;
         }
         const post_id = parseInt(req.query.post_id.toString());
-        console.log("post_id: "+post_id)
-
         const posts = await this.db.fetchPostsByIds([post_id])
         if (posts.length === 0) {
             res.json({
@@ -44,8 +42,8 @@ export class FetchPostInformationController extends BaseDatabaseController {
                 image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
-                location: postObject.location //can be null, not all posts have locations
-            });
+                location: postObject.location
+                });
         }
     }
 
