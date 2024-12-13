@@ -2,6 +2,7 @@ import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
 import {SignInForm, ErrorInSignInForm} from "../../../Global/sign-in-form";
 import Database from "../../database";
+import {hashPassword} from "../password.encryption";
 
 export class SignInController extends UserAuthentificationController{
     public constructor(private db: Database) {
@@ -61,7 +62,8 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             });
         } else {
-            await this.db.storeUser(inputs.username, inputs.email, inputs.password);
+            const hashedPassword = inputs.password//hashPassword(inputs.password, inputs.username);
+            await this.db.storeUser(inputs.username, inputs.email, hashedPassword);
             const user_id = await this.db.getUserID(inputs.username);
             await this.db.storeProfileDecoration(user_id, inputs.username, "");
             res.json({ redirect: '/user/log-in' });
