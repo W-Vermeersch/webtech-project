@@ -39,9 +39,8 @@ export class FetchPostInformationController extends BaseDatabaseController {
             const postObject = post[0]
             const postOwner = this.db.fetchUserUsingID(postObject.user_id);
             res.json({
-                username: postOwner,
-                user_id: postObject.user_id,
-                image_urls: postObject.image_url,
+                user: postOwner,
+                image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
                 location: postObject.location //can be null, not all posts have locations

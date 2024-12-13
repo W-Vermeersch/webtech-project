@@ -32,6 +32,7 @@ interface User {
 const mockPosts: Post[] = Array(15)
   .fill(null)
   .map((_, index) => ({
+    user: "username",
     image_url: "https://dummyimage.com/180",
     latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
     longitude: 4.395356 + (Math.random() - 0.5) * 0.02,

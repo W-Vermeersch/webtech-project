@@ -1,6 +1,5 @@
 export interface Post {
-    title?: string;
-    user?: string;
+    user: string;
     image_url: string; // url to the storage api
     idx?: number; // index of Post
     description: string;
@@ -12,6 +11,8 @@ export interface Post {
     profilepicurl?: string;
     commentsection?: PostComment[];
   }
+
+  
 
 export interface PostComment{
     idx: number; // index to refer to Post
