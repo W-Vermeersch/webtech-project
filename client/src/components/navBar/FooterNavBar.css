@@ -1,3 +1,13 @@
+body {
+  padding-bottom: 60px; /* Add padding equivalent to the height of the navbar */
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 70px; /* Adjust for mobile-specific navbar height */
+  }
+}
+
 .footer-navbar {
   position: fixed;
   bottom: 0;
