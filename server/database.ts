@@ -187,8 +187,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                         post.image_url,
                         post.description,
                         post.tags,
-                        post.longitude,
                         post.latitude,
+                        post.longitude,
                     ],
                 };
             } else {
