@@ -40,15 +40,15 @@ export default function PostImage({
       <div id="image-overlay" className="d-flex flex-column">
         <h4 className="mb-auto">
           <Badge bg="danger" className="m-3">
-            {stateCountry.state}, {stateCountry.country}
+            {stateCountry.country === "" ? "🌍" : `${stateCountry.state}, ${stateCountry.country}`}
           </Badge>
         </h4>
         <Stack id="tags" direction="horizontal">
-          {tags.map((tag) => (
+          {tags[0] !== "None" ? tags.map((tag) => (
             <Badge key={tag} bg="dark" className="m-2">
               {tag}
             </Badge>
-          ))}
+          )) : null}
         </Stack>
         {/* add more things to overlay on the post image */}
       </div>

@@ -125,7 +125,7 @@ const FeedPage = () => {
           );
         return <SinglePost key={post.idx} post={post} />;
       })}
-      <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+      <Button disabled={isFetchingNextPage}>
         {isFetchingNextPage
           ? "Loading more"
           : (data?.pages?.length ?? 0) < 3
