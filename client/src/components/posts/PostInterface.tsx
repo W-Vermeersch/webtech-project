@@ -7,7 +7,7 @@ export interface Post {
   likes?: number; // in DB each posts has a list of all Users who liked
   location: Location;
   // added because profile pictures also exist
-  profilepicurl?: string;
+  profile_picture?: string;
   commentsection?: PostComment[];
 }
 
