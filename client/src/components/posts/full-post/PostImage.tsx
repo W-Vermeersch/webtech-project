@@ -6,34 +6,33 @@ import Badge from "react-bootstrap/Badge";
 import Stack from "react-bootstrap/Stack";
 
 import { useEffect, useState } from "react";
+import { Location } from "../PostInterface";
 
 interface PostImageProps {
   image_url: string;
   tags: string[];
-  latitude: number;
-  longitude: number;
+  location: Location;
 }
 
 export default function PostImage({
   image_url,
   tags,
-  latitude,
-  longitude,
+  location,
 }: PostImageProps) {
 
-  const [location, setLocation] = useState<{ state: string; country: string }>({
+  const [stateCountry, setStateCountry] = useState<{ state: string; country: string }>({
     state: "",
     country: "",
   });
 
   useEffect(() => {
     async function fetchLocation() {
-      const locationData = await getCityCountry(latitude, longitude);
-      setLocation(locationData);
+      const locationData = await getCityCountry(location.latitude, location.longitude);
+      setStateCountry(locationData);
     }
 
     fetchLocation();
-  }, [latitude, longitude]);
+  }, [location.latitude, location.longitude]);
 
   return (
     <div id="post-image-container">
@@ -41,15 +40,15 @@ export default function PostImage({
       <div id="image-overlay" className="d-flex flex-column">
         <h4 className="mb-auto">
           <Badge bg="danger" className="m-3">
-            {location.state}, {location.country}
+            {stateCountry.country === "" ? "🌍" : `${stateCountry.state}, ${stateCountry.country}`}
           </Badge>
         </h4>
         <Stack id="tags" direction="horizontal">
-          {tags.map((tag) => (
+          {tags[0] !== "None" ? tags.map((tag) => (
             <Badge key={tag} bg="dark" className="m-2">
               {tag}
             </Badge>
-          ))}
+          )) : null}
         </Stack>
         {/* add more things to overlay on the post image */}
       </div>

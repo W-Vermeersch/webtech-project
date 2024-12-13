@@ -79,13 +79,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     /* Returns an array with all the column values of a user given their ID.*/
     public async fetchUserUsingID(user_id: number): Promise<any> {
-        console.log("Fetching user.");
+        //console.log("Fetching user.");
+        //console.log("user_id: " + user_id)
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
         const res = await this.executeQuery(query);
-        console.log(res.rows);
+        //console.log(res.rows);
         return res.rows;
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
@@ -220,24 +221,46 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         }
     }
 
-    /* Returns an array with all the posts made by a user given their ID. */
-    public async fetchPostsOfUser(user_id: number): Promise<any[]> {
-        const query = {
-            text: 'SELECT * FROM post_table WHERE user_id = $1',
-            values: [user_id],
-        };
-        const res = await this.executeQuery(query);
-        return res.rows;
+    /* Returns an array of all the posts that a user has liked, given their user ID. */
+public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
+    const query = {
+        text: `
+            SELECT 
+                p.post_id, 
+                p.user_id, 
+                p.image_url, 
+                p.description, 
+                p.tags, 
+                ST_X(p.location::geometry) AS longitude, 
+                ST_Y(p.location::geometry) AS latitude
+            FROM likes_table l
+            INNER JOIN post_table p ON l.post_id = p.post_id
+            WHERE l.user_id = $1
+        `,
+        values: [user_id],
+    };
+    const res = await this.executeQuery(query);
+
+    return res.rows.map(row => ({
+        post_id: row.post_id,
+        user_id: row.user_id,
+        image_url: row.image_url,
+        description: row.description,
+        tags: row.tags,
+        location: {
+            longitude: row.longitude,
+            latitude: row.latitude,
+        }
+    }));
     }
 
-    /* Returns an array of post IDs that a user has liked given their user ID. */
-    public async fetchLikedPostsOfUser(user_id: string): Promise<number[]> {
+    public async fetchLikedUsersOfPost(post_id: Number) {
         const query = {
-            text: 'SELECT post_id FROM likes_table WHERE user_id = $1',
-            values: [user_id],
-        };
-        const res = await this.executeQuery(query);  //returns a list of post ids, not the actual posts
-        return await this.fetchPostsByIds(res.rows);
+            text: 'SELECT user_id FROM likes_table where post_id = $1',
+            values: [post_id]
+        }
+        const res = await this.executeQuery(query);
+        return res.rows.map(userid => userid.user_id)
     }
 
     public async fetchUserWhoLikedPost(post_id: number): Promise<number[]> {
@@ -252,49 +275,154 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         /* Returns an array of all posts that match with the given list of post IDs. */
     public async fetchPostsByIds(postIds: number[]): Promise<any[]> {
         if (postIds.length === 0) {
-            return []; // giving empty list can cause errors so manually return a empty list in that case
+            return [];
         }
     
         const query = {
-            text: 'SELECT * FROM post_table WHERE post_id = ANY($1)',
-            values: [postIds], 
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                    image_url, 
+                    description, 
+                    tags, 
+                    ST_X(location::geometry) AS longitude, 
+                    ST_Y(location::geometry) AS latitude
+                FROM post_table 
+                WHERE post_id = ANY($1)
+            `,
+            values: [postIds],
         };
+
         const res = await this.executeQuery(query);
-        return res.rows; 
+
+        return res.rows.map(row => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+        }));
     }
 
-    /* Returns an array of all posts belonging to a tag given the tag's name. */
-    public async fetchPostsFromTag(tag: string): Promise<any[]> {
+    /* Returns an array with all the posts made by a user given their ID. */
+    public async fetchPostsOfUser(user_id: number): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM post_table WHERE $1 = ANY(tags)', // Tag search in the "tags" array.
-            values: [tag],
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                    image_url, 
+                    description, 
+                    tags, 
+                    ST_X(location::geometry) AS longitude, 
+                    ST_Y(location::geometry) AS latitude
+                FROM post_table 
+                WHERE user_id = $1
+            `,
+            values: [user_id],
         };
         const res = await this.executeQuery(query);
-        return res.rows;
+
+        return res.rows.map(row => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+        }));
     }
 
-    /* Returns an array of all posts that are within a certain radius in geolocation. */
-    public async fetchPostsWithinRadius(latitude: number,
-                                        longitude: number,
-                                        radius: number): Promise<any[]> {
+    /* Fetch posts within a radius */
+    public async fetchPostsWithinRadius(latitude: number, longitude: number, radius: number): Promise<any[]> {
         const query = {
-            text: 'SELECT * FROM post_table WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)',
-            values: [longitude, latitude, radius], // radius is in meters
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                    image_url, 
+                    description, 
+                    tags, 
+                    ST_X(location::geometry) AS longitude, 
+                    ST_Y(location::geometry) AS latitude
+                FROM post_table 
+                WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)
+            `,
+            values: [longitude, latitude, radius],
         };
         const res = await this.executeQuery(query);
-        return res.rows;
+
+        return res.rows.map(row => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+        }));
     }
 
-    /* Returns an array of all the nearest posts from the given location, limit is the amount of posts you want to receive. */
-    public async fetchNearestPosts(latitude: number,
-                                   longitude: number,
-                                   limit: number): Promise<any[]> {
+    /* Fetch nearest posts */
+    public async fetchNearestPosts(latitude: number, longitude: number, limit: number): Promise<any[]> {
         const query = {
-            text: `SELECT * FROM post_table ORDER BY ST_Distance(location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) LIMIT $3`,
-            values: [longitude, latitude, limit], // Limit for the number of nearest posts
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                    image_url, 
+                    description, 
+                    tags, 
+                    ST_X(location::geometry) AS longitude, 
+                    ST_Y(location::geometry) AS latitude
+                FROM post_table 
+                ORDER BY ST_Distance(location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) 
+                LIMIT $3
+            `,
+            values: [longitude, latitude, limit],
         };
         const res = await this.executeQuery(query);
-        return res.rows;
+
+        return res.rows.map(row => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+
+        }));
+    }
+
+    //post id 16 is giving bugss because it is linked to someone without a decoration, remove this later
+    public async fetchRandomPosts(n: Number, shownPosts) {
+        console.log("fetch in database (random)")
+        const query = {
+            text: `SELECT 
+                    post_id
+                    FROM post_table
+                    WHERE post_id NOT IN (SELECT post_id FROM post_table WHERE post_id = ANY($1::int[])) 
+                    ORDER BY RANDOM()
+                    LIMIT $2;
+                    `,
+            values: [shownPosts, n]
+        }
+        const res = await this.executeQuery(query);
+        console.log("res: "+ res.rows)
+        return res.rows.map(post => post.post_id);
     }
 
     /* Deletes a post from the DB given its ID. All comments that belong to this post will automatically be deleted as well. */

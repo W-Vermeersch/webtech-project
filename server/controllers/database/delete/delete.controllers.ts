@@ -28,8 +28,8 @@ export class DeleteController extends BaseDatabaseController {
         });
     }
 
-    private async deleteUser(req: express.Request, res: express.Response) {
-        const username = req.query.username
+    private async deleteUser(req, res) {
+        const username = req.user.username //get username from the access token
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
@@ -44,8 +44,8 @@ export class DeleteController extends BaseDatabaseController {
         }
     }
 
-    private async deleteLike(req: express.Request, res: express.Response) {
-        const username = req.query.username
+    private async deleteLike(req, res) {
+        const username = req.user.username
         const post_id = parseInt(req.query.post_id.toString());
 
         const users = await this.db.fetchUserUsingUsername(username.toString())

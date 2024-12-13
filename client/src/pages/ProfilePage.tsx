@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -31,10 +32,13 @@ interface User {
 const mockPosts: Post[] = Array(15)
   .fill(null)
   .map((_, index) => ({
+    idx: index,
+    user: "username",
     image_url: "https://dummyimage.com/180",
-    latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
-    longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
-    title: `Post ${index + 1}`,
+    location: {
+      latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
+      longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
+    },
     tags: ["tag1", "tag2"],
     description: `This is post number ${index + 1}`,
   }));
@@ -55,9 +59,8 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
+        const resp = await axios.get(FETCH_USER_PROFILE, {
           params: { username },
-
           //signal: controller.signal,
         });
         if (resp.data.redirect) {
@@ -91,7 +94,6 @@ export default function ProfilePage() {
     //   isMounted = false;
     //   controller.abort();
     // }
-
   }, [username]);
 
   if (!user) {
@@ -148,9 +150,9 @@ export default function ProfilePage() {
             <Tab eventKey="map" title="Map">
               {activeTab === "map" && (
                 <MapContainer
-                posts={mockPosts}
-                center={[50.822376, 4.395356]}
-              />
+                  posts={mockPosts}
+                  center={[50.822376, 4.395356]}
+                />
               )}
             </Tab>
           </Tabs>

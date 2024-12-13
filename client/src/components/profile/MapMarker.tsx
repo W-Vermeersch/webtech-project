@@ -9,10 +9,10 @@ interface MapMarkerProps {
 
 export default function MapMarker({ post }: MapMarkerProps) {
   return (
-    <Marker position={[post.latitude, post.longitude]}>
+    <Marker position={[post.location.latitude, post.location.longitude]}>
       <Popup>
         <NavLink to="#">
-          <Image src={post.image_url} alt={post.title || "Post image"} />
+          <Image src={post.image_url}/>
         </NavLink>
       </Popup>
     </Marker>

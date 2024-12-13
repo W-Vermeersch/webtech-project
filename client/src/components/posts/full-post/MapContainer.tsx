@@ -7,19 +7,13 @@ import L from "leaflet";
 import "./map.css";
 import "leaflet/dist/leaflet.css";
 
-interface Post {
-  user?: string;
-  image_url: string; // url to the storage api
-  idx?: number; // index of Post
-  description?: string;
-  tags?: string[];
-  likes?: number; // in DB each posts has a list of all Users who liked
-  longitude: number;
-  latitude: number;
+interface Location {
+  latitude: number,
+  longitude: number,
 }
 
 interface MapContainerProps {
-  post: Post;
+  location: Location;
   zoom: number;
   className?: string;
 }
@@ -33,11 +27,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapContainer({ post, zoom, className }: MapContainerProps) {
+export default function MapContainer({ location, zoom, className }: MapContainerProps) {
   return (
     <div className={"map-wrapper-fp mb-3 mb-md-0 " + className}>
       <LeafletMapContainer
-        center={[post.latitude, post.longitude]}
+        center={[location.latitude, location.longitude]}
         zoom={zoom}
         scrollWheelZoom={true}
         className="map-container-fp"
@@ -47,7 +41,7 @@ export default function MapContainer({ post, zoom, className }: MapContainerProp
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Marker position={[post.latitude, post.longitude]} />
+        <Marker position={[location.latitude, location.longitude]} />
       </LeafletMapContainer>
     </div>
   );

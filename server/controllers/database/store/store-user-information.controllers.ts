@@ -32,8 +32,8 @@ export class StoreUserInformationController extends BaseDatabaseController {
         });
     }
 
-    private async likePost(req: express.Request, res: express.Response) {
-        const username = req.query.username
+    private async likePost(req, res) {
+        const username = req.user.username
         const post_id = parseInt(req.query.post_id.toString());
 
         const users = await this.db.fetchUserUsingUsername(username.toString())
@@ -58,9 +58,9 @@ export class StoreUserInformationController extends BaseDatabaseController {
     private async followUser(req: express.Request, res: express.Response) {
         console.log("TO DO");
     }
-    private async updateBio(req: express.Request, res: express.Response) {
-        const newBio = req.params.new_bio
-        const username = req.query.username
+    private async updateBio(req, res) {
+        const newBio = req.query.new_bio
+        const username = req.user.username
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
@@ -73,9 +73,9 @@ export class StoreUserInformationController extends BaseDatabaseController {
             await this.db.updateBio(user_id, newBio.toString())
         }
     }
-    private async updatePFP(req: express.Request, res: express.Response) {
-        const newPFP = req.params.new_profile_picture
-        const username = req.query.username
+    private async updatePFP(req, res) {
+        const newPFP = req.query.new_profile_picture
+        const username = req.user.username
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
@@ -88,9 +88,9 @@ export class StoreUserInformationController extends BaseDatabaseController {
             await this.db.updateProfilePicture(user_id, newPFP.toString())
         }
     }
-    private async updateDisplayname(req: express.Request, res: express.Response) {
-        const newName = req.params.new_display_name
-        const username = req.query.username
+    private async updateDisplayname(req, res) {
+        const newName = req.query.new_display_name
+        const username = req.user.username
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({

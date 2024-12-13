@@ -11,7 +11,7 @@ export class FetchCommentInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/fetch/comment/information", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/comment/information", (req: express.Request, response: express.Response) => {
             return this.getCommentInformation(req, response);
         });
     }
@@ -25,10 +25,11 @@ export class FetchCommentInformationController extends BaseDatabaseController {
             });
         } else {
             const commentObject = comments[0]
-            const commentOwner = this.db.fetchUserUsingID(commentObject.user_id);
+            const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
+            const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
             res.json({
-                username: commentOwner,
-                user_id: commentObject.user_id,
+                user: commentOwner[0].username,
+                profile_picture: commentOwnerDecoration[0].profile_picture_image_url,
                 description: commentObject.description
             });
         }

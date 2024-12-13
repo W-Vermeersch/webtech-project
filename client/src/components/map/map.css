@@ -1,4 +1,24 @@
+.map-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
 .leaflet-container {
-    height: 600px;
-    width: 800px;
+    height: 85vh;
+    width: 100%;
+}
+
+#post-filter {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    z-index: 1000;
+}
+
+#post-refresh {
+    position: absolute;
+    top: 9vh;
+    right: 2vw;
+    z-index: 1000;
 }
