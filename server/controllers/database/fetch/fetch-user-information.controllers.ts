@@ -1,37 +1,54 @@
 import * as express from "express";
-import {BaseDatabaseController} from "../base.database.controller";
+import { BaseDatabaseController } from "../base.database.controller";
 import Database from "../../../database";
-import {authenticateToken} from "../../user-authentification";
+import { authenticateToken } from "../../user-authentification";
 
 export class FetchUserInformationController extends BaseDatabaseController {
+  constructor(private db: Database) {
+    super();
+  }
 
-    constructor(private db: Database) {
-        super()
-    }
+  initializeRoutes(): void {
+    // /user/get
+    this.router.get(
+      "/fetch/user/profile",
+      (req: express.Request, response: express.Response) => {
+        return this.getProfileInformation(req, response);
+      }
+    );
 
-    initializeRoutes(): void {
-        // /user/get
-        this.router.get("/fetch/user/profile", authenticateToken, (req: express.Request, response: express.Response) => {
-            return this.getProfileInformation(req, response);
-        });
+    this.router.get(
+      "/fetch/user/comments",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.getUserComments(req, response);
+      }
+    );
 
-        this.router.get("/fetch/user/comments", authenticateToken, (req: express.Request, response: express.Response) => {
-            return this.getUserComments(req, response);
-        });
+    this.router.get(
+      "/fetch/user/posts",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.getUserPosts(req, response);
+      }
+    );
 
-        this.router.get("/fetch/user/posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            return this.getUserPosts(req, response);
-        });
+    this.router.get(
+      "/fetch/user/liked-posts",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.getUserLikedPosts(req, response);
+      }
+    );
+  }
 
-        this.router.get("/fetch/user/liked-posts", authenticateToken, (req: express.Request, response: express.Response) => {
-            return this.getUserLikedPosts(req, response);
-        });
-    }
+  // All fetching operations require the username inside the request parameters.
 
-    // All fetching operations require the username inside the request parameters.
-
-    private async getProfileInformation(req: express.Request, res: express.Response) {
-        const username = (req.query.username) ? req.query.username : " ";
+  private async getProfileInformation(
+    req: express.Request,
+    res: express.Response
+  ) {
+    const username = req.query.username ? req.query.username : " ";
 
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
@@ -55,53 +72,55 @@ export class FetchUserInformationController extends BaseDatabaseController {
         }
     }
 
-    private async getUserComments(req: express.Request, res: express.Response) {
-        const username = (req.query.username) ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const userComments = (await this.db.fetchCommentsOfUser(userObject.user_id))
-            res.json({
-                user_comments: userComments
-            });
-        }
+  private async getUserComments(req: express.Request, res: express.Response) {
+    const username = req.query.username ? req.query.username : " ";
+    const users = await this.db.fetchUserUsingUsername(username.toString());
+    if (users.length === 0) {
+      res.json({
+        redirect: "/pageNotFound",
+      });
+    } else {
+      const userObject = users[0];
+      const userComments = await this.db.fetchCommentsOfUser(
+        userObject.user_id
+      );
+      res.json({
+        user_comments: userComments,
+      });
     }
+  }
 
-    private async getUserPosts(req: express.Request, res: express.Response) {
-        const username = (req.query.username) ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const userPosts = (await this.db.fetchPostsOfUser(userObject.user_id))
-            console.log(userPosts)
-            res.json({
-                user_posts: userPosts
-            });
-        }
+  private async getUserPosts(req: express.Request, res: express.Response) {
+    const username = req.query.username ? req.query.username : " ";
+    const users = await this.db.fetchUserUsingUsername(username.toString());
+    if (users.length === 0) {
+      res.json({
+        redirect: "/pageNotFound",
+      });
+    } else {
+      const userObject = users[0];
+      const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+      res.json({
+        user_posts: userPosts,
+      });
     }
+  }
 
-    private async getUserLikedPosts(req: express.Request, res: express.Response) {
-        const username = (req.query.username) ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const likedPosts = (await this.db.fetchLikedPostsOfUser(userObject.username))
-            res.json({
-                user_liked_posts: likedPosts
-            });
-        }
+  private async getUserLikedPosts(req: express.Request, res: express.Response) {
+    const username = req.query.username ? req.query.username : " ";
+    const users = await this.db.fetchUserUsingUsername(username.toString());
+    if (users.length === 0) {
+      res.json({
+        redirect: "/pageNotFound",
+      });
+    } else {
+      const userObject = users[0];
+      const likedPosts = await this.db.fetchLikedPostsOfUser(
+        userObject.username
+      );
+      res.json({
+        user_liked_posts: likedPosts,
+      });
     }
-
+  }
 }

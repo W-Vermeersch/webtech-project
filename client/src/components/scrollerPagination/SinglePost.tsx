@@ -1,16 +1,59 @@
-import { Row, Col, Container } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Row, Col, Container, Button } from "react-bootstrap";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
+import { useState } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from "../../api/axios";
+import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
+import CommentModal from "./Comment";
 
 interface SinglePostProps {
   post: Post;
 }
 
 const SinglePost = ({ post }: SinglePostProps) => {
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const handleViewAllComments = () => {
     navigate("/log-in");
+  };
+
+  // initialise the likes and track if the post is liked
+  const [likes, setLikes] = useState(post.likes || 0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+
+  const handleLike = async () => {
+    try {
+      if (isLiked) {
+        // Unlike the post
+        console.log("Im unliking the post");
+        // await axiosPrivate.post(DELETE_LIKE, (post.user, post.idx));
+        setLikes((prev) => prev - 1);
+      } else {
+        console.log("Im liking the post.");
+        // Like the post, this sends the wrong user for now
+        // await axiosPrivate.post(LIKE_POST, (post.user, post.idx));
+        setLikes((prev) => prev + 1);
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+    }
+  };
+
+  const handleOpenCommentModal = () => {
+    setShowCommentModal(true);
+  };
+
+  const handleCloseCommentModal = () => {
+    setShowCommentModal(false);
+  };
+
+  const handleComment = () => {
+    // Handle comment logic here
+    console.log("Comment button clicked");
   };
 
   // For each post, display the first two comments,
@@ -24,17 +67,17 @@ const SinglePost = ({ post }: SinglePostProps) => {
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
-            <Link to={`/user/${post.user}`}>
+            <NavLink to={`/profile/${post.user}`}>
               <img className="profilepic" src={post.image_url}></img>
-            </Link>
+            </NavLink>
           </Col>
           <Col>
-            <Link
+            <NavLink
               style={{ textDecoration: "none", color: "inherit" }}
-              to={`/user/${post.user}`}
+              to={`/profile/${post.user}`}
             >
               <div className="username d-flex flex-column">{post.user}</div>
-            </Link>
+            </NavLink>
           </Col>
         </Row>
       </div>
@@ -45,6 +88,26 @@ const SinglePost = ({ post }: SinglePostProps) => {
             src={post.image_url}
             alt="Post content"
             className="w-100 post-image"
+          />
+        </div>
+
+        {/* Like and comment */}
+        <div className="post-actions">
+          <img
+            src={isLiked ? "src/assets/liked.svg" : "src/assets/like.svg"}
+            alt="Like"
+            className="action-icon"
+            onClick={handleLike}
+            style={{ cursor: "pointer", width: "24px", marginRight: "10px" }}
+          />
+          <span>{likes}</span>
+
+          <img
+            src="src/assets/comment.svg"
+            alt="Comment"
+            className="action-icon"
+            onClick={handleOpenCommentModal}
+            style={{ cursor: "pointer", width: "30px", marginLeft: "20px" }}
           />
         </div>
 
@@ -85,6 +148,15 @@ const SinglePost = ({ post }: SinglePostProps) => {
           </div>
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <CommentModal
+          show={showCommentModal}
+          onHide={handleCloseCommentModal}
+          post={post}
+        />
+      )}
     </Container>
   );
 };
