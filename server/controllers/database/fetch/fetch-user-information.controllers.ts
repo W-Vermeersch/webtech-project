@@ -9,7 +9,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
   }
 
   initializeRoutes(): void {
-    // /user/get
     this.router.get(
       "/fetch/user/profile",
       (req: express.Request, response: express.Response) => {
@@ -19,7 +18,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
 
     this.router.get(
       "/fetch/user/comments",
-      authenticateToken,
       (req: express.Request, response: express.Response) => {
         return this.getUserComments(req, response);
       }
@@ -27,7 +25,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
 
     this.router.get(
       "/fetch/user/posts",
-      authenticateToken,
       (req: express.Request, response: express.Response) => {
         return this.getUserPosts(req, response);
       }
@@ -35,7 +32,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
 
     this.router.get(
       "/fetch/user/liked-posts",
-      authenticateToken,
       (req: express.Request, response: express.Response) => {
         return this.getUserLikedPosts(req, response);
       }
@@ -43,13 +39,11 @@ export class FetchUserInformationController extends BaseDatabaseController {
   }
 
   // All fetching operations require the username inside the request parameters.
-
   private async getProfileInformation(
     req: express.Request,
     res: express.Response
   ) {
     const username = req.query.username ? req.query.username : " ";
-
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
@@ -58,7 +52,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
         } else {
             const userObject = users[0]
             const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
-            //console.log("user prifile decoration: "+ userProfileDecoration);
+            //console.log("user profile decoration: "+ userProfileDecoration);
             //console.log(userProfileDecoration[0].display_name)
             res.json({
                 username: userObject.username,

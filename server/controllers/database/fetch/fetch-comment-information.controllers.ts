@@ -11,7 +11,7 @@ export class FetchCommentInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/fetch/comment/information", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/comment/information", (req: express.Request, response: express.Response) => {
             return this.getCommentInformation(req, response);
         });
     }

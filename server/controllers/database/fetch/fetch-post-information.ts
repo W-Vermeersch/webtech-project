@@ -11,11 +11,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/fetch/post/information", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/information", (req: express.Request, response: express.Response) => {
             return this.getPostInformation(req, response);
         });
 
-        this.router.get("/fetch/post/comments", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/comments", (req: express.Request, response: express.Response) => {
             return this.getPostComments(req, response);
         });
 
