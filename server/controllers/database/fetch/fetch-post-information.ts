@@ -22,15 +22,21 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getPostInformation(req: express.Request, res: express.Response) {
+        if (!req.query.post_id) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+            return;
+        }
         const post_id = parseInt(req.query.post_id.toString());
 
-        const posts = await this.db.fetchPostsByIds([post_id])
-        if (posts.length === 0) {
+        const post = await this.db.fetchPostsByIds([post_id])
+        if (post.length === 0) {
             res.json({
-                redirect: '/home'
+                redirect: '/pageNotFound'
             });
         } else {
-            const postObject = posts[0]
+            const postObject = post[0]
             const postOwner = this.db.fetchUserUsingID(postObject.user_id);
             res.json({
                 username: postOwner,
@@ -44,12 +50,18 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getPostComments(req: express.Request, res: express.Response) {
+        if (!req.query.post_id) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+            return;
+        }
         const post_id = parseInt(req.query.post_id.toString());
 
         const posts = await this.db.fetchPostsByIds([post_id])
         if (posts.length === 0) {
             res.json({
-                redirect: '/home'
+                redirect: '/pageNotFound'
             });
         } else {
             const postObject = posts[0]

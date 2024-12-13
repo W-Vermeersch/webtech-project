@@ -40,14 +40,15 @@ const mockPost: Post = {
   longitude: 4.395356,
 };
 
+
 export default function FullPost() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { post_id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     async function fetchPost() {
-      const resp = await axios.get(FETCH_POST, { params: { id } });
+      const resp = await axios.get(FETCH_POST, { params: { post_id } });
       if (resp.data.redirect) {
         navigate(resp.data.redirect);
       } else {
@@ -55,7 +56,7 @@ export default function FullPost() {
       }
     }
     fetchPost();
-  }, [id]);
+  }, [post_id]);
 
   if (!post) {
     return null;
