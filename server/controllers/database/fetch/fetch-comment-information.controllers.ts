@@ -25,9 +25,9 @@ export class FetchCommentInformationController extends BaseDatabaseController {
             });
         } else {
             const commentObject = comments[0]
-            const commentOwner = this.db.fetchUserUsingID(commentObject.user_id);
+            const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
             res.json({
-                username: commentOwner,
+                username: commentOwner[0].username,
                 user_id: commentObject.user_id,
                 description: commentObject.description
             });

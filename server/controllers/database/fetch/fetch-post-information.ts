@@ -23,6 +23,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     private async getPostInformation(req: express.Request, res: express.Response) {
         const post_id = parseInt(req.query.post_id.toString());
+        console.log("post_id: "+post_id)
 
         const posts = await this.db.fetchPostsByIds([post_id])
         if (posts.length === 0) {
@@ -31,9 +32,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const postOwner = this.db.fetchUserUsingID(postObject.user_id);
+            const postOwner = await this.db.fetchUserUsingID(postObject.user_id);
+            console.log("postOwner: "+postOwner)
             res.json({
-                username: postOwner,
+                username: postOwner[0].username,
                 user_id: postObject.user_id,
                 image_urls: postObject.image_url,
                 description: postObject.description,
@@ -53,7 +55,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const postComments = (await this.db.fetchCommentsOfPost(postObject.post_id))
+            const postComments = await this.db.fetchCommentsOfPost(postObject.post_id)
             res.json({
                 post_comments: postComments
             });

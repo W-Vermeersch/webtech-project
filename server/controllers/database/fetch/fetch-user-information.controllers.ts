@@ -41,15 +41,16 @@ export class FetchUserInformationController extends BaseDatabaseController {
         } else {
             const userObject = users[0]
             const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
-            //console.log(userProfileDecoration); // empty array??
+            //console.log("user prifile decoration: "+ userProfileDecoration);
+            //console.log(userProfileDecoration[0].display_name)
             res.json({
                 username: userObject.username,
                 user_id: userObject.user_id,
-                displayname: userProfileDecoration.display_name,
-                profilepicture: userProfileDecoration.profile_picture_image_url,
-                bio: userProfileDecoration.bio,
-                totalexp: userProfileDecoration.total_exp,
-                badges: userProfileDecoration.badges
+                displayname: userProfileDecoration[0].display_name,
+                profilepicture: userProfileDecoration[0].profile_picture_image_url,
+                bio: userProfileDecoration[0].bio,
+                totalexp: userProfileDecoration[0].total_exp,
+                badges: userProfileDecoration[0].badges
             });
         }
     }
@@ -80,6 +81,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
         } else {
             const userObject = users[0]
             const userPosts = (await this.db.fetchPostsOfUser(userObject.user_id))
+            console.log(userPosts)
             res.json({
                 user_posts: userPosts
             });
