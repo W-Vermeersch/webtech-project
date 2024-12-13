@@ -65,16 +65,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         email: string,
         password: string
     ) {
-        console.log("Storing user.");
         const query = {
             text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [username, email, password],
         };
-        await this.executeQuery(query);
+        await this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
     }
     /* Returns an array with all the column values of a user given their username.*/
     public async fetchUserUsingUsername(username: string): Promise<any> {
-        console.log("Fetching user.");
         const query = {
             text: 'SELECT * FROM user_table WHERE username = $1',
             values: [username],

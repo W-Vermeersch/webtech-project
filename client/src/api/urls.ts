@@ -33,7 +33,7 @@ export const ADD_COMMENT = "/db/store/comment" // een comment opslaan. deze werk
 export const ADD_POST = "/db/store/post" // een post opslaan. dit is de code van william die ik hierin heb verplaatst. ik weet nog niet exact wat en hoe er meegegeven moet worden. dit is nog in work in progress
 
 // User Authentication controllers:
-export const SIGN_IN = "/user/sign-up" // een user aanmaken. heeft username, email, password en passwordConfirm nodig in de body
+export const SIGN_IN = "/user/sign-in" // een user aanmaken. heeft username, email, password en passwordConfirm nodig in de body
 export const LOG_IN = "/user/log-in" // een user inloggen. heeft username of email en password nodig in de body
 export const LOG_OUT = "/user/log-out" // een user uitloggen. heeft geen parameters nodig
 export const REFRESH_TOKEN = "/user/token" // een nieuwe access token aanvragen. heeft geen parameters nodig

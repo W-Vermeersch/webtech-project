@@ -4,7 +4,7 @@ import { LogInForm, ErrorInLogInForm } from "../../../Global/log-in-forms";
 import Database from "../../database";
 import * as jwt from "jsonwebtoken";
 import { ref } from "yup";
-import {validPassword} from "../password.encryption";
+import {validPassword} from "./password.encryption";
 require("dotenv").config();
 
 export class LogInController extends UserAuthentificationController {
@@ -145,7 +145,6 @@ export class LogInController extends UserAuthentificationController {
       const userEmail = user[0].email;
       //console.log("user password: " + user[0].password + "Given password: " + password)
       if (!validPassword(password, userEmail, userPassword)){
-          //console.log("password incorrect")
         errors.password = "Password incorrect!";
         inputs.password = "";
       }

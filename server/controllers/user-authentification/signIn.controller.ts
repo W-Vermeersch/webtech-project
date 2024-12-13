@@ -2,7 +2,7 @@ import {UserAuthentificationController} from "./base.user.controller";
 import * as express from "express";
 import {SignInForm, ErrorInSignInForm} from "../../../Global/sign-in-form";
 import Database from "../../database";
-import {hashPassword} from "../password.encryption";
+import {hashPassword} from "./password.encryption";
 
 export class SignInController extends UserAuthentificationController{
     public constructor(private db: Database) {
@@ -18,7 +18,6 @@ export class SignInController extends UserAuthentificationController{
 
     async addPost(req: express.Request, res: express.Response): Promise<void> {
         const inputs: SignInForm = new SignInForm();
-        console.log(req.body)
         inputs.fill(req.body);
         const errors: ErrorInSignInForm = new ErrorInSignInForm();
 
@@ -31,7 +30,6 @@ export class SignInController extends UserAuthentificationController{
            errors.email = "Please enter a valid email address.";
            inputs.email = "";
         }
-
         if (!this._isGiven(inputs.password)) {
             errors.password = "Please enter a password.";
             inputs.password = "";
@@ -62,7 +60,7 @@ export class SignInController extends UserAuthentificationController{
                 inputs: inputs.toObject()
             });
         } else {
-            const hashedPassword = inputs.password//hashPassword(inputs.password, inputs.username);
+            const hashedPassword = hashPassword(inputs.password, inputs.email);
             await this.db.storeUser(inputs.username, inputs.email, hashedPassword);
             const user_id = await this.db.getUserID(inputs.username);
             await this.db.storeProfileDecoration(user_id, inputs.username, "");
