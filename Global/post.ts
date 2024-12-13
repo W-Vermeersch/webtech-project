@@ -5,6 +5,8 @@ export class Post {
     description: string = "";
     tags: string[] = [];
     likes: number = 0; // in DB each posts has a list of all Users who liked
+    rarity: number = 0;
+    score: number = 0;
     longitude: number | null;
     latitude: number | null;
     commentsection: Comment[];

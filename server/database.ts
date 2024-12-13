@@ -196,14 +196,16 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                 query = {
                     text: `
                         INSERT INTO post_table
-                        (user_id, image_url, description, tags)
-                        VALUES ($1, $2, $3, $4)
+                        (user_id, image_url, description, tags, score, rarity)
+                        VALUES ($1, $2, $3, $4, $5, $6)
                     `,
                     values: [
                         post.user,
                         post.image_url,
                         post.description,
                         post.tags,
+                        post.score,
+                        post.rarity
                     ],
                 };
             }
@@ -229,13 +231,22 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array of post IDs that a user has liked given their user ID. */
-    public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
+    public async fetchLikedPostsOfUser(user_id: string): Promise<number[]> {
         const query = {
             text: 'SELECT post_id FROM likes_table WHERE user_id = $1',
             values: [user_id],
         };
         const res = await this.executeQuery(query);  //returns a list of post ids, not the actual posts
         return await this.fetchPostsByIds(res.rows);
+    }
+
+    public async fetchUserWhoLikedPost(post_id: number): Promise<number[]> {
+        const query = {
+            text: 'SELECT user_id FROM likes_table WHERE post_id = $1',
+            values: [post_id],
+        };
+        const res = await this.executeQuery(query);  //returns a list of post ids, not the actual posts
+        return res.rows;
     }
 
         /* Returns an array of all posts that match with the given list of post IDs. */
@@ -413,7 +424,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[], score INT NOT NULL DEFAULT 0, rarity NUMERIC(2, 1) NOT NULL DEFAULT 0,location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 

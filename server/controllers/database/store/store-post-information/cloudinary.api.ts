@@ -74,16 +74,16 @@ export class CloudinaryApi {
         return this.scanImage(imageUrl, prompts);
     }
 
-    public async appraiseImage(imageUrl: string): Promise<number> {
-        return new Promise(async (resolve, reject) => {return 50})
+    public async appraiseImage(imageUrl: string): Promise<number[]> {
+        return new Promise(async (resolve, reject) => {return [50, 1.0]})
         const prompts = [
             "Rate this image based on the scenery and the animal by only outputting a number on a scala of 1 to 100, if no animal give '0'.",
             "Rate the rarity rarity of the animal in the picture by only outputting a number with a scala of 1.0 to 5.0, if no animal give '0'."
         ]
         return this.scanImage(imageUrl, prompts).then((res: string[]) => {
             if (res.length === 2) {
-                return Number(+res[0] * +res[1])
-            } else return 0
+                return [+res[0] ,+res[1]]
+            } else return [0,0]
         });
     }
 }
