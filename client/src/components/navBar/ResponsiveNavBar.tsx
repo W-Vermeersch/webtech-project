@@ -17,7 +17,11 @@ export default function ResponsiveNavBar() {
 
   return (
     <>
-      {isMobile ? <NavBar/> : <NavBar />}
+      {isMobile ? (
+        <NavBar isMobile={isMobile} />
+      ) : (
+        <NavBar isMobile={isMobile} />
+      )}
     </>
   );
 }
