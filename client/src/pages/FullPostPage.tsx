@@ -11,7 +11,7 @@ import MapContainer from "../components/posts/full-post/MapContainer";
 import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
-import { Post, PostComment, User } from "../components/posts/PostInterface"
+import { Post, PostComment, User } from "../components/posts/PostInterface";
 import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
 
 // later make modules of components
@@ -24,32 +24,41 @@ export default function FullPost() {
 
   useEffect(() => {
     async function fetchPost() {
-      console.log(post_id);
-      const resp = await axios.get(FETCH_POST, { params: { post_id } });
-      if (resp.data.redirect) {
-        navigate(resp.data.redirect, { replace: true });
-      } else {
-        console.log(resp.data);
-        setPost(resp.data); 
+      try {
+        const resp = await axios.get(FETCH_POST, { params: { post_id } });
+        if (resp.data.redirect) {
+          navigate(resp.data.redirect, { replace: true });
+        } else {
+          setPost(resp.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch post:", error);
       }
     }
 
-    async function fetchUser(username: string) {
-      const resp = await axios.get(FETCH_USER_PROFILE, { params: { username } });
-      if (resp.data.redirect) {
-        navigate(resp.data.redirect, { replace: true });
-    } else {
-      setUser(resp.data);
-    }
-  }
-
     fetchPost();
-    console.log(post);
+  }, [post_id, navigate]);
+
+  useEffect(() => {
+    async function fetchUser(username: string) {
+      try {
+        const resp = await axios.get(FETCH_USER_PROFILE, {
+          params: { username },
+        });
+        if (resp.data.redirect) {
+          navigate(resp.data.redirect, { replace: true });
+        } else {
+          setUser(resp.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+
     if (post) {
       fetchUser(post.user);
     }
-
-  }, [post_id]);
+  }, [post, navigate]);
 
   if (!post || !user) {
     return null;
@@ -63,7 +72,11 @@ export default function FullPost() {
         className="flex-nowrap flex-md-wrap row-cols-md-3"
       >
         <Col xs={12} md={6} className="order-md-4 order-2">
-          <PostImage image_url={post.image_url} tags={post.tags} location={post.location} />
+          <PostImage
+            image_url={post.image_url}
+            tags={post.tags}
+            location={post.location}
+          />
         </Col>
         <Col xs={12} md={6} className="order-md-1 order-1">
           <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
@@ -81,7 +94,11 @@ export default function FullPost() {
         </Col>
         <Col xs={12} md={6} className="order-md-3 order-4">
           <Row>
-            <MapContainer location={post.location} zoom={10} className="shadow-lg" />
+            <MapContainer
+              location={post.location}
+              zoom={5}
+              className="shadow-lg"
+            />
           </Row>
         </Col>
       </Row>
