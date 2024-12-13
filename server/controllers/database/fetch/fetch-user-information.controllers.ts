@@ -53,7 +53,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
             res.json({
-                redirect: '/home'
+                redirect: '/pageNotFound'
             });
         } else {
             const userObject = users[0]

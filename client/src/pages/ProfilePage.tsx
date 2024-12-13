@@ -34,9 +34,10 @@ const mockPosts: Post[] = Array(15)
   .map((_, index) => ({
     user: "username",
     image_url: "https://dummyimage.com/180",
-    latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
-    longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
-    title: `Post ${index + 1}`,
+    location: {
+      latitude: 50.822376 + (Math.random() - 0.5) * 0.02,
+      longitude: 4.395356 + (Math.random() - 0.5) * 0.02,
+    },
     tags: ["tag1", "tag2"],
     description: `This is post number ${index + 1}`,
   }));

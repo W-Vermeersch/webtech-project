@@ -84,11 +84,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
       <div className="post-content">
         <div className="post-image-wrapper">
-          <img
-            src={post.image_url}
-            alt="Post content"
-            className="w-100 post-image"
-          />
+          <NavLink to={`/profile/${post.user}`}>
+            <img
+              src={post.image_url}
+              alt="Post content"
+              className="w-100 post-image"
+            />
+          </NavLink>
         </div>
 
         {/* Like and comment */}
@@ -114,7 +116,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
         {/* Caption & Tags Section */}
         <div className="post-details">
           <p className="caption mb-1">
-            <span className="fw-bold">@{post.user}</span> {post.title}
+            <span className="fw-bold">@{post.user}</span> {post.description}
           </p>
 
           <div className="tags-section mb-2">
@@ -137,13 +139,15 @@ const SinglePost = ({ post }: SinglePostProps) => {
             ))}
 
             {post.commentsection && post.commentsection.length > 2 && (
-              <div
-                className="load-more-comments muted"
-                style={{ cursor: "pointer" }}
-                onClick={handleViewAllComments}
-              >
-                View all comments
-              </div>
+              <NavLink to={`/profile/${post.user}`}>
+                <div
+                  className="load-more-comments muted"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleViewAllComments}
+                >
+                  View all comments
+                </div>
+              </NavLink>
             )}
           </div>
         </div>
