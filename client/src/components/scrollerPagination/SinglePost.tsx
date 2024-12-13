@@ -35,7 +35,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
       console.log("Im liking the post.");
       // Like the post, this sends the wrong user for now
       //const resp = await axiosPrivate.get(LIKE_POST, { current_postid });
-      console.log(resp);
+      //console.log(resp);
       setLikes((prev) => prev + 1);
     }
     setIsLiked(!isLiked);
