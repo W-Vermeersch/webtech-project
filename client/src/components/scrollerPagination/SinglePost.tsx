@@ -25,22 +25,20 @@ const SinglePost = ({ post }: SinglePostProps) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
 
   const handleLike = async () => {
-    try {
-      if (isLiked) {
-        // Unlike the post
-        console.log("Im unliking the post");
-        // await axiosPrivate.post(DELETE_LIKE, (post.user, post.idx));
-        setLikes((prev) => prev - 1);
-      } else {
-        console.log("Im liking the post.");
-        // Like the post, this sends the wrong user for now
-        // await axiosPrivate.post(LIKE_POST, (post.user, post.idx));
-        setLikes((prev) => prev + 1);
-      }
-      setIsLiked(!isLiked);
-    } catch (error) {
-      console.error("Error liking/unliking post:", error);
+    const current_postid = post.idx;
+    if (isLiked) {
+      // Unlike the post
+      console.log("Im unliking the post");
+      // await axiosPrivate.post(DELETE_LIKE, (post.user, post.idx));
+      setLikes((prev) => prev - 1);
+    } else {
+      console.log("Im liking the post.");
+      // Like the post, this sends the wrong user for now
+      //const resp = await axiosPrivate.get(LIKE_POST, { current_postid });
+      //console.log(resp);
+      setLikes((prev) => prev + 1);
     }
+    setIsLiked(!isLiked);
   };
 
   const handleOpenCommentModal = () => {
