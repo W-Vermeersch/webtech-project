@@ -83,7 +83,7 @@ export class CloudinaryApi {
         return this.scanImage(imageUrl, prompts).then((res: string[]) => {
             if (res.length === 2) {
                 return Number(+res[0] * +res[1])
-            }
+            } else return 0
         });
     }
 }
