@@ -1,11 +1,11 @@
 import * as express from "express";
-import { authenticateToken } from "./user-authentification/login.controllers";
-import { UserAuthentificationController } from "./user-authentification/base.user.controller";
+import { authenticateToken } from "./user-authentification";
+import {BaseController} from "./base.controller";
 
-export class UserProfileController extends UserAuthentificationController {
+export class UserProfileController extends BaseController {
 
     constructor() {
-        super();
+        super("/user");
     }
 
     initializeRoutes(): void {

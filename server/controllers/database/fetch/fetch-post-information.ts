@@ -29,6 +29,18 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     }
 
+    private async processLikesOfPost(post_id, user_id): Promise<{ isLiked: boolean, likes: number }> {
+        return this.db.fetchLikedUsersOfPost(post_id).then((res) => {
+            const resp = {isLiked: false, likes: 0}
+            if (res.includes(user_id)) {
+                resp.isLiked = true;
+            }
+            resp.likes = res.length;
+            console.log("Found post : ", resp);
+            return resp;
+        })
+    }
+
     private async getPostInformation(req: express.Request, res: express.Response) {
         if (!req.query.post_id) {
             res.json({
@@ -46,13 +58,16 @@ export class FetchPostInformationController extends BaseDatabaseController {
             const postObject = posts[0]
             const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
             const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
+            const likes = await this.processLikesOfPost(post_id, postObject.user_id);
             res.json({
                 user: postOwner[0].username,
                 profile_picture: postOwnerDecoration[0].profile_picture_image_url,
                 image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
-                location: postObject.location
+                location: postObject.location,
+                likes: likes.likes,
+                liked: likes.isLiked
                 });
         }
     }
@@ -81,13 +96,16 @@ export class FetchPostInformationController extends BaseDatabaseController {
             const postObject = post_list[0]
             const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
             const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
+            const likes = await this.processLikesOfPost(post_id, postObject.user_id);
             const postToSend = {
                 user: postOwner[0].username,
                 profile_picture: postOwnerDecoration[0].profile_picture_image_url,
                 image_url: postObject.image_url,
                 description: postObject.description,
                 tags: postObject.tags,
-                location: postObject.location
+                location: postObject.location,
+                likes: likes.likes,
+                liked: likes.isLiked
                 }
             posts.push(postToSend);
             shownIds.push(post_id);

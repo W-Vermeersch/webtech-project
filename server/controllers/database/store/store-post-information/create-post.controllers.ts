@@ -1,6 +1,6 @@
 import {BaseController} from "../../../base.controller";
 import * as express from "express";
-import { authenticateToken } from "../../../user-authentification/login.controllers";
+import { authenticateToken } from "../../../user-authentification";
 
 export class CreatePostController extends BaseController {
 

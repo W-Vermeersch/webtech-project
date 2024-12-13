@@ -4,7 +4,7 @@ import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../../../Global/post";
 import * as ExifReader from 'exifreader';
-import { authenticateToken } from "../../../user-authentification/login.controllers";
+import { authenticateToken } from "../../../user-authentification/user.controller";
 import * as multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
