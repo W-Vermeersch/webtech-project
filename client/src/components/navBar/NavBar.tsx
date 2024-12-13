@@ -14,7 +14,11 @@ import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
 import { LOG_IN } from "../../api/urls";
 
-export default function NavBar() {
+interface NavBarProps {
+  isMobile: boolean;
+}
+
+export default function NavBar({ isMobile }: NavBarProps) {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
@@ -56,7 +60,7 @@ export default function NavBar() {
             </NavItem>
           </Nav>
           <Nav>
-            <Search/>
+            <Search />
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">
