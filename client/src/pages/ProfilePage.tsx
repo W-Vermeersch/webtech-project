@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -55,14 +56,14 @@ export default function ProfilePage() {
 
     async function fetchUser() {
       try {
-        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
+        const resp = await axios.get(FETCH_USER_PROFILE, {
           params: { username },
 
           //signal: controller.signal,
         });
         if (resp.data.redirect) {
           // user not found
-          navigate(resp.data.redirect);
+          navigate("/pageNotFound", { replace: true });
         } else {
           //isMounted &&
           setUser(resp.data);
@@ -91,7 +92,6 @@ export default function ProfilePage() {
     //   isMounted = false;
     //   controller.abort();
     // }
-
   }, [username]);
 
   if (!user) {
@@ -148,9 +148,9 @@ export default function ProfilePage() {
             <Tab eventKey="map" title="Map">
               {activeTab === "map" && (
                 <MapContainer
-                posts={mockPosts}
-                center={[50.822376, 4.395356]}
-              />
+                  posts={mockPosts}
+                  center={[50.822376, 4.395356]}
+                />
               )}
             </Tab>
           </Tabs>

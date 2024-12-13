@@ -1,9 +1,10 @@
 import { Row, Col, Container, Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
 import { useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from "../../api/axios";
 import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
 import CommentModal from "./Comment";
 
@@ -12,7 +13,7 @@ interface SinglePostProps {
 }
 
 const SinglePost = ({ post }: SinglePostProps) => {
-  const axios = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const handleViewAllComments = () => {
     navigate("/log-in");
@@ -27,13 +28,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
     try {
       if (isLiked) {
         // Unlike the post
-        console.log("Im unliking the post")
-        // await axios.post(DELETE_LIKE, (post.user, post.idx));
+        console.log("Im unliking the post");
+        // await axiosPrivate.post(DELETE_LIKE, (post.user, post.idx));
         setLikes((prev) => prev - 1);
       } else {
-        console.log("Im liking the post.")
+        console.log("Im liking the post.");
         // Like the post, this sends the wrong user for now
-        // await axios.post(LIKE_POST, (post.user, post.idx));
+        // await axiosPrivate.post(LIKE_POST, (post.user, post.idx));
         setLikes((prev) => prev + 1);
       }
       setIsLiked(!isLiked);
@@ -66,17 +67,17 @@ const SinglePost = ({ post }: SinglePostProps) => {
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
-            <Link to={`/profile/${post.user}`}>
+            <NavLink to={`/profile/${post.user}`}>
               <img className="profilepic" src={post.image_url}></img>
-            </Link>
+            </NavLink>
           </Col>
           <Col>
-            <Link
+            <NavLink
               style={{ textDecoration: "none", color: "inherit" }}
               to={`/profile/${post.user}`}
             >
               <div className="username d-flex flex-column">{post.user}</div>
-            </Link>
+            </NavLink>
           </Col>
         </Row>
       </div>
