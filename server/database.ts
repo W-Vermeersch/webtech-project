@@ -79,14 +79,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     /* Returns an array with all the column values of a user given their ID.*/
     public async fetchUserUsingID(user_id: number): Promise<any> {
-        console.log("Fetching user.");
-        console.log("user_id: " + user_id)
+        //console.log("Fetching user.");
+        //console.log("user_id: " + user_id)
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
         const res = await this.executeQuery(query);
-        console.log(res.rows);
+        //console.log(res.rows);
         return res.rows;
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
@@ -229,8 +229,8 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 p.image_url, 
                 p.description, 
                 p.tags, 
-                ST_X(p.location) AS longitude, 
-                ST_Y(p.location) AS latitude
+                ST_X(p.location::geometry) AS longitude, 
+                ST_Y(p.location::geometry) AS latitude
             FROM likes_table l
             INNER JOIN post_table p ON l.post_id = p.post_id
             WHERE l.user_id = $1
@@ -386,7 +386,25 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             
         }));
     }
-    
+
+    //post id 16 is giving bugss because it is linked to someone without a decoration, remove this later
+    public async fetchRandomPosts(n: Number, shownPosts) {
+        console.log("fetch in database (random)")
+        const query = {
+            text: `SELECT 
+                    post_id
+                    FROM post_table
+                    WHERE post_id NOT IN (SELECT post_id FROM post_table WHERE post_id = ANY($1::int[])) 
+                    ORDER BY RANDOM()
+                    LIMIT $2;
+                    `,
+            values: [shownPosts, n]
+        }
+        const res = await this.executeQuery(query);
+        console.log("res: "+ res.rows)
+        return res.rows.map(post => post.post_id);
+    }
+
     /* Deletes a post from the DB given its ID. All comments that belong to this post will automatically be deleted as well. */
     public async deletePost(post_id: number): Promise<void> {
         const query = {
