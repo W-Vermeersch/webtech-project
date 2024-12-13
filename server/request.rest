@@ -38,9 +38,15 @@ Content-Type: application/json
     }
 
 ###
-
-GET http://localhost:5000/db/fetch/post/comments?post_id=1
+// fetch post 1
+GET http://localhost:5000/db/fetch/post/information?post_id=1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbW9vb29vIiwidXNlcl9pZCI6MjcsImlhdCI6MTczNDA5MzcxOCwiZXhwIjoxNzM0MDk0NjE4fQ.7O5UKALQRlgnoD_oXhATVIl3IWtE6BMrZsBXRB8rUgU
 
+###
+// fetch random posts
+# @no-cookie-jar
+GET http://localhost:5000/db/fetch/post/random-posts?nr_of_posts=3
+Content-Type: application/json
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbW9vb29vIiwidXNlcl9pZCI6MjcsImlhdCI6MTczNDA5MzcxOCwiZXhwIjoxNzM0MDk0NjE4fQ.7O5UKALQRlgnoD_oXhATVIl3IWtE6BMrZsBXRB8rUgU
 

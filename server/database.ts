@@ -69,7 +69,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [username, email, password],
         };
-        await this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
+        return await this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
     }
     /* Returns an array with all the column values of a user given their username.*/
     public async fetchUserUsingUsername(username: string): Promise<any> {
@@ -77,7 +77,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM user_table WHERE username = $1',
             values: [username],
         }
-        return this.executeQuery(query).then((res) => {return res.rows});
+        return await this.executeQuery(query).then((res) => {return res.rows});
         // resulting array contains a lot of query metadata.
         // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
         // if you need that metadata you can remove .rows and extract what you need.
@@ -89,7 +89,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
-        return this.executeQuery(query).then((res) => {return res.rows});
+        return await this.executeQuery(query).then((res) => {return res.rows});
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
     public async fetchUserUsingEmailOrUsername(input: string): Promise<any> {
@@ -97,12 +97,12 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM user_table WHERE email = $1 OR username = $1',
             values: [input],
         };
-        return this.executeQuery(query).then((res) => {return res.rows;});
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns the ID of a user given their username*/
     public async getUserID(username: string): Promise<number> {
-        return this.fetchUserUsingUsername(username).then((response)=>{
+        return await this.fetchUserUsingUsername(username).then((response)=>{
             return response[0].user_id
         });
     };
@@ -114,7 +114,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'DELETE FROM user_table WHERE username = $1 AND user_id = $2',
             values: [username, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -127,7 +127,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'INSERT INTO comment_table (post_id, user_id, description) VALUES ($1, $2, $3)',
             values: [post_id, user_id, comment],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /* Returns an array of all comments that match with the given list of comment IDs. */
@@ -139,7 +139,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE comment_id = ANY($1)',
             values: [commentIds],
         };
-        return this.executeQuery(query).then((res) => {return res.rows;});
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns an array with all the comments of a given post using its ID. */
@@ -148,7 +148,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE post_id = $1',
             values: [post_id],
         };
-        return this.executeQuery(query).then((res) => {return res.rows;});
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns an array with all the comments from a given user given their ID. */
@@ -157,7 +157,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE user_id = $1',
             values: [user_id],
         };
-        return this.executeQuery(query).then((res) => {return res.rows;});
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Deletes a comment from the DB given the ID of itself and its user. */
@@ -166,7 +166,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'DELETE FROM comment_table WHERE comment_id = $1',
             values: [comment_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     //Operations for the post table
@@ -238,7 +238,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         `,
         values: [user_id],
     };
-    return this.executeQuery(query).then((res) => {
+    return await this.executeQuery(query).then((res) => {
         return res.rows.map((row: Post) => ({
             post_id: row.post_id,
             user_id: row.user_id,
@@ -260,7 +260,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'SELECT user_id FROM likes_table where post_id = $1',
             values: [post_id]
         }
-        return this.executeQuery(query).then((res) => {
+        return await this.executeQuery(query).then((res) => {
             return res.rows.map((user: Like) => user.user_id)
         });
     }
@@ -287,7 +287,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [postIds],
         };
 
-        return this.executeQuery(query).then((res) => {
+        return await this.executeQuery(query).then((res) => {
             return res.rows.map((row: Post) => ({
                 post_id: row.post_id,
                 user_id: row.user_id,
@@ -319,7 +319,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [user_id],
         };
-        return this.executeQuery(query).then((res) => {
+        return await this.executeQuery(query).then((res) => {
             return res.rows.map((row: Post) => ({
                 post_id: row.post_id,
                 user_id: row.user_id,
@@ -424,7 +424,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM post_table WHERE post_id = $1',
             values: [post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -439,7 +439,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
             values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, []],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /*Update a user's profile picture given their ID*/
@@ -448,7 +448,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET profile_picture_image_url = $1 WHERE user_id = $2',
             values: [newImageUrl, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /*Update the total EXP count of a user given their ID*/
@@ -459,7 +459,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 text: 'UPDATE user_profile_decoration_table SET total_exp =  total_exp + $1 WHERE user_id = $2',
                 values: [Math.trunc(newExp), user_id],
             };
-            await this.executeQuery(query);
+            return await this.executeQuery(query);
         }
         catch (error) {
             console.error(error);
@@ -472,7 +472,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET badges = $1 WHERE user_id = $2',
             values: [JSON.stringify(newBadges), user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
     /*Updates a user's bio description*/
     public async updateBio(user_id: number, newBio: string): Promise<void> {
@@ -480,14 +480,14 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET bio = $1 WHERE user_id = $2',
             values: [newBio, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
     public async updateDisplayName(user_id: number, newName: string): Promise<void> {
         const query = {
             text: 'UPDATE user_profile_decoration_table SET display_name = $1 WHERE user_id = $2',
             values: [newName, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     public async fetchProfileDecoration(user_id: number): Promise<any> {
@@ -504,7 +504,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM user_profile_decoration_table WHERE user_id = $1',
             values: [user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -516,7 +516,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'INSERT INTO likes_table (user_id, post_id) VALUES ($1, $2)',
             values: [user_id, post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     public async deleteLike(user_id: number,
@@ -525,7 +525,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM likes_table WHERE user_id = $1 AND post_id = $2',
             values: [user_id, post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
