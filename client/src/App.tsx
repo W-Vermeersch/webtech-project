@@ -7,7 +7,7 @@ import PersistLogin from "./components/PersistLogin.tsx";
 
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogInPage from "./pages/LogInPage.tsx";
-import ResponsiveNavBar from "./components/navBar/ResponsiveNavBar.tsx";
+import NavBar from "./components/navBar/NavBar.tsx";
 import HomePage from "./pages/Homepage.tsx";
 import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
@@ -19,7 +19,7 @@ import FullPost from "./pages/FullPostPage.tsx";
 function App() {
   return (
     <>
-      <ResponsiveNavBar />
+      <NavBar />
       <Routes>
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth />}>
