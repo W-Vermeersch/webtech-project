@@ -29,7 +29,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
-          <Route path="/post/:id" element={<FullPost />} />
+          <Route path="/post/:post_id" element={<FullPost />} />
           <Route path="/map" element={<Map />} />
         </Route>
 

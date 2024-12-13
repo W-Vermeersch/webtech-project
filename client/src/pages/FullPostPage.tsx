@@ -24,10 +24,12 @@ export default function FullPost() {
 
   useEffect(() => {
     async function fetchPost() {
+      console.log(post_id);
       const resp = await axios.get(FETCH_POST, { params: { post_id } });
       if (resp.data.redirect) {
         navigate(resp.data.redirect, { replace: true });
       } else {
+        console.log(resp.data);
         setPost(resp.data); 
       }
     }
@@ -42,6 +44,7 @@ export default function FullPost() {
   }
 
     fetchPost();
+    console.log(post);
     if (post) {
       fetchUser(post.user);
     }
