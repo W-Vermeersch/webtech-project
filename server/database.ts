@@ -250,8 +250,16 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             latitude: row.latitude,
         }
     }));
-}
-
+    }
+    
+    public async fetchLikedUsersOfPost(post_id: Number) {
+        const query = {
+            text: 'SELECT user_id FROM likes_table where post_id = $1',
+            values: [post_id]
+        }
+        const res = await this.executeQuery(query);
+        return res.rows.map(userid => userid.user_id)
+    }
 
     public async fetchPostsByIds(postIds: number[]): Promise<any[]> {
         if (postIds.length === 0) {

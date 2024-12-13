@@ -23,6 +23,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostComments(req, response);
         });
 
+        this.router.get("/fetch/post/like-amount", (req: express.Request, response: express.Response) => {
+            return this.getPostLikesAmount(req, response);
+        });
+
     }
 
     private async getPostInformation(req: express.Request, res: express.Response) {
@@ -118,5 +122,21 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
-}
+    private async getPostLikesAmount(req: express.Request, res: express.Response) {
+        if (!req.query.post_id) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+            return;
+        }
+        const post_id = parseInt(req.query.post_id.toString());
+        const user_ids = await this.db.fetchLikedUsersOfPost(post_id)
+    
+        res.json({
+            nr_of_likes: user_ids.length
+            });
+        }
+    }
+
+
 
