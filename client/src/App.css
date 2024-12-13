@@ -1,7 +1,12 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem; 
+  padding: 2rem;
+}
+@media (max-width: 768px) {
+  #root {
+    margin-top: -40px; /* Move further up for smaller screens */
+  }
 }
 
 body.modal-open {
@@ -12,6 +17,12 @@ Link {
   text-underline: None;
 }
 
-.nav{
+.nav {
   top: -80px;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    top: 0;
+  }
 }
