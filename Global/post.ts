@@ -10,6 +10,7 @@ export class Post {
     score: number = 0;
     longitude: number | null;
     latitude: number | null;
+    isLiked: boolean = false;
     commentsection: Comment[];
 
     constructor(body: any) {

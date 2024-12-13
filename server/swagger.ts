@@ -9,6 +9,6 @@ const doc = {
 };
 
 const outputFile = './swagger-output.json';
-const routes = ['./controllers/user-authentification/signIn.controller.ts', './controllers/post/post.controller.ts'];
+const routes = ['./controllers/user-authentification/user.controller.ts'];
 
 swaggerAutogen(outputFile, routes, doc);

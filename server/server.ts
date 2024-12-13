@@ -3,6 +3,7 @@ import * as controller from './controllers';
 import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
+import {UserAuthenticationController} from "./controllers";
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
@@ -27,9 +28,7 @@ export class App {
 
     private _initializeControllers(): void {
         // Add new controllers here
-        this.addController(new controller.SignInController(this.database));
-        this.addController(new controller.LogInController(this.database));
-
+        this.addController(new controller.UserAuthenticationController(this.database));
         this.addController(new controller.DeleteController(this.database));
         this.addController(new controller.FetchUserInformationController(this.database));
         this.addController(new controller.FetchCommentInformationController(this.database));
