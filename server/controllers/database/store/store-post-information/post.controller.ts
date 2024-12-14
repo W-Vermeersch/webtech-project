@@ -1,4 +1,3 @@
-import {BaseController} from "../../../base.controller";
 import * as express from "express";
 import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
