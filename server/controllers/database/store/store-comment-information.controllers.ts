@@ -14,7 +14,7 @@ export class StoreCommentInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/store/comment", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/comment", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.storeComment(req, response);
         });
     }
