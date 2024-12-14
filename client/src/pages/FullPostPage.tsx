@@ -2,7 +2,7 @@ import "./FullPostPage.css";
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "../api/axios";
+// import axios from "../api/axios";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -13,10 +13,12 @@ import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
 import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.tsx";
 
 // later make modules of components
 
 export default function FullPost() {
+  const axios = useAxiosPrivate();
   const navigate = useNavigate();
   const { post_id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
@@ -29,6 +31,7 @@ export default function FullPost() {
         if (resp.data.redirect) {
           navigate(resp.data.redirect, { replace: true });
         } else {
+          console.log(resp.data);
           setPost(resp.data);
         }
       } catch (error) {

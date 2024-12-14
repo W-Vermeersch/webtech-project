@@ -1,7 +1,7 @@
 import * as express from "express";
 import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
-import {authenticateToken} from "../../user-authentification";
+import {ifAuthenticatedToken} from "../../user-authentification";
 
 interface Post {
     user: String,
@@ -9,6 +9,8 @@ interface Post {
     image_url: String[],
     description: String,
     tags: String[],
+    score: number,
+    rarity: number,
     location: {
         latitude: Number,
         Longitude: Number
@@ -25,11 +27,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/fetch/post/information", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/information", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getPostInformation(req, response);
         });
 
-        this.router.get("/fetch/post/random-posts", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/random-posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getRandomPosts(req, response);
         });
 
@@ -46,6 +48,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
         return await this.db.fetchLikedUsersOfPost(post_id).then((res) => {
             const resp = {isLiked: false, likes: 0}
+            console.log("User who liked : ", user_id)
             if (res.includes(user_id)) {
                 resp.isLiked = true;
             }
@@ -63,7 +66,8 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
         const post_id = parseInt(req.query.post_id.toString());
 
-        this.fetchPost(post_id).then((val) => {
+        // @ts-ignore
+        this.fetchPost(post_id, req.userId).then((val) => {
             return res.json(val)
         }).catch(() => {
             return res.json({
@@ -72,7 +76,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         })
     }
 
-    private async fetchPost(postId: number): Promise<Post> {
+    private async fetchPost(postId: number, userId: number): Promise<Post> {
         const posts = await this.db.fetchPostsByIds([postId])
         if (posts.length === 0) {
             throw new Error("No posts found.");
@@ -80,13 +84,15 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const postObject = posts[0]
         const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
-        const likes = await this.processLikesOfPost(postId, postObject.user_id);
+        const likes = await this.processLikesOfPost(postId, userId);
         return {
             user: postOwner[0].username,
             profile_picture: postOwnerDecoration[0].profile_picture_image_url,
             image_url: postObject.image_url,
             description: postObject.description,
             tags: postObject.tags,
+            score: postObject.score,
+            rarity: postObject.rarity,
             location: postObject.location,
             likes: likes.likes,
             liked: likes.isLiked
@@ -109,7 +115,8 @@ export class FetchPostInformationController extends BaseDatabaseController {
         console.log("postIds: "+ postIds)
 
         const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
-            return await this.fetchPost(id).then((val: Post) => {
+            // @ts-ignore
+            return await this.fetchPost(id, req.userId).then((val: Post) => {
                 shownIds.push(id)
                 // console.log(val)
                 return val
