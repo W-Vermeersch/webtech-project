@@ -14,7 +14,8 @@
   }
 
   .popup-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px; /* Optional: Round the popup image corners */
+    max-width: 20vw;
+    max-height: 20vh;
+    object-fit: contain;
+    border-radius: 10px; 
   }

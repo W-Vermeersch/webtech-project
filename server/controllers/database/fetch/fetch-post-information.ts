@@ -116,7 +116,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
         const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
             // @ts-ignore
-            return await this.fetchPost(id, req.userId).then((val: Post) => {
+            return await this.fetchPost(id, req.query.userId).then((val: Post) => {
                 shownIds.push(id)
                 // console.log(val)
                 return val

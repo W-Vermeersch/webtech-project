@@ -24,7 +24,7 @@ export default function MapMarker({ post }: MapMarkerProps) {
     <Marker position={[post.location.latitude, post.location.longitude]} icon={myIcon}>
       <Popup offset={[0, -50]}>
         <NavLink to={`/post/${post.idx}`}>
-          <Image src={post.image_url}/>
+          <Image src={post.image_url} className="popup-image"/>
         </NavLink>
       </Popup>
     </Marker>
