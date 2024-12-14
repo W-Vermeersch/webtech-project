@@ -36,23 +36,24 @@ const SinglePost = ({ post }: SinglePostProps) => {
   };
 
   const handleUnliking = async () => {
-    const post_id = post.idx;
-    console.log("handleunliking has been called");
-    const resp = await axiosPrivate.get(DELETE_LIKE, {
-      params: { post_id },
-    });
-    if (!(resp.status === 404)) {
-      setLikes((prev) => prev - 1);
-      setIsLiked(!isLiked);
-    } else {
-      console.log("Error post has not been liked yet");
-    }
-  };
+    try {
+      const post_id = post.idx;
+      console.log("handleunliking has been called");
 
-  const handleLike = () => {
-    if (isLiked) {
-      handleUnliking;
-    } else handleLiking;
+      // Use DELETE method with params
+      const resp = await axiosPrivate.delete(DELETE_LIKE, {
+        params: { post_id },
+      });
+
+      if (resp.status === 200) {
+        setLikes((prev) => prev - 1);
+        setIsLiked(false);
+      } else {
+        console.error("Error unliking post");
+      }
+    } catch (err) {
+      console.error("Error during unliking:", err);
+    }
   };
 
   const handleOpenCommentModal = () => {
@@ -61,11 +62,6 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
   const handleCloseCommentModal = () => {
     setShowCommentModal(false);
-  };
-
-  const handleComment = () => {
-    // Handle comment logic here
-    console.log("Comment button clicked");
   };
 
   // For each post, display the first two comments,
