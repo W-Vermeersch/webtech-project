@@ -8,6 +8,12 @@ import {hashPassword, validPassword} from "./password.encryption";
 import {ErrorInSignInForm, SignInForm} from "../../../Global/sign-in-form";
 require("dotenv").config();
 
+interface JwtPayloadCustom {
+    username: string;
+    user_id: number;
+    iat: number;
+    exp: number;
+}
 
 export class UserAuthenticationController extends BaseController {
     constructor(private db: Database) {
@@ -304,7 +310,7 @@ export function authenticateToken(req, res, next) {
                 .status(403)
                 .send("Unauthorized, provided token is no longer valid");
         //we now know the user is validated
-        req.user = user; //user is a object, to get the values do user.user.username or user_id
+        req.user = user;
         //console.log(user.user.user_id)
         next();
     });
@@ -324,9 +330,11 @@ export function ifAuthenticatedToken(req, res, next){
                 jwt.verify(token, accessTokenSecret, (err, user) => {
                     if (err){
                         req.userId = -1;
-                    }
+                    } else {
+                    const userPayload = user as JwtPayloadCustom;
                     console.log(user)
-                    req.userId = user.user.user_id; //user is a object, to get the values do user.user.username or user_id
+                    req.userId = userPayload.user_id;
+                    }
                 });
             }
         }
