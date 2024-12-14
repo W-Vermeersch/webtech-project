@@ -43,6 +43,7 @@ function Map() {
       });
     });
 
+    // locally store the posts to avoid refresh when navigating/refreshing the page
     async function fetchPosts() {
       const rawPosts = localStorage.getItem("posts");
       const storedPosts = rawPosts ? JSON.parse(rawPosts) : null;
@@ -53,6 +54,8 @@ function Map() {
       }
 
       try {
+        // if not logged in, send -1 as userId
+        // nr_of_posts is the number of posts to fetch
         const resp = await axios.get(FETCH_RANDOM_POSTS, {
           params: { nr_of_posts: 4, userId: user ? user.userID : -1 },
         });
