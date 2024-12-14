@@ -312,7 +312,6 @@ export function authenticateToken(req, res, next) {
 
 export function ifAuthenticatedToken(req, res, next){
     const authHeader: string = req.headers["authorization"];
-    console.log(authHeader)
     const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
     //check if we have a valid token
     try {
@@ -325,8 +324,7 @@ export function ifAuthenticatedToken(req, res, next){
                     if (err){
                         req.userId = -1;
                     }
-                    console.log(user)
-                    req.userId = user.user.user_id; //user is a object, to get the values do user.user.username or user_id
+                    req.userId = user.user_id; //user is a object, to get the values do user.user.username or user_id
                 });
             }
         }
