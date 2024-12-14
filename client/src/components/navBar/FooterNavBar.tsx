@@ -12,6 +12,14 @@ export default function FooterNavBar() {
   const authUser = useAuthUser();
   const navigate = useNavigate();
 
+  function handleProfileClick() {
+    if (!authUser) {
+      navigate(LOG_IN);
+    } else {
+      navigate(`/profile/${authUser.username}`);
+    }
+  }
+
   async function handleLogIn() {
     navigate(LOG_IN);
   }
@@ -43,13 +51,10 @@ export default function FooterNavBar() {
         <FaCrown size={24} />
         <span>Leaderboard</span>
       </NavLink>
-      <NavLink
-        to={`/profile/${authUser && authUser.username}`}
-        className="footer-nav-item"
-      >
+      <div className="footer-nav-item" onClick={handleProfileClick}>
         <FaUser size={24} />
         <span>Profile</span>
-      </NavLink>
+      </div>
     </div>
   );
 }

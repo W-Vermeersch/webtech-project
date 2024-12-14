@@ -4,23 +4,25 @@ import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post, PostComment } from "../posts/PostInterface";
+import Search from "../navBar/Search";
+import "./feedPage.css";
 
 // mock comments
 const mockcomments: PostComment[] = [
   {
-    idx: 1,
-    user: "Alice",
-    comment: "This is such a beautiful picture! 😍",
+    post_id: 1,
+    user_id: "Alice",
+    description: "This is such a beautiful picture! 😍",
   },
   {
-    idx: 2,
-    user: "Bob",
-    comment: "Whatever bruh",
+    post_id: 2,
+    user_id: "Bob",
+    description: "Whatever bruh",
   },
   {
-    idx: 3,
-    user: "aubrey",
-    comment: "I want to see it too.",
+    post_id: 3,
+    user_id: "aubrey",
+    description: "I want to see it too.",
   },
 ];
 
@@ -116,22 +118,27 @@ const FeedPage = () => {
 
   return (
     <>
-      {_posts?.map((post, i) => {
-        if (i === _posts.length - 1)
-          return (
-            <div ref={ref} key={post.idx}>
-              <SinglePost post={post} />
-            </div>
-          );
-        return <SinglePost key={post.idx} post={post} />;
-      })}
-      <Button disabled={isFetchingNextPage}>
-        {isFetchingNextPage
-          ? "Loading more"
-          : (data?.pages?.length ?? 0) < 3
-          ? "Load more"
-          : "Nothing more to load"}
-      </Button>
+      <div className="search-bar d-xs-block d-md-none">
+        <Search />
+      </div>
+      <div className="feed-content">
+        {_posts?.map((post, i) => {
+          if (i === _posts.length - 1)
+            return (
+              <div ref={ref} key={post.idx}>
+                <SinglePost post={post} />
+              </div>
+            );
+          return <SinglePost key={post.idx} post={post} />;
+        })}
+        <Button disabled={isFetchingNextPage}>
+          {isFetchingNextPage
+            ? "Loading more"
+            : (data?.pages?.length ?? 0) < 3
+            ? "Load more"
+            : "Nothing more to load"}
+        </Button>
+      </div>
     </>
   );
 };
