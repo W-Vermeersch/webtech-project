@@ -1,3 +1,13 @@
+body {
+  padding-bottom: 60px; /* Add padding equivalent to the height of the navbar */
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 70px; /* Adjust for mobile-specific navbar height */
+  }
+}
+
 .footer-navbar {
   position: fixed;
   bottom: 0;
@@ -34,7 +44,7 @@
   justify-content: center;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  transform: translateY(-10px); /* Lift the icon slightly */
+  transform: translateY(-10px);
 }
 
 .create-post-icon:hover {

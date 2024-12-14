@@ -1,6 +1,14 @@
 import { Pool } from 'pg';
-import {Post} from "../Global/post";
+import {Like, Post} from "../Global/post";
+import {User} from "./Modules/User";
 require('dotenv').config();
+
+interface QueryWithoutValues {
+    text: string;
+}
+interface QueryWithValues extends QueryWithoutValues {
+    values: any[]
+}
 
 class Database {
     pool = new Pool({
@@ -8,7 +16,7 @@ class Database {
         user: "avnadmin",
         port: 15545,   //default port for postgresql
         password: process.env.DB_PASSWORD,
-        database: "defaultdb", //name of postgresql databse
+        database: "defaultdb", //name of postgresql database
         max: 10, //maximum amount of clients in the pool
         idleTimeout: 60000,   //close idle clients after 1 minute
         ssl: {
@@ -41,7 +49,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         },
     });
 
-    private executeQuery(query) {
+    private executeQuery(query: QueryWithoutValues | QueryWithValues): Promise<any> {
         try {
             return this.pool.query(query);  // Automatically acquires and releases client
         } catch (error) {
@@ -57,37 +65,31 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         email: string,
         password: string
     ) {
-        console.log("Storing user.");
         const query = {
             text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [username, email, password],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
     }
     /* Returns an array with all the column values of a user given their username.*/
     public async fetchUserUsingUsername(username: string): Promise<any> {
-        console.log("Fetching user.");
         const query = {
             text: 'SELECT * FROM user_table WHERE username = $1',
             values: [username],
         }
-        const res = await this.executeQuery(query);
-        //console.log(res.rows);
-        return res.rows; // resulting array contains a lot of query metadata.
-                         // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
-    };                   // if you need that metadata you can remove .rows and extract what you need.
+        return await this.executeQuery(query).then((res) => {return res.rows});
+        // resulting array contains a lot of query metadata.
+        // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
+        // if you need that metadata you can remove .rows and extract what you need.
+    };
 
     /* Returns an array with all the column values of a user given their ID.*/
     public async fetchUserUsingID(user_id: number): Promise<any> {
-        //console.log("Fetching user.");
-        //console.log("user_id: " + user_id)
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
-        const res = await this.executeQuery(query);
-        //console.log(res.rows);
-        return res.rows;
+        return await this.executeQuery(query).then((res) => {return res.rows});
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
     public async fetchUserUsingEmailOrUsername(input: string): Promise<any> {
@@ -95,14 +97,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM user_table WHERE email = $1 OR username = $1',
             values: [input],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns the ID of a user given their username*/
     public async getUserID(username: string): Promise<number> {
-        const userInfo = await this.fetchUserUsingUsername(username);
-        return userInfo[0].user_id;
+        return await this.fetchUserUsingUsername(username).then((response)=>{
+            return response[0].user_id
+        });
     };
 
     /* Deletes a user form the BD given their identifier (username and id). All posts that belong to this user will automatically be deleted as well as its comments and the users comments. */
@@ -112,7 +114,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'DELETE FROM user_table WHERE username = $1 AND user_id = $2',
             values: [username, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -125,7 +127,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'INSERT INTO comment_table (post_id, user_id, description) VALUES ($1, $2, $3)',
             values: [post_id, user_id, comment],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /* Returns an array of all comments that match with the given list of comment IDs. */
@@ -137,8 +139,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE comment_id = ANY($1)',
             values: [commentIds],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns an array with all the comments of a given post using its ID. */
@@ -147,8 +148,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE post_id = $1',
             values: [post_id],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Returns an array with all the comments from a given user given their ID. */
@@ -157,8 +157,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM comment_table WHERE user_id = $1',
             values: [user_id],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return await this.executeQuery(query).then((res) => {return res.rows;});
     }
 
     /* Deletes a comment from the DB given the ID of itself and its user. */
@@ -167,14 +166,14 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'DELETE FROM comment_table WHERE comment_id = $1',
             values: [comment_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     //Operations for the post table
     /* Stores a post into the DB*/
     public async storePost(post: Post): Promise<void> {
         try {
-            let query;
+            let query: QueryWithValues;
             if (post.longitude !== undefined && post.latitude !== undefined) {
                 // Insert with geospatial data
                 query = {
@@ -197,14 +196,16 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                 query = {
                     text: `
                         INSERT INTO post_table
-                        (user_id, image_url, description, tags)
-                        VALUES ($1, $2, $3, $4)
+                        (user_id, image_url, description, tags, score, rarity)
+                        VALUES ($1, $2, $3, $4, $5, $6)
                     `,
                     values: [
                         post.user,
                         post.image_url,
                         post.description,
                         post.tags,
+                        post.score,
+                        post.rarity
                     ],
                 };
             }
@@ -237,33 +238,37 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         `,
         values: [user_id],
     };
-    const res = await this.executeQuery(query);
+    return await this.executeQuery(query).then((res) => {
+        return res.rows.map((row: Post) => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+        }));
+    });
 
-    return res.rows.map(row => ({
-        post_id: row.post_id,
-        user_id: row.user_id,
-        image_url: row.image_url,
-        description: row.description,
-        tags: row.tags,
-        location: {
-            longitude: row.longitude,
-            latitude: row.latitude,
-        }
-    }));
+
     }
-    
-    public async fetchLikedUsersOfPost(post_id: Number) {
+
+    public async fetchLikedUsersOfPost(post_id: Number): Promise<number[]> {
         const query = {
             text: 'SELECT user_id FROM likes_table where post_id = $1',
             values: [post_id]
         }
-        const res = await this.executeQuery(query);
-        return res.rows.map(userid => userid.user_id)
+        return await this.executeQuery(query).then((res) => {
+            return res.rows.map((user: Like) => user.user_id)
+        });
     }
 
+        /* Returns an array of all posts that match with the given list of post IDs. */
     public async fetchPostsByIds(postIds: number[]): Promise<any[]> {
         if (postIds.length === 0) {
-            return []; 
+            return [];
         }
     
         const query = {
@@ -281,22 +286,22 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [postIds],
         };
-    
-        const res = await this.executeQuery(query);
-    
-        return res.rows.map(row => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-        }));
+
+        return await this.executeQuery(query).then((res) => {
+            return res.rows.map((row: Post) => ({
+                post_id: row.post_id,
+                user_id: row.user_id,
+                image_url: row.image_url,
+                description: row.description,
+                tags: row.tags,
+                location: {
+                    longitude: row.longitude,
+                    latitude: row.latitude,
+                }
+            }));
+        });
     }
-        
+
     /* Returns an array with all the posts made by a user given their ID. */
     public async fetchPostsOfUser(user_id: number): Promise<any[]> {
         const query = {
@@ -314,21 +319,21 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [user_id],
         };
-        const res = await this.executeQuery(query);
-    
-        return res.rows.map(row => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-        }));
+        return await this.executeQuery(query).then((res) => {
+            return res.rows.map((row: Post) => ({
+                post_id: row.post_id,
+                user_id: row.user_id,
+                image_url: row.image_url,
+                description: row.description,
+                tags: row.tags,
+                location: {
+                    longitude: row.longitude,
+                    latitude: row.latitude,
+                }
+            }));
+        });
     }
-    
+
     /* Fetch posts within a radius */
     public async fetchPostsWithinRadius(latitude: number, longitude: number, radius: number): Promise<any[]> {
         const query = {
@@ -347,7 +352,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [longitude, latitude, radius],
         };
         const res = await this.executeQuery(query);
-    
+
         return res.rows.map(row => ({
             post_id: row.post_id,
             user_id: row.user_id,
@@ -360,7 +365,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             }
         }));
     }
-    
+
     /* Fetch nearest posts */
     public async fetchNearestPosts(latitude: number, longitude: number, limit: number): Promise<any[]> {
         const query = {
@@ -380,7 +385,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [longitude, latitude, limit],
         };
         const res = await this.executeQuery(query);
-    
+
         return res.rows.map(row => ({
             post_id: row.post_id,
             user_id: row.user_id,
@@ -391,11 +396,11 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 longitude: row.longitude,
                 latitude: row.latitude,
             }
-            
+
         }));
     }
 
-    //post id 16 is giving bugss because it is linked to someone without a decoration, remove this later
+    //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
     public async fetchRandomPosts(n: Number, shownPosts) {
         console.log("fetch in database (random)")
         const query = {
@@ -419,7 +424,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM post_table WHERE post_id = $1',
             values: [post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -434,7 +439,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
             values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, []],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /*Update a user's profile picture given their ID*/
@@ -443,7 +448,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET profile_picture_image_url = $1 WHERE user_id = $2',
             values: [newImageUrl, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     /*Update the total EXP count of a user given their ID*/
@@ -454,7 +459,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 text: 'UPDATE user_profile_decoration_table SET total_exp =  total_exp + $1 WHERE user_id = $2',
                 values: [Math.trunc(newExp), user_id],
             };
-            await this.executeQuery(query);
+            return await this.executeQuery(query);
         }
         catch (error) {
             console.error(error);
@@ -467,7 +472,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET badges = $1 WHERE user_id = $2',
             values: [JSON.stringify(newBadges), user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
     /*Updates a user's bio description*/
     public async updateBio(user_id: number, newBio: string): Promise<void> {
@@ -475,14 +480,14 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'UPDATE user_profile_decoration_table SET bio = $1 WHERE user_id = $2',
             values: [newBio, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
     public async updateDisplayName(user_id: number, newName: string): Promise<void> {
         const query = {
             text: 'UPDATE user_profile_decoration_table SET display_name = $1 WHERE user_id = $2',
             values: [newName, user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     public async fetchProfileDecoration(user_id: number): Promise<any> {
@@ -499,7 +504,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM user_profile_decoration_table WHERE user_id = $1',
             values: [user_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -511,7 +516,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'INSERT INTO likes_table (user_id, post_id) VALUES ($1, $2)',
             values: [user_id, post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
     public async deleteLike(user_id: number,
@@ -520,7 +525,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             text: 'DELETE FROM likes_table WHERE user_id = $1 AND post_id = $2',
             values: [user_id, post_id],
         };
-        await this.executeQuery(query);
+        return await this.executeQuery(query);
     }
 
 
@@ -540,7 +545,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
 
         // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[],location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[], score INT NOT NULL DEFAULT 0, rarity NUMERIC(2, 1) NOT NULL DEFAULT 0,location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 

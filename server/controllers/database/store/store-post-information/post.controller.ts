@@ -4,7 +4,7 @@ import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../../../Global/post";
 import * as ExifReader from 'exifreader';
-import { authenticateToken } from "../../../user-authentification/login.controllers";
+import { authenticateToken } from "../../../user-authentification/user.controller";
 import * as multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
@@ -84,11 +84,15 @@ export class StorePostInformationController extends BaseDatabaseController {
                 }
 
                 // Store the post in the database
-                await this.db.storePost(post);
+
                 console.log(post);
-                const reward: number = await evaluation
+                const reward: number[] = await evaluation
+                post.score = reward[0]
+                post.rarity = reward[1]
                 console.log("Evaluation of the post: ", reward)
-                await this.db.addUserExp(userID, reward);
+                const xp = reward[0]*reward[1]
+                await this.db.addUserExp(userID, xp);
+                await this.db.storePost(post);
 
                 fs.unlinkSync(tempFilePath);
                 return res.status(200).send(post);
