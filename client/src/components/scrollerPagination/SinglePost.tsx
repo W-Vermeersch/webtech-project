@@ -25,19 +25,20 @@ const SinglePost = ({ post }: SinglePostProps) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
 
   const handleLiking = async () => {
+    console.log("Handlelike has been called");
     const post_id = post.idx;
     const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
     }
-    console.log("Handlelike has been called");
+    console.log("amount of likes", isLiked);
   };
 
   const handleUnliking = async () => {
     const post_id = post.idx;
     console.log("handleunliking has been called");
-    const resp = await axiosPrivate.post(DELETE_LIKE, {
+    const resp = await axiosPrivate.get(DELETE_LIKE, {
       params: { post_id },
     });
     if (!(resp.status === 404)) {
