@@ -22,15 +22,17 @@ function App() {
       <ResponsiveNavBar />
       <Routes>
         <Route element={<PersistLogin />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/map" element={<Map />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />
           </Route>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/profile/:username" element={<ProfilePage />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/profile/:username" element={<ProfilePage />} />
+          </Route>
           <Route path="/post/:post_id" element={<FullPost />} />
-          <Route path="/map" element={<Map />} />
         </Route>
 
         <Route path="/user">

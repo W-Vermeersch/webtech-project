@@ -11,19 +11,25 @@ interface CommentModalProps {
   post: Post;
 }
 
+interface CommentValues {
+  post_id: number;
+  description: string;
+}
+
 const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
   const axiosPrivate = useAxiosPrivate();
   const [comment, setComment] = React.useState("");
 
   const handleCommentSubmit = async () => {
     // handle comment submission here
-    const values: PostComment = {
-      user_id: post.user,
+    const values: CommentValues = {
       post_id: post.idx,
       description: comment,
     };
-    const resp = await axiosPrivate.get(ADD_COMMENT, { params: values });
+    const resp = await axiosPrivate.post(ADD_COMMENT, values);
     console.log("Comment Submitted: ", values);
+    console.log("Response", resp.status);
+    console.log("Response", resp.data);
     onHide(); // close the modal after submission
   };
 

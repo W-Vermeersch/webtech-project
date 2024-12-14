@@ -2,26 +2,33 @@ import "./NavBar.css";
 import NavItem from "./NavItem";
 import Search from "./Search";
 
+import { useState } from "react";
+
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { FaSearch } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
 import { LOG_IN } from "../../api/urls";
-
-interface NavBarProps {
-  isMobile: boolean;
-}
+import { FaS } from "react-icons/fa6";
+import { ModalBody } from "react-bootstrap";
 
 export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
+  const [modalShow, setModalShow] = useState(false);
+
+  const handleSearchComplete = () => {
+    setModalShow(false);
+  };
 
   async function handleLogOut() {
     if (!authUser) {
@@ -60,7 +67,22 @@ export default function NavBar() {
             </NavItem>
           </Nav>
           <Nav>
-            <Search />
+            <div className="d-md-none d-lg-block">
+              <Search />
+            </div>
+            {/* for screen between md and lg */}
+            <div className="d-none d-md-block d-lg-none">
+              <FaSearch
+                className="search-icon"
+                size={20}
+                onClick={() => setModalShow(true)}
+              />
+              <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
+                <ModalBody className="search-modal rounded">
+                  <Search onSearchComplete={handleSearchComplete}/>
+                </ModalBody>
+              </Modal>
+            </div>
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">

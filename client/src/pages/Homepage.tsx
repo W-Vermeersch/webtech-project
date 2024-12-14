@@ -7,11 +7,12 @@ import FeedPage from "../components/scrollerPagination/feedPage.tsx";
 import { Button } from "react-bootstrap";
 
 export default function Homepage() {
-
   return (
     <Container>
       <Col xs={12} md={8} className="mx-auto">
-        <FeedPage/>
+        {/* <Row md={3}>  --> show multiple posts per line */}
+          <FeedPage />
+       {/*  </Row> */}
       </Col>
     </Container>
   );

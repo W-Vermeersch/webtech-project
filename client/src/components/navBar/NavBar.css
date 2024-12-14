@@ -6,3 +6,22 @@ nav div {
 .dropdown-item:active {
   background-color: transparent !important;
 }
+
+.search-icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.search-icon:hover {
+  color: rgb(203, 203, 203);
+}
+
+.search-modal {
+  background-color: rgb(34, 37, 41);
+  color: white;
+}
+
+.dropdown-menu {
+  background-color: rgb(34, 37, 41) !important;
+  color: white;
+}

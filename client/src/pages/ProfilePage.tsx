@@ -137,67 +137,65 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <Container
-        className="text-white rounded overflow-hidden border border-light shadow"
-        onClick={handleToggleMenu}
-      >
-        <Row>
-          <Col
-            className="p-4 d-flex justify-content-center"
-            id="userInfo"
-            xs={12}
-            lg={3}
-          >
-            <Stack className="align-items-center" gap={1}>
-              <Image
-                src="https://dummyimage.com/180"
-                alt="profile pic"
-                className="rounded-circle"
+    <Container className="text-white rounded overflow-hidden border border-light shadow"
+    onClick={handleToggleMenu}>
+      <Row>
+        <Col
+          className="p-4 d-flex justify-content-center"
+          id="userInfo"
+          xs={12}
+          lg={3}
+        >
+          <Stack className="align-items-center" gap={1}>
+            <Image
+              src={user.profilepicture}
+              alt="profile pic"
+              className="rounded-circle"
+            />
+            <h3>{user.username}</h3>
+            <h4>{user.totalexp}</h4>
+            <div className="w-100">
+              <ProgressBar
+                variant="success"
+                now={600}
+                max={1000}
+                label={"current progress"}
               />
-              <h3>{user.username}</h3>
-              <h4>{user.totalexp}</h4>
-              <div className="w-100">
-                <ProgressBar
-                  variant="success"
-                  now={600}
-                  max={1000}
-                  label={"current progress"}
-                />
-              </div>
-              <Container className="p-3 bio-container">
-                <p className="text-center">{user.bio}</p>
+            </div>
+            <Container className="p-3 bio-container">
+              <p className="text-center">{user.bio}</p>
+            </Container>
+          </Stack>
+        </Col>
+        <Col className="ps-3 pt-2" id="userPosts" xs={12} lg={9}>
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(k) => setActiveTab(k || "gallery")}
+            id="justify-tab-example"
+            className="mb-3 custom-tabs"
+            variant="underline"
+            justify
+          >
+            <Tab eventKey="gallery" title="Gallery">
+              <Container
+                className="d-flex flex-wrap justify-content-center"
+                style={{ maxHeight: "450px", overflowY: "auto" }}
+              >
+                <PostGallery posts={mockPosts} />
               </Container>
-            </Stack>
-          </Col>
-          <Col className="ps-3 pt-2" id="userPosts" xs={12} lg={9}>
-            <Tabs
-              activeKey={activeTab}
-              onSelect={(k) => setActiveTab(k || "gallery")}
-              id="justify-tab-example"
-              className="mb-3 custom-tabs"
-              variant="underline"
-              justify
-            >
-              <Tab eventKey="gallery" title="Gallery">
-                <Container
-                  className="d-flex flex-wrap justify-content-center"
-                  style={{ maxHeight: "450px", overflowY: "auto" }}
-                >
-                  <PostGallery posts={mockPosts} />
-                </Container>
-              </Tab>
-              <Tab eventKey="map" title="Map">
-                {activeTab === "map" && (
-                  <MapContainer
-                    posts={mockPosts}
-                    center={[50.822376, 4.395356]}
-                  />
-                )}
-              </Tab>
-            </Tabs>
-          </Col>
-        </Row>
-      </Container>
+            </Tab>
+            <Tab eventKey="map" title="Map">
+              {activeTab === "map" && (
+                <MapContainer
+                  posts={mockPosts}
+                  center={[50.822376, 4.395356]}
+                />
+              )}
+            </Tab>
+          </Tabs>
+        </Col>
+      </Row>
+    </Container>
     </>
   );
 }
