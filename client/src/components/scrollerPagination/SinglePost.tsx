@@ -49,12 +49,6 @@ const SinglePost = ({ post }: SinglePostProps) => {
     }
   };
 
-  const handleLike = () => {
-    if (isLiked) {
-      handleUnliking;
-    } else handleLiking;
-  };
-
   const handleOpenCommentModal = () => {
     setShowCommentModal(true);
   };
