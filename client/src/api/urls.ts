@@ -17,6 +17,7 @@ export const FETCH_COMMENT = "/db/fetch/comment/information" // geeft alle value
 //FetchPostInformation (heeft post id nodig in parameters (req.params.post_id)
 export const FETCH_POST = "db/fetch/post/information" // geeft alle values van een post terug.
 export const FETCH_POST_COMMENTS = "db/fetch/post/comments" // geeft alle comments van een post terug 
+export const FETCH_RANDOM_POSTS = "db/fetch/post/random-posts" // geeft random posts terug (params: nr_of_posts)
 
 //Storing controllers:
 //StoreUserInformation
