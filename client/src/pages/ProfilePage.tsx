@@ -17,6 +17,10 @@ import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 import { Post, PostComment } from "../components/posts/PostInterface";
 import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import { FaEllipsisV } from "react-icons/fa";
+import useSignOut from "../hooks/useSignOut";
+import useAuthUser from "../hooks/useAuthUser";
+import { LOG_IN } from "../api/urls";
 
 interface User {
   username: string;
@@ -51,6 +55,23 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
+  // to log out on mobile view
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const signOut = useSignOut();
+  const authUser = useAuthUser();
+
+  const handleToggleMenu = () => {
+    setIsMenuVisible((prev) => !prev); // Toggle menu visibility
+  };
+
+  async function handleLogOut() {
+    if (!authUser) {
+      return;
+    }
+    await signOut();
+    navigate(LOG_IN);
+    // deal with error handling
+  }
 
   useEffect(() => {
     // Abort fetch if component is unmounted
@@ -101,7 +122,23 @@ export default function ProfilePage() {
   }
 
   return (
-    <Container className="text-white rounded overflow-hidden border border-light shadow">
+    <>
+      <div
+        className="three-dots d-xs-block d-md-none"
+        onClick={handleToggleMenu}
+      >
+        <FaEllipsisV size={24} />
+      </div>
+      {isMenuVisible && (
+        <div className="popup-menu">
+          <button onClick={handleLogOut} className="logout-button">
+            Log Out
+          </button>
+        </div>
+      )}
+
+    <Container className="text-white rounded overflow-hidden border border-light shadow"
+    onClick={handleToggleMenu}>
       <Row>
         <Col
           className="p-4 d-flex justify-content-center"
@@ -159,5 +196,6 @@ export default function ProfilePage() {
         </Col>
       </Row>
     </Container>
+    </>
   );
 }

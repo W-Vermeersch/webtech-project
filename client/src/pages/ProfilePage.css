@@ -23,4 +23,29 @@
   color: gray;
 }
 
+.three-dots {
+  position: absolute;
+  right: 8px;
+  top: 16px;
+}
 
+.popup-menu {
+  position: absolute;
+  right: 8px;
+  top: 40px;
+  background-color: #a02828;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.2);
+}
+
+.logout-button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+}
+
+.logout-button:hover {
+  background-color: #942424;
+}

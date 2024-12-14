@@ -172,52 +172,52 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     //Operations for the post table
     /* Stores a post into the DB*/
     public async storePost(post: Post): Promise<void> {
-        try {
-            let query: QueryWithValues;
-            if (post.longitude !== undefined && post.latitude !== undefined) {
-                // Insert with geospatial data
-                query = {
-                    text: `
-                        INSERT INTO post_table
-                        (user_id, image_url, description, tags, location)
-                        VALUES ($1, $2, $3, $4, ST_SetSRID(ST_MakePoint($5, $6), 4326))
-                    `,
-                    values: [
-                        post.user,
-                        post.image_url,
-                        post.description,
-                        post.tags,
-                        post.latitude,
-                        post.longitude,
-                    ],
-                };
-            } else {
-                // Insert without geospatial data
-                query = {
-                    text: `
-                        INSERT INTO post_table
-                        (user_id, image_url, description, tags, score, rarity)
-                        VALUES ($1, $2, $3, $4, $5, $6)
-                    `,
-                    values: [
-                        post.user,
-                        post.image_url,
-                        post.description,
-                        post.tags,
-                        post.score,
-                        post.rarity
-                    ],
-                };
-            }
-
-            // Execute the query
-            await this.executeQuery(query);
-
-            console.log('Post stored successfully.');
-        } catch (error) {
-            console.error('Error storing post:', error);
-            throw error; // Re-throw the error for upstream handling
+        let query: QueryWithValues;
+        if (post.longitude !== undefined && post.latitude !== undefined) {
+            // Insert with geospatial data
+            query = {
+                text: `
+                    INSERT INTO post_table
+                    (user_id, image_url, description, tags, score, rarity, location)
+                    VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8), 4326))
+                `,
+                values: [
+                    post.user,
+                    post.image_url,
+                    post.description,
+                    post.tags,
+                    post.score,
+                    post.rarity,
+                    post.latitude,
+                    post.longitude,
+                ],
+            };
+        } else {
+            // Insert without geospatial data
+            query = {
+                text: `
+                    INSERT INTO post_table
+                    (user_id, image_url, description, tags, score, rarity)
+                    VALUES ($1, $2, $3, $4, $5, $6)
+                `,
+                values: [
+                    post.user,
+                    post.image_url,
+                    post.description,
+                    post.tags,
+                    post.score,
+                    post.rarity
+                ],
+            };
         }
+
+        // Execute the query
+        return this.executeQuery(query)
+            .then(() => console.log('Post stored successfully.'))
+            .catch(error => {
+                console.error('Error storing post:', error);
+                throw error; // Re-throw the error for upstream handling
+            });
     }
 
     /* Returns an array of all the posts that a user has liked, given their user ID. */
@@ -238,13 +238,15 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         `,
         values: [user_id],
     };
-    return await this.executeQuery(query).then((res) => {
+    return this.executeQuery(query).then((res) => {
         return res.rows.map((row: Post) => ({
             post_id: row.post_id,
             user_id: row.user_id,
             image_url: row.image_url,
             description: row.description,
             tags: row.tags,
+            score: row.score,
+            rarity: row.rarity,
             location: {
                 longitude: row.longitude,
                 latitude: row.latitude,
@@ -287,13 +289,15 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [postIds],
         };
 
-        return await this.executeQuery(query).then((res) => {
+        return this.executeQuery(query).then((res) => {
             return res.rows.map((row: Post) => ({
                 post_id: row.post_id,
                 user_id: row.user_id,
                 image_url: row.image_url,
                 description: row.description,
                 tags: row.tags,
+                score: row.score,
+                rarity: row.rarity,
                 location: {
                     longitude: row.longitude,
                     latitude: row.latitude,
@@ -319,13 +323,15 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [user_id],
         };
-        return await this.executeQuery(query).then((res) => {
+        return this.executeQuery(query).then((res) => {
             return res.rows.map((row: Post) => ({
                 post_id: row.post_id,
                 user_id: row.user_id,
                 image_url: row.image_url,
                 description: row.description,
                 tags: row.tags,
+                score: row.score,
+                rarity: row.rarity,
                 location: {
                     longitude: row.longitude,
                     latitude: row.latitude,
@@ -351,19 +357,21 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [longitude, latitude, radius],
         };
-        const res = await this.executeQuery(query);
-
-        return res.rows.map(row => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-        }));
+        return this.executeQuery(query).then((res) => {
+            return res.rows.map((row: Post) => ({
+                post_id: row.post_id,
+                user_id: row.user_id,
+                image_url: row.image_url,
+                description: row.description,
+                tags: row.tags,
+                score: row.score,
+                rarity: row.rarity,
+                location: {
+                    longitude: row.longitude,
+                    latitude: row.latitude,
+                }
+            }));
+        });
     }
 
     /* Fetch nearest posts */
