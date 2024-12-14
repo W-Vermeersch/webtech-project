@@ -145,7 +145,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
           <div className="comments-section">
             {commentsToDisplay.map((comment, index) => (
               <div key={index} className="comment">
-                <strong>{comment.user}:</strong> {comment.comment}
+                <strong>{comment.user_id}:</strong> {comment.description}
               </div>
             ))}
 
