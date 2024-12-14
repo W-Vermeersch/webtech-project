@@ -11,7 +11,9 @@ import { Post } from "../posts/PostInterface";
 
 import MapMarker from "../profile/MapMarker";
 
-import { Button, ButtonGroup } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Spinner from "react-bootstrap/Spinner";
 
 interface Location {
   lat: number;
@@ -22,6 +24,7 @@ function Map() {
   const [location, setLocation] = useState<Location | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [refresh, setRefresh] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const user = useAuthUser();
 
   function handleRefresh() {
@@ -32,6 +35,7 @@ function Map() {
 
 
   useEffect(() => {
+    setIsLoading(true);
     navigator.geolocation.getCurrentPosition((position) => {
       setLocation({
         lat: position.coords.latitude,
@@ -44,6 +48,7 @@ function Map() {
       const storedPosts = rawPosts ? JSON.parse(rawPosts) : null;
       if (storedPosts && storedPosts.length !== 0) {
         setPosts(storedPosts);
+        setIsLoading(false);
         return;
       }
 
@@ -55,9 +60,11 @@ function Map() {
         localStorage.setItem("posts", JSON.stringify(resp.data.posts));
       } catch (error) {
         console.error("Failed to fetch posts:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-
+    
     fetchPosts();
   }, [refresh]);
 
@@ -71,6 +78,7 @@ function Map() {
       <Button id="post-refresh" variant="success" onClick={handleRefresh}>
         Refresh
       </Button>
+      {isLoading && <Spinner className="spinner" animation="border" variant="success"/>}
       <MapContainer
         center={location ? location : [50.822376, 4.395356]}
         zoom={2}
