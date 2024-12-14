@@ -1,10 +1,12 @@
 import { Formik, Form, Field, FormikHelpers } from "formik";
+import { useNavigate } from "react-router-dom";
 import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
+import useAuthUser from "../../hooks/useAuthUser";
 
 interface PostFormValues {
   caption: string;
@@ -17,6 +19,8 @@ const animalTags: string[] = ["Cat", "Dog", "Lion"];
 
 const PostForm = () => {
   const axios = useAxiosPrivate();
+  const navigate = useNavigate();
+  const user = useAuthUser();
 
   const initialValues: PostFormValues = {
     caption: "",
@@ -33,6 +37,7 @@ const PostForm = () => {
     try {
       const resp = await axios.post(ADD_POST, values);
       console.log("Response:", resp.data);
+      navigate(`/profile/${user?.username}`);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {

@@ -48,11 +48,12 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
-    async function fetchUser(username: string) {
+    async function fetchUser(user_id: number) {
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
-          params: { username },
+          params: { user_id },
         });
+        console.log("user: ", resp.data);
         if (resp.data.redirect) {
           navigate(resp.data.redirect, { replace: true });
         } else {
@@ -63,8 +64,8 @@ export default function FullPost() {
       }
     }
 
-    if (post) {
-      fetchUser(post.user);
+    if (post && post.user_id) {
+      fetchUser(post.user_id);
     }
   }, [post, navigate]);
 
@@ -90,7 +91,7 @@ export default function FullPost() {
           <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
             <UserSection
               username={user.username}
-              profile_pic={user.profilepicture}
+              profile_pic={`src/assets/${post.profile_picture}`}
               level={user.totalexp}
             />
           </div>

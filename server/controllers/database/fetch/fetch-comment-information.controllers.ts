@@ -17,8 +17,12 @@ export class FetchCommentInformationController extends BaseDatabaseController {
     }
 
     private async getCommentInformation(req: express.Request, res: express.Response) {
-        const comment_id = parseInt(req.query.comment_id.toString());
-        const comments = await this.db.fetchCommentByIds([comment_id])
+        const comment_id = req.query.comment_id ? parseInt(req.query.comment_id.toString()) : null;
+        if (comment_id === null) {
+            res.status(400).json({ error: "Invalid comment_id" });
+            return;
+        }
+        const comments = await this.db.fetchCommentByIds([comment_id]);
         if (comments.length === 0) {
             res.json({
                 redirect: '/home'
