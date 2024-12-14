@@ -1,3 +1,8 @@
 .form-inline div {
     gap: 0px;
 }
+
+.bg-dark .dropdown-menu {
+  background-color: rgb(34, 37, 41) !important;
+  color: white;
+}
