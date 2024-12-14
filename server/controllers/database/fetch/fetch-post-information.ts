@@ -141,10 +141,24 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const postComments = await this.db.fetchCommentsOfPost(postObject.post_id)
+            const commentIds = await (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
+            const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
+        
+                const comments = await this.db.fetchCommentByIds([comment_id])
+                const commentObject = comments[0]
+                const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
+                const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
+                    return {
+                    user_id: commentObject.user_id,
+                    user: commentOwner[0].username,
+                    profile_picture: commentOwnerDecoration[0].profile_picture_image_url,
+                    post_id: commentObject.post_id,
+                    description: commentObject.description
+                };
+            }));
             res.json({
-                post_comments: postComments
-            });
+                post_comments: comment_list
+            })
         }
     }
 
@@ -160,9 +174,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
     
         res.json({
             nr_of_likes: user_ids.length
-            });
+            });  
         }
-    }
+}
 
 
 

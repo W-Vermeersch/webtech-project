@@ -28,8 +28,10 @@ export class FetchCommentInformationController extends BaseDatabaseController {
             const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
             const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
             res.json({
+                user_id: commentObject.user_id,
                 user: commentOwner[0].username,
                 profile_picture: commentOwnerDecoration[0].profile_picture_image_url,
+                post_id: commentObject.post_id,
                 description: commentObject.description
             });
         }
