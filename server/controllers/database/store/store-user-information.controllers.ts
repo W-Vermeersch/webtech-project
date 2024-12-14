@@ -15,19 +15,19 @@ export class StoreUserInformationController extends BaseDatabaseController {
             return this.likePost(req, response);
         });
 
-        this.router.get("/store/user/follow-user", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/follow-user", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.followUser(req, response);
         });
 
-        this.router.get("/store/user/update-bio", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/update-bio", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.updateBio(req, response);
         });
 
-        this.router.get("/store/user/update-profile-picture", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/update-profile-picture", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.updatePFP(req, response);
         });
 
-        this.router.get("/store/user/update-displayname", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/update-displayname", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.updateDisplayname(req, response);
         });
     }

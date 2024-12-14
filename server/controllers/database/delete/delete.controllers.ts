@@ -11,19 +11,19 @@ export class DeleteController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/delete/user/delete-user", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.delete("/delete/user/delete-user", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.deleteUser(req, response);
         });
 
-        this.router.get("/delete/user/delete-like", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.delete("/delete/user/delete-like", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.deleteLike(req, response);
         });
 
-        this.router.get("/delete/comment/delete", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.delete("/delete/comment/delete", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.deleteComment(req, response);
         });
 
-        this.router.get("/delete/post/delete", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.delete("/delete/post/delete", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.deletePost(req, response);
         });
     }
