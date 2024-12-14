@@ -96,7 +96,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
       <div className="post-content">
         <div className="post-image-wrapper">
-          <NavLink to={`/post/${post.idx}`}>
+          <NavLink to={`/post/${post.idx}`} state={{ post }}>
             <img
               src={post.image_url}
               alt="Post content"
