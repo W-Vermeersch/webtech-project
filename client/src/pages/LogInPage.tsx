@@ -14,10 +14,12 @@ export default function LogInPage() {
         <small className="text-muted">Log in to continue posting</small>
       </h1>
       <Row className="justify-content-center">
-        <Col xs={6}>
+        <Col xs={10} sm={8} md={6}>
           <Container id="form-container" className="rounded shadow-sm">
             <LogIn />
-            <NavItem to="/user/sign-up" className="text-light mt-3">Don't have an account? Sign up here</NavItem>
+            <NavItem to="/user/sign-up" className="text-light mt-3">
+              Don't have an account? Sign up here
+            </NavItem>
           </Container>
         </Col>
       </Row>
