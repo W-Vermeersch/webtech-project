@@ -318,7 +318,6 @@ export function authenticateToken(req, res, next) {
 
 export function ifAuthenticatedToken(req, res, next){
     const authHeader: string = req.headers["authorization"];
-    console.log(authHeader)
     const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
     //check if we have a valid token
     try {
