@@ -31,7 +31,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostInformation(req, response);
         });
 
-        this.router.get("/fetch/post/random-posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/random-posts", (req: express.Request, response: express.Response) => {
             return this.getRandomPosts(req, response);
         });
 
@@ -110,7 +110,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             res.json({error: "No amount of posts have been specified"})
         }
         console.log("getRandomPosts called")
-        const post_count = parseInt(req.query.nr_of_posts.toString());
+        const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
         const postIds = await this.db.fetchRandomPosts(post_count, shownIds) 
         console.log("postIds: "+ postIds)
 
