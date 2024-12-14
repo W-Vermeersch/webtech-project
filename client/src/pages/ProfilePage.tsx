@@ -111,7 +111,7 @@ export default function ProfilePage() {
         >
           <Stack className="align-items-center" gap={1}>
             <Image
-              src="https://dummyimage.com/180"
+              src={user.profilepicture}
               alt="profile pic"
               className="rounded-circle"
             />

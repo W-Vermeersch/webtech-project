@@ -8,19 +8,19 @@ import { Post, PostComment } from "../posts/PostInterface";
 // mock comments
 const mockcomments: PostComment[] = [
   {
-    idx: 1,
-    user: "Alice",
-    comment: "This is such a beautiful picture! 😍",
+    user_id: "Alice",
+    post_id: 1,
+    description: "This is such a beautiful picture! 😍",
   },
   {
-    idx: 2,
-    user: "Bob",
-    comment: "Whatever bruh",
+    user_id: "Bob",
+    post_id: 1,
+    description: "Whatever bruh",
   },
   {
-    idx: 3,
-    user: "aubrey",
-    comment: "I want to see it too.",
+    user_id: "aubrey",
+    post_id: 1,
+    description: "I want to see it too.",
   },
 ];
 
