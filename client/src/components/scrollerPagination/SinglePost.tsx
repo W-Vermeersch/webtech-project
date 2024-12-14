@@ -6,7 +6,8 @@ import { useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axios from "../../api/axios";
 import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
-import CommentModal from "./Comment";
+import CommentModal from "./PlaceComment";
+import ViewCommentsModal from "./ViewComments";
 
 interface SinglePostProps {
   post: Post;
@@ -15,14 +16,12 @@ interface SinglePostProps {
 const SinglePost = ({ post }: SinglePostProps) => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const handleViewAllComments = () => {
-    navigate("/log-in");
-  };
 
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");
@@ -62,6 +61,14 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
   const handleCloseCommentModal = () => {
     setShowCommentModal(false);
+  };
+
+  const handleViewAllComments = () => {
+    setShowViewCommentsModal(true);
+  };
+
+  const handleCloseViewCommentsModal = () => {
+    setShowViewCommentsModal(false);
   };
 
   // For each post, display the first two comments,
@@ -147,15 +154,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
             ))}
 
             {post.commentsection && post.commentsection.length > 2 && (
-              <NavLink to={`/post/${post.idx}`}>
-                <div
-                  className="load-more-comments muted"
-                  style={{ cursor: "pointer" }}
-                  onClick={handleViewAllComments}
-                >
-                  View all comments
-                </div>
-              </NavLink>
+              <div
+                className="load-more-comments"
+                style={{ cursor: "pointer" }}
+                onClick={handleViewAllComments}
+              >
+                View all comments
+              </div>
             )}
           </div>
         </div>
@@ -166,6 +171,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
         <CommentModal
           show={showCommentModal}
           onHide={handleCloseCommentModal}
+          post={post}
+        />
+      )}
+      {showViewCommentsModal && (
+        <ViewCommentsModal
+          show={showViewCommentsModal}
+          onHide={handleCloseViewCommentsModal}
           post={post}
         />
       )}

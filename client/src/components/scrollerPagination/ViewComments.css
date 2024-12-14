@@ -1,0 +1,13 @@
+.comment-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.comment-buttons button:first-child {
+  margin-right: auto;
+}
+
+.comment-buttons button:last-child {
+  margin-left: auto;
+}
