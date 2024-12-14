@@ -4,7 +4,7 @@ import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../../../Global/post";
 import * as ExifReader from 'exifreader';
-import { authenticateToken } from "../../../user-authentification/user.controller";
+import { authenticateToken } from "../../../user-authentification";
 import * as multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
@@ -64,6 +64,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             const GeoData = GPSDataExtractor(tempFilePath);
 
 
+            console.log("process image")
             // Process the image via the image API
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
                 const tags = this.imageApi.identifyImage(imageUrl);
@@ -74,7 +75,6 @@ export class StorePostInformationController extends BaseDatabaseController {
 
                 // @ts-ignore
                 const userID = req.user.user_id;
-                console.log("User who posted :", userID);
                 post.user = userID;
 
                 post.longitude = (await GeoData).longitude;
