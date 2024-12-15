@@ -90,13 +90,10 @@ export default function ProfilePage() {
         params: { username },
       });
       setPosts(resp.data.posts);
-      console.log("posts :", resp.data.posts);
-      console.log("posts :", posts);
     }
 
     if (user) {
       fetchPosts();
-      //console.log("posts :", posts);
     }
   }, [user]);
 

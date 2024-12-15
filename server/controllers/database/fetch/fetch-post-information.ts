@@ -122,8 +122,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             throw new Error("No posts found.");
             }
         const postObject = posts[0]
-        const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
-        console.log("Post owner: ", postOwner.user_id, " User requesting : ", userId);
+        const postOwner = (await this.db.fetchUserUsingID(postObject.user_id))[0];
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
         const comments = await this.fetchComments(postId);

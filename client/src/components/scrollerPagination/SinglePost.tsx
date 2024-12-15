@@ -9,6 +9,7 @@ import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
 import CommentModal from "./Commenting/PlaceComment";
 import ViewCommentsModal from "./Commenting/ViewComments";
 import withAuthCheck from "./withAuthCheck";
+import { FETCH_HAS_USER_LIKED } from "../../api/urls";
 
 interface SinglePostProps {
   post: Post;
@@ -30,10 +31,10 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   useEffect(() => {
     const fetchLikedStatus = async () => {
       try {
-        const resp = await axiosPrivate.get("/db/fetch/post/liked", {
+        const resp = await axiosPrivate.get(FETCH_HAS_USER_LIKED, {
           params: { post_id: post.idx },
         });
-        console.log("What is returned", resp.data);
+        //console.log("What is returned", resp.data);
         if (resp.status === 200 && resp.data) {
           setIsLiked(resp.data.liked);
         }

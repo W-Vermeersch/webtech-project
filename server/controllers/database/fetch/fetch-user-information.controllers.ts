@@ -43,40 +43,48 @@ export class FetchUserInformationController extends BaseDatabaseController {
     req: express.Request,
     res: express.Response
   ) {
-    const username = req.query.username ? req.query.username : "";
-    const user_id = req.query.user_id ? req.query.user_id : "";
+    const identifier = req.query.username ? req.query.username : "";
 
     let users;
-    console.log("username: ", username);
-    console.log("user_id: ", user_id);
+    console.log("identifier: ", identifier);
 
-    if (username) {
-      users = await this.db.fetchUserUsingUsername(username.toString());
-    } else if (user_id) {
-      users = await this.db.fetchUserUsingID(Number(user_id));
+    if (!identifier) {
+      return res
+        .status(400)
+        .json({ error: "Username or user ID must be provided" });
+    }
+
+    const userId = Number(identifier);
+    if (isNaN(userId)) {
+      users = await this.db.fetchUserUsingUsername(identifier.toString());
     } else {
-      return res.status(400).json({ error: "Username or user ID must be provided" });
+      users = await this.db.fetchUserUsingID(userId);
     }
-    console.log("users: ", users);
-        if (users.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const userObject = users[0]
-            const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
-            //console.log("user profile decoration: ", userProfileDecoration);
-            //console.log(userProfileDecoration[0].display_name)
-            res.json({
-                username: userObject.username,
-                user_id: userObject.user_id,
-                profilepicture: userProfileDecoration.profilePicture,
-                bio: userProfileDecoration.bio,
-                totalexp: userProfileDecoration.xp,
-                badges: userProfileDecoration.badges
-            });
-        }
+
+    if (users.length === 0) {
+      res.json({
+        redirect: "/pageNotFound",
+      });
+    } else {
+      console.log("users: ", users);
+      const userObject = users[0];
+      console.log("user object: ", userObject);
+      const userProfileDecoration = await this.db.fetchProfileDecoration(
+        userObject.user_id
+      );
+      //console.log("user profile decoration: ", userProfileDecoration);
+      //console.log(userProfileDecoration[0].display_name)
+      
+      res.json({
+        username: userObject.username,
+        user_id: userObject.user_id,
+        profilepicture: userProfileDecoration.profilePicture,
+        bio: userProfileDecoration.bio,
+        totalexp: userProfileDecoration.xp,
+        badges: userProfileDecoration.badges,
+      });
     }
+  }
 
   private async getUserComments(req: express.Request, res: express.Response) {
     const username = req.query.username ? req.query.username : " ";

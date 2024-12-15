@@ -54,6 +54,7 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
+    
     async function fetchUser(username: string | number) {
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {

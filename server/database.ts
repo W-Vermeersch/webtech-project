@@ -86,7 +86,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
-        return await this.executeQuery(query).then((res) => {return res.rows[0]});
+        return await this.executeQuery(query).then((res) => {return res.rows});
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
     public async fetchUserUsingEmailOrUsername(input: string): Promise<User[]> {
