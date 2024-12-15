@@ -118,10 +118,10 @@ export default function ProfilePage() {
       )}
 
       <Container
-        className="text-white rounded overflow-hidden border border-light shadow"
+        className=" text-white rounded overflow-hidden border border-light shadow"
         onClick={ToglleLogoutOff}
       >
-        <Row>
+        <Row className="profile-container">
           <Col
             className="p-4 d-flex justify-content-center"
             id="userInfo"
@@ -175,19 +175,20 @@ export default function ProfilePage() {
               variant="underline"
               justify
             >
-              <Tab eventKey="gallery" title="Gallery">
+              <Tab eventKey="gallery" title="Gallery" className="pb-4">
                 <Container
-                  className="d-flex flex-wrap justify-content-center"
-                  style={{ maxHeight: "450px", overflowY: "auto" }}
+                  className="d-flex flex-wrap justify-content-center pb-4"
+                  style={{ height: "70vh", overflowY: "auto" }}
                 >
                   <PostGallery posts={posts || []} />
                 </Container>
               </Tab>
-              <Tab eventKey="map" title="Map">
+              <Tab eventKey="map" title="Map" className="pb-4">
                 {activeTab === "map" && (
                   <MapContainer
                     posts={posts || []}
                     center={[50.822376, 4.395356]}
+                    activeTab={activeTab === "map"}
                   />
                 )}
               </Tab>

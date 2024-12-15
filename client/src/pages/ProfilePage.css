@@ -7,7 +7,7 @@
   background-color: rgb(72, 78, 84);
 }
 .profile-container {
-  max-height: 80vh;
+  min-height: 80vh;
 }
 
 .bio-container {
