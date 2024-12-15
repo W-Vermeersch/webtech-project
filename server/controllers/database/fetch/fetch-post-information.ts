@@ -123,13 +123,13 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         const postObject = posts[0]
         const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
-        console.log("Post owner: ", postOwner[0].user_id, " User requesting : ", userId);
+        console.log("Post owner: ", postOwner.user_id, " User requesting : ", userId);
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
         const comments = await this.fetchComments(postId);
         return {
             idx: postId,
-            user: postOwner[0].username,
+            user: postOwner.username,
             profile_picture: postOwnerDecoration.profilePicture,
             image_url: postObject.image_url,
             description: postObject.description,
@@ -190,7 +190,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         } else {
             const postObject = posts[0]
-            const commentIds = await (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
+            const commentIds = (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
             const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
         
                 const comments = await this.db.fetchCommentByIds([comment_id])

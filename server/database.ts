@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 import {Like} from "../Global/post";
-import {User} from "./Modules/User";
+// import {User} from "./Modules/User";
 require('dotenv').config();
-import { Post, Comment, UserDecoration} from "./interfaces"
+import { User, Post, Comment, UserDecoration} from "./interfaces"
 
 interface QueryWithoutValues {
     text: string;
@@ -61,39 +61,35 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     //Operations for the user table:
     /* Stores a user into the DB.*/
-    public async storeUser(
-        username: string,
-        email: string,
-        password: string
-    ) {
+    public async storeUser(user: User) {
         const query = {
             text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
-            values: [username, email, password],
+            values: [user.username, user.email, user.password],
         };
-        return await this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
+        return this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
     }
     /* Returns an array with all the column values of a user given their username.*/
-    public async fetchUserUsingUsername(username: string): Promise<any> {
+    public async fetchUserUsingUsername(username: string): Promise<User[]> {
         const query = {
             text: 'SELECT * FROM user_table WHERE username = $1',
             values: [username],
         }
-        return await this.executeQuery(query).then((res) => {return res.rows});
+        return this.executeQuery(query).then((res) => {return res.rows});
         // resulting array contains a lot of query metadata.
         // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
         // if you need that metadata you can remove .rows and extract what you need.
     };
 
     /* Returns an array with all the column values of a user given their ID.*/
-    public async fetchUserUsingID(user_id: number): Promise<any> {
+    public async fetchUserUsingID(user_id: number): Promise<User> {
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
         }
-        return await this.executeQuery(query).then((res) => {return res.rows});
+        return await this.executeQuery(query).then((res) => {return res.rows[0]});
     };
     /* Returns an array with all the column values of a user given their email adress OR their username (used for logging in).*/
-    public async fetchUserUsingEmailOrUsername(input: string): Promise<any> {
+    public async fetchUserUsingEmailOrUsername(input: string): Promise<User[]> {
         const query = {
             text: 'SELECT * FROM user_table WHERE email = $1 OR username = $1',
             values: [input],
@@ -103,9 +99,16 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     /* Returns the ID of a user given their username*/
     public async getUserID(username: string): Promise<number> {
-        return await this.fetchUserUsingUsername(username).then((response)=>{
-            return response[0].user_id
-        });
+        try {
+            return await this.fetchUserUsingUsername(username).then((response)=>{
+                return response[0].user_id
+            }).catch(() => {
+                return 0;
+            });
+        }
+        catch {
+            return 0
+        }
     };
 
     /* Deletes a user form the BD given their identifier (username and id). All posts that belong to this user will automatically be deleted as well as its comments and the users comments. */
@@ -115,24 +118,22 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'DELETE FROM user_table WHERE username = $1 AND user_id = $2',
             values: [username, user_id],
         };
-        return await this.executeQuery(query);
+        return this.executeQuery(query);
     }
 
 
     //Operations for the comment table
     /* Stores a comment into the DB, IDs of user and post need to be given */
-    public async storeComment(user_id: number,
-                              post_id: number,
-                              comment: string): Promise<void> {
+    public async storeComment(comment: Comment): Promise<void> {
         const query = {
             text: 'INSERT INTO comment_table (post_id, user_id, description) VALUES ($1, $2, $3)',
-            values: [post_id, user_id, comment],
+            values: [comment.post_id, comment.user_id, comment.description],
         };
-        return await this.executeQuery(query);
+        return this.executeQuery(query);
     }
 
     /* Returns an array of all comments that match with the given list of comment IDs. */
-    public async fetchCommentByIds(commentIds: number[]): Promise<any[]> {
+    public async fetchCommentByIds(commentIds: number[]): Promise<Comment[]> {
         if (commentIds.length === 0) {
             return [];
         }
@@ -144,7 +145,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array with all the comments of a given post using its ID. */
-    public async fetchCommentsOfPost(post_id: number): Promise<any[]> {
+    public async fetchCommentsOfPost(post_id: number): Promise<Comment[]> {
         const query = {
             text: 'SELECT * FROM comment_table WHERE post_id = $1',
             values: [post_id],
@@ -222,7 +223,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array of all the posts that a user has liked, given their user ID. */
-public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
+public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     // return this.executePostQuery(` FROM likes_table l INNER JOIN post_table p ON l.post_id = p.post_id WHERE l.user_id = $1`, [user_id])
     const query = {
         text: `
@@ -269,7 +270,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
         });
     }
 
-    private async executePostQuery(query_specification: string, values: any[]): Promise<Post[]> {
+    private async executePostQuery(query_specification: string, values: any): Promise<Post[]> {
     const query = {
         text: `SELECT post_id, user_id, image_url, description, tags, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
         values: [values],
@@ -304,37 +305,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
 
     /* Returns an array with all the posts made by a user given their ID. */
     public async fetchPostsOfUser(user_id: number): Promise<Post[]> {
-        // const query = {
-        //     text: `
-        //         SELECT
-        //             post_id,
-        //             user_id,
-        //             image_url,
-        //             description,
-        //             tags,
-        //             ST_X(location::geometry) AS longitude,
-        //             ST_Y(location::geometry) AS latitude
-        //         FROM post_table
-        //         WHERE user_id = $1
-        //     `,
-        //     values: [user_id],
-        // };
-        return this.executePostQuery(`FROM post_table WHERE user_id = $1`, [user_id])
-        // return this.executeQuery(query).then((res) => {
-        //     return res.rows.map((row) => ({
-        //         post_id: row.post_id,
-        //         user_id: row.user_id,
-        //         image_url: row.image_url,
-        //         description: row.description,
-        //         tags: row.tags,
-        //         score: row.score,
-        //         rarity: row.rarity,
-        //         location: {
-        //             longitude: row.longitude,
-        //             latitude: row.latitude,
-        //         }
-        //     }));
-        // });
+        return this.executePostQuery(`FROM post_table WHERE user_id = $1`, user_id)
     }
 
     /* Fetch posts within a radius */
@@ -440,13 +411,12 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
     //profile decoration operations
 
     public async storeProfileDecoration(
-        user_id: number,
-        displayName: string,
+        user: User,
         bio: string,
     ) {
         const query = {
             text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
-            values: [user_id, displayName, bio, "default-profile-picture.jpg", 0, []],
+            values: [user.user_id, user.username, bio, "default-profile-picture.jpg", 0, []],
         };
         return await this.executeQuery(query);
     }

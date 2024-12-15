@@ -123,7 +123,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
     } else {
       const userObject = users[0];
       const likedPosts = await this.db.fetchLikedPostsOfUser(
-        userObject.username
+        userObject.user_id
       );
       res.json({
         user_liked_posts: likedPosts,
