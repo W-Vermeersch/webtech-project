@@ -16,6 +16,7 @@ interface SinglePostProps {
 }
 
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
+  console.log("This is the posts that have been fetched", post);
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -84,7 +85,10 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
         <Row className="align-items-center">
           <Col xs="auto">
             <NavLink to={`/profile/${post.user}`}>
-              <img className="profilepic" src={post.profile_picture}></img>
+              <img
+                className="profilepic"
+                src={`/src/assets/${post.profile_picture}`}
+              ></img>
             </NavLink>
           </Col>
           <Col>
