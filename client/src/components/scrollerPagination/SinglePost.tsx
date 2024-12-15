@@ -16,7 +16,6 @@ interface SinglePostProps {
 }
 
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
-  console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
