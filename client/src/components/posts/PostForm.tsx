@@ -50,6 +50,9 @@ const PostForm = () => {
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
           <FormGroup className="mb-4 " controlId="reactFile">
+            <p className="dropzone-title">
+              Drag and drop some files here, or click to select files
+            </p>
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
 
