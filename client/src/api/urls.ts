@@ -16,8 +16,11 @@ export const FETCH_COMMENT = "/db/fetch/comment/information" // geeft alle value
 
 //FetchPostInformation (heeft post id nodig in parameters (req.params.post_id)
 export const FETCH_POST = "db/fetch/post/information" // geeft alle values van een post terug.
+export const FETCH_POST_LIKED = "db/fetch/post/liked" // geeft als een user een post heeft geliked of niet
 export const FETCH_POST_COMMENTS = "db/fetch/post/comments" // geeft alle comments van een post terug 
 export const FETCH_RANDOM_POSTS = "db/fetch/post/random-posts" // geeft random posts terug (params: nr_of_posts)
+export const FETCH_POST_NEAREST = "db/fetch/post/nearest" // heeft latitude, longitude en limit nodig in e params. die geeft limit aantal posts terug die het dischts zijn van de gegeven locatie. hier kan je niet de optie hebben om alle posts te tonen maar dat is van zelfsprekend
+export const FETCH_POST_RADIUS = "db/fetch/post/within-radius" // deze heeft latitude, longitude, radius en limit nodig in de params. als limit -1 is geeft het alle posts terug binnenin de radius. als het niet -1 is gaat het limit aantal posts terug geven.
 
 //Storing controllers:
 //StoreUserInformation

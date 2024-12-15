@@ -1,7 +1,7 @@
 import * as express from "express";
 import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
-import {Post} from "../../../../../Global/post";
+import {Post} from "../../../../interfaces";
 import * as ExifReader from 'exifreader';
 import { authenticateToken } from "../../../user-authentification";
 import * as multer from "multer";
@@ -68,7 +68,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             await this.imageApi.postImage(tempFilePath).then(async (imageUrl) => {
                 const tags = this.imageApi.identifyImage(imageUrl);
                 const evaluation = this.imageApi.appraiseImage(imageUrl);
-                const post = new Post(body);
+                const post: Post = body;
                 post.description = body.caption;
                 post.image_url = [imageUrl];
 
@@ -76,8 +76,7 @@ export class StorePostInformationController extends BaseDatabaseController {
                 const userID = req.user.user_id;
                 post.user = userID;
 
-                post.longitude = (await GeoData).longitude;
-                post.latitude = (await GeoData).latitude;
+                post.location = await GeoData;
                 if ((await tags).length !== 0) {
                     post.tags = await tags;
                 }
