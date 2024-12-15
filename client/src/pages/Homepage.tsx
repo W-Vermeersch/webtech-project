@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 
 export default function Homepage() {
   useEffect(() => {
-    Cookies.remove("shown_post_ids", { path: "/" }); // Verwijdert cookie client-side
+    Cookies.remove("shown_post_ids"); // Verwijdert cookie client-side
   }, []);
   return (
     <Container>

@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 import "./map.css";
 
 import { MapContainer, TileLayer } from "react-leaflet";
+import Cookies from "js-cookie";
 import L from "leaflet";
 import axios from "../../api/axios";
 import { useState, useEffect, useRef } from "react";
@@ -31,6 +32,9 @@ function Map() {
 
   function handleRefresh() {
     localStorage.removeItem("posts");
+    if (posts && posts.length === 0) {
+      Cookies.remove("shown_post_ids");
+    }
     setPosts(null);
     setRefresh((prev) => !prev);
   }
