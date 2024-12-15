@@ -38,18 +38,18 @@ export default function PostImage({
     <div id="post-image-container">
       <Image id="post-image" src={image_url} alt="post" fluid />
       <div id="image-overlay" className="d-flex flex-column">
-        <h4 className="mb-auto">
-          <Badge bg="danger" className="m-3">
-            {stateCountry.country === "" ? "🌍" : `${stateCountry.state}, ${stateCountry.country}`}
-          </Badge>
-        </h4>
-        <Stack id="tags" direction="horizontal">
+        <Stack id="tags" direction="horizontal" className="mb-auto">
           {tags[0] !== "None" ? tags.map((tag) => (
-            <Badge key={tag} bg="dark" className="m-2">
+            <Badge key={tag} bg="dark" className="badge-tag m-2">
               {tag}
             </Badge>
           )) : null}
         </Stack>
+        <h3 className="">
+          <Badge bg="danger" className="m-3">
+            {stateCountry.country === "" ? "🌍" : `${stateCountry.state}, ${stateCountry.country}`}
+          </Badge>
+        </h3>
         {/* add more things to overlay on the post image */}
       </div>
     </div>

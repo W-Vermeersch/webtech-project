@@ -87,7 +87,8 @@ export default function FullPost() {
 
   return (
     <>
-      {isLoading && <Spinner className="spinner" animation="border" variant="succes" />}
+      {isLoading && <Spinner className="spinner" animation="border" variant="success" />}
+
       <div id="full-post">
         <Row
           style={{ height: "80vh" }}

@@ -13,6 +13,8 @@ import Stack from "react-bootstrap/Stack";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import Spinner from "react-bootstrap/Spinner";
+import './../Spinner.css';
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
@@ -29,6 +31,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
@@ -61,6 +64,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchUser() {
+      setIsLoading(true);
       //console.log("fetching user");
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
@@ -90,6 +94,7 @@ export default function ProfilePage() {
         params: { username },
       });
       setPosts(resp.data.posts);
+      setIsLoading(false);
     }
 
     if (user) {
@@ -117,6 +122,9 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {isLoading && 
+        <Spinner animation="border" className="spinner" variant="success"/>}
+
       <Container
         className=" text-white rounded overflow-hidden border border-light shadow"
         onClick={ToglleLogoutOff}
@@ -128,14 +136,14 @@ export default function ProfilePage() {
             xs={12}
             lg={3}
           >
-            <Stack className="align-items-center" gap={1}>
+            <Stack className="align-items-center" gap={3}>
               <Image
                 src={`/src/assets/${user.profilepicture}`}
                 alt="profile pic"
                 className="profile-circle rounded-circle"
               />
               <h3>{user.username}</h3>
-              <h4>{level(user.totalexp)}</h4>
+              <h4>{`Level: ${level(user.totalexp)}`}</h4>
               <div className="w-100">
                 <ProgressBar
                   variant="success"

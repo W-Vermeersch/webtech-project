@@ -162,7 +162,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
               ? post.tags.map((tag: string, index: number) => (
                   <span
                     key={`${tag}${index}`}
-                    className="badge rounded-pill bg-light text-muted me-1"
+                    className="badge bg-success text-light me-1"
                   >
                     #{tag}
                   </span>

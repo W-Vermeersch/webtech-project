@@ -13,8 +13,8 @@ body.modal-open {
   padding-right: 0px !important;
 }
 
-Link {
-  text-underline: None;
+a {
+  text-decoration: none !important;
 }
 
 .nav {
