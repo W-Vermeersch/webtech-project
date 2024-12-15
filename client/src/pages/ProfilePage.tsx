@@ -3,6 +3,7 @@ import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "../api/axios";
+import { maxExp, level, currentLevelExp} from "./../api/xp-system";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -125,12 +126,12 @@ export default function ProfilePage() {
                 className="rounded-circle"
               />
               <h3>{user.username}</h3>
-              <h4>{user.totalexp}</h4>
+              <h4>{level(user.totalexp)}</h4>
               <div className="w-100">
                 <ProgressBar
                   variant="success"
-                  now={600}
-                  max={1000}
+                  now={currentLevelExp(user.totalexp)}
+                  max={maxExp}
                   label={"current progress"}
                 />
               </div>
