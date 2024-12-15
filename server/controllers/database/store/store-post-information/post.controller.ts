@@ -18,11 +18,6 @@ export class StorePostInformationController extends BaseDatabaseController {
 
     imageApi = new CloudinaryApi();
 
-    private upload = multer({
-        dest: path.join(__dirname, "uploads"), // Temporary storage
-        limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
-    });
-
     constructor(private db: Database) {
         super();
     }
@@ -40,7 +35,7 @@ export class StorePostInformationController extends BaseDatabaseController {
         try {
             // Ensure the file exists
             // @ts-ignore
-            const userId = req.user.user;
+            const userId = req.user.user_id;
             if (!file || !req.body.caption) {
                 return res.status(400).send("Missing required fields: 'file' or 'caption'");
             }

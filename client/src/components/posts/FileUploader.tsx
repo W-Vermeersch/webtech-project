@@ -19,7 +19,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
 
       // Pass the File object directly (to use with FormData)
       setFieldValue('file', file);
-      setFieldValue('image_type', file.type);
     }
   }, [setFieldValue]);
 
