@@ -13,7 +13,6 @@ interface PostFormValues {
   caption: string;
   file: string;
   tags: string[];
-  image_type: string;
 }
 
 const animalTags: string[] = ["Cat", "Dog", "Lion"];
@@ -27,7 +26,6 @@ const PostForm = () => {
     caption: "",
     file: "",
     tags: [],
-    image_type: "",
   };
 
   async function onSubmit(
@@ -35,8 +33,15 @@ const PostForm = () => {
     actions: FormikHelpers<PostFormValues>
   ) {
     console.log("Form data:", values);
+    const formData = new FormData();
+    formData.append('file', values.file); // Attach the file
+    formData.append('caption', values.caption);
+    formData.append('tags', values.tags[0]);
     try {
-      const resp = await axios.post(ADD_POST, values);
+      const resp = await axios.post(ADD_POST, values, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }});
       console.log("Response:", resp.data);
       navigate(`/profile/${user?.username}`);
     } catch (error) {

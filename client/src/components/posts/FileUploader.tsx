@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import "./FileUploader.css";
-// https://www.npmjs.com/package/react-dropzone copied and adjusted
 
 interface FileUploaderProps {
   setFieldValue: (field: string, value: any) => void;
@@ -15,21 +14,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
       if (acceptedFiles.length > 0) {
         const file: File = acceptedFiles[0];
 
-        const reader = new FileReader();
+      // Generate preview URL using Object URL
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
 
-        reader.onabort = () => console.log("File reading was aborted");
-        reader.onerror = () => console.log("File reading has failed");
-        reader.onload = () => {
-          const binarystring = reader.result;
-          setPreviewUrl(binarystring as string);
-          setFieldValue("file", binarystring);
-          setFieldValue("image_type", file.type);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [setFieldValue]
-  );
+      // Pass the File object directly (to use with FormData)
+      setFieldValue('file', file);
+    }
+  }, [setFieldValue]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

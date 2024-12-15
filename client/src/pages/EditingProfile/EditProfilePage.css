@@ -1,3 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
 .edit-profile-container .dropzone-title {
   display: none;
+}
+
+.title-container {
+  margin-bottom: 1.5rem;
+}
+.title {
+  font-family: "Press Start 2P";
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.username {
+  font-family: "Press Start 2P";
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
 }

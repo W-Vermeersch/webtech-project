@@ -13,7 +13,6 @@ export class CreatePostController extends BaseController {
         this.router.post("/create-post", authenticateToken, (req: express.Request, response: express.Response) => {
                 console.log("authenticated")
                 return response.status(204).send("Succesfully authenticated the user");
-
             }
         )}
 }

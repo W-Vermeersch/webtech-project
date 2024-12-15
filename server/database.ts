@@ -184,7 +184,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8), 4326))
                 `,
                 values: [
-                    post.user,
+                    post.user_id,
                     post.image_url,
                     post.description,
                     post.tags,
@@ -203,7 +203,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     VALUES ($1, $2, $3, $4, $5, $6)
                 `,
                 values: [
-                    post.user,
+                    post.user_id,
                     post.image_url,
                     post.description,
                     post.tags,
