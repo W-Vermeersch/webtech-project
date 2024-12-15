@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
-import {Like, Post} from "../Global/post";
+import {Like} from "../Global/post";
 import {User} from "./Modules/User";
 require('dotenv').config();
-import { Comment, UserDecoration} from "./interfaces"
+import { Post, Comment, UserDecoration} from "./interfaces"
 
 interface QueryWithoutValues {
     text: string;
@@ -174,7 +174,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     /* Stores a post into the DB*/
     public async storePost(post: Post): Promise<void> {
         let query: QueryWithValues;
-        if (post.longitude !== undefined && post.latitude !== undefined) {
+        if (post.location.longitude !== undefined && post.location.latitude !== undefined) {
             // Insert with geospatial data
             query = {
                 text: `
@@ -189,8 +189,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     post.tags,
                     post.score,
                     post.rarity,
-                    post.longitude,
-                    post.latitude,
+                    post.location.longitude,
+                    post.location.latitude,
                 ],
             };
         } else {
@@ -222,38 +222,39 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array of all the posts that a user has liked, given their user ID. */
-public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
-    const query = {
-        text: `
-            SELECT 
-                p.post_id, 
-                p.user_id, 
-                p.image_url, 
-                p.description, 
-                p.tags, 
-                ST_X(p.location::geometry) AS longitude, 
-                ST_Y(p.location::geometry) AS latitude
-            FROM likes_table l
-            INNER JOIN post_table p ON l.post_id = p.post_id
-            WHERE l.user_id = $1
-        `,
-        values: [user_id],
-    };
-    return this.executeQuery(query).then((res) => {
-        return res.rows.map((row: Post) => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            score: row.score,
-            rarity: row.rarity,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-        }));
-    });
+public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
+    return this.executePostQuery(` FROM likes_table l INNER JOIN post_table p ON l.post_id = p.post_id WHERE l.user_id = $1`, [user_id])
+    // const query = {
+    //     text: `
+    //         SELECT
+    //             p.post_id,
+    //             p.user_id,
+    //             p.image_url,
+    //             p.description,
+    //             p.tags,
+    //             ST_X(p.location::geometry) AS longitude,
+    //             ST_Y(p.location::geometry) AS latitude
+    //         FROM likes_table l
+    //         INNER JOIN post_table p ON l.post_id = p.post_id
+    //         WHERE l.user_id = $1
+    //     `,
+    //     values: [user_id],
+    // };
+    // return this.executeQuery(query).then((res) => {
+    //     return res.rows.map((row) => ({
+    //         post_id: row.post_id,
+    //         user_id: row.user_id,
+    //         image_url: row.image_url,
+    //         description: row.description,
+    //         tags: row.tags,
+    //         score: row.score,
+    //         rarity: row.rarity,
+    //         location: {
+    //             longitude: row.longitude,
+    //             latitude: row.latitude,
+    //         }
+    //     }));
+    // });
 
 
     }
@@ -268,77 +269,72 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         });
     }
 
+    private async executePostQuery(query_specification: string, values: any[]): Promise<Post[]> {
+    const query = {
+        text: `SELECT post_id, user_id, image_url, description, tags, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
+        values: [values],
+    }
+        return this.executeQuery(query).then((res) => {
+            return res.rows.map((row) => ({
+                post_id: row.post_id,
+                user_id: row.user_id,
+                image_url: row.image_url,
+                description: row.description,
+                tags: row.tags,
+                score: row.score,
+                rarity: row.rarity,
+                location: {
+                    longitude: row.longitude,
+                    latitude: row.latitude,
+                }
+            }));
+        }).catch(err => {
+            console.log("Error in q : ",err)
+            return []
+        });
+}
+
         /* Returns an array of all posts that match with the given list of post IDs. */
-    public async fetchPostsByIds(postIds: number[]): Promise<any[]> {
+    public async fetchPostsByIds(postIds: number[]): Promise<Post[]> {
         if (postIds.length === 0) {
             return [];
         }
-    
-        const query = {
-            text: `
-                SELECT 
-                    post_id, 
-                    user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
-                FROM post_table 
-                WHERE post_id = ANY($1)
-            `,
-            values: [postIds],
-        };
-
-        return this.executeQuery(query).then((res) => {
-            return res.rows.map((row: Post) => ({
-                post_id: row.post_id,
-                user_id: row.user_id,
-                image_url: row.image_url,
-                description: row.description,
-                tags: row.tags,
-                score: row.score,
-                rarity: row.rarity,
-                location: {
-                    longitude: row.longitude,
-                    latitude: row.latitude,
-                }
-            }));
-        });
+        return this.executePostQuery(` FROM post_table WHERE post_id = ANY($1)`, postIds)
     }
 
     /* Returns an array with all the posts made by a user given their ID. */
-    public async fetchPostsOfUser(user_id: number): Promise<any[]> {
-        const query = {
-            text: `
-                SELECT 
-                    post_id, 
-                    user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
-                FROM post_table 
-                WHERE user_id = $1
-            `,
-            values: [user_id],
-        };
-        return this.executeQuery(query).then((res) => {
-            return res.rows.map((row: Post) => ({
-                post_id: row.post_id,
-                user_id: row.user_id,
-                image_url: row.image_url,
-                description: row.description,
-                tags: row.tags,
-                score: row.score,
-                rarity: row.rarity,
-                location: {
-                    longitude: row.longitude,
-                    latitude: row.latitude,
-                }
-            }));
-        });
+    public async fetchPostsOfUser(user_id: number): Promise<Post[]> {
+        // const query = {
+        //     text: `
+        //         SELECT
+        //             post_id,
+        //             user_id,
+        //             image_url,
+        //             description,
+        //             tags,
+        //             ST_X(location::geometry) AS longitude,
+        //             ST_Y(location::geometry) AS latitude
+        //         FROM post_table
+        //         WHERE user_id = $1
+        //     `,
+        //     values: [user_id],
+        // };
+        return this.executePostQuery(`FROM post_table WHERE user_id = $1`, [user_id])
+        // return this.executeQuery(query).then((res) => {
+        //     return res.rows.map((row) => ({
+        //         post_id: row.post_id,
+        //         user_id: row.user_id,
+        //         image_url: row.image_url,
+        //         description: row.description,
+        //         tags: row.tags,
+        //         score: row.score,
+        //         rarity: row.rarity,
+        //         location: {
+        //             longitude: row.longitude,
+        //             latitude: row.latitude,
+        //         }
+        //     }));
+        // });
     }
 
     /* Fetch posts within a radius */
@@ -357,7 +353,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         return res.rows
     }
 
-    public async fetchPostsWithinRadiusWithLimit(latitude: number, longitude: number, radius: number, limit: number): Promise<any[]> {
+    public async fetchPostsWithinRadiusWithLimit(latitude: number, longitude: number, radius: number, limit: number): Promise<Post[]> {
         const query = {
             text: `
                 SELECT 
@@ -369,8 +365,12 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             `,
             values: [longitude, latitude, radius, limit],
         };
-        const res = await this.executeQuery(query)
-        return res.rows
+        return this.executeQuery(query).then(list => {
+            return list.rows.map((val) => {
+                return {
+
+                }
+                })})
     }
 
     /* Fetch nearest posts */
@@ -411,15 +411,16 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
     public async fetchPostsByTag(tag: string): Promise<{ post_id: number, user_id: number }[]> {
         const query = {
             text: `
-                SELECT 
-                    post_id, 
+                SELECT
+                    post_id,
                     user_id
-                FROM post_table 
+                FROM post_table
                 WHERE $1 = ANY(tags);
             `,
             values: [tag],
         };
-    
+        // return this.executePostQuery(`FROM post_table WHERE $1 = ANY(tags)`, [tag])
+
         const res = await this.executeQuery(query);
         return res.rows;
     }

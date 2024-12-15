@@ -20,7 +20,7 @@ interface Post {
     rarity: number,
     location: {
         latitude: Number,
-        Longitude: Number
+        longitude: Number
     },
     likes: number,
     liked: boolean,
@@ -51,15 +51,15 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostLikesAmount(req, response);
         });
 
-        this.router.get("/fetch/post/nearest", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/nearest", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getNearestPosts(req, response);
         });
 
-        this.router.get("/fetch/post/within-radius", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/within-radius", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getPostsWithinRadius(req, response);
         });
 
-        this.router.get("/fetch/tag/posts", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/tag/posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getTagPosts(req, response);
         });
 
@@ -68,12 +68,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
         return await this.db.fetchLikedUsersOfPost(post_id).then((res) => {
             const resp = {isLiked: false, likes: 0}
-            console.log("User who liked : ", user_id)
             if (res.includes(user_id)) {
                 resp.isLiked = true;
             }
             resp.likes = res.length;
-            console.log("Found post : ", resp);
             return resp;
         })
     }
@@ -238,8 +236,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const post_list = await Promise.all(posts.map(async (postObject) => {
             const post_id = postObject.post_id;
             const user_id = postObject.user_id;
-            const postToReturn = await this.fetchPost(post_id, user_id)
-            return postToReturn;
+            return await this.fetchPost(post_id, user_id);
         }))
         res.json({
             posts: post_list
@@ -260,8 +257,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const post_list = await Promise.all(posts.map(async (postObject) => {
             const post_id = postObject.post_id;
             const user_id = postObject.user_id;
-            const postToReturn = await this.fetchPost(post_id, user_id)
-            return postToReturn;
+            return await this.fetchPost(post_id, user_id);
         }))
         res.json({
             posts: post_list
@@ -285,8 +281,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             post_list = await Promise.all(posts.map(async (postObject) => {
                 const post_id = postObject.post_id;
                 const user_id = postObject.user_id;
-                const postToReturn = await this.fetchPost(post_id, user_id)
-                return postToReturn;
+                return await this.fetchPost(post_id, user_id);
             }))
         } else {
             const posts = await this.db.fetchPostsWithinRadiusWithLimit(lat, long, radius, limit)
