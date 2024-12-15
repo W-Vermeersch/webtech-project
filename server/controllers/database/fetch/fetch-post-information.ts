@@ -4,6 +4,7 @@ import Database from "../../../database";
 import {ifAuthenticatedToken} from "../../user-authentification";
 
 interface Post {
+    idx: number,
     user: String,
     profile_picture: String[],
     image_url: String[],
@@ -83,9 +84,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         const postObject = posts[0]
         const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
+        console.log("Post owner: ", postOwner);
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
         return {
+            idx: postId,
             user: postOwner[0].username,
             profile_picture: postOwnerDecoration[0].profile_picture_image_url,
             image_url: postObject.image_url,
