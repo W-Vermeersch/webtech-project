@@ -1,5 +1,5 @@
-import { Row, Col, Container, Button, Toast } from "react-bootstrap";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Row, Col, Container } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
 import { useState } from "react";
@@ -25,7 +25,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");
@@ -77,9 +76,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
 
   // For each post, display the first two comments,
   // otherwhise click on more to open up the comments section
-  const commentsToDisplay = post.commentsection
-    ? post.commentsection.slice(0, 2)
-    : [];
+  const commentsToDisplay = post.comments ? post.comments.slice(0, 2) : [];
 
   return (
     <Container className="post">
@@ -153,11 +150,11 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           <div className="comments-section">
             {commentsToDisplay.map((comment, index) => (
               <div key={index} className="comment">
-                <strong>{comment.user_id}:</strong> {comment.description}
+                <strong>{comment.user}:</strong> {comment.text}
               </div>
             ))}
 
-            {post.commentsection && (
+            {post.comments && (
               <div
                 className="load-more-comments"
                 style={{ cursor: "pointer" }}
