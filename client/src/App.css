@@ -13,7 +13,7 @@ body.modal-open {
   padding-right: 0px !important;
 }
 
-a {
+a, Link, NavLink, .nav-link {
   text-decoration: none !important;
 }
 
