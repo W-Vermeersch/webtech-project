@@ -42,11 +42,7 @@ export default function FooterNavBar() {
         <FaMap size={25} />
         <span>Map</span>
       </NavLink>
-      <NavLink to="/create-post" className="footer-nav-item">
-        <div className="create-post-icon">
-          <FaPlus size={25} />
-        </div>
-      </NavLink>
+      
       <NavLink to="/leaderboard" className="footer-nav-item">
         <FaCrown size={25} />
         <span>Leaderboard</span>
@@ -55,6 +51,11 @@ export default function FooterNavBar() {
         <FaUser size={25} />
         <span>Profile</span>
       </div>
+      <NavLink to="/create-post" className="footer-nav-item">
+        <div className="create-post-icon">
+          <FaPlus size={25} />
+        </div>
+      </NavLink>
     </div>
   );
 }

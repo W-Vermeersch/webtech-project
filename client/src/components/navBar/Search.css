@@ -1,5 +1,6 @@
 .form-inline div {
     gap: 0px;
+    min-height: 5vh;
 }
 
 .bg-dark .dropdown-menu {

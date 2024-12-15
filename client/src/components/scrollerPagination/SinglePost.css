@@ -11,14 +11,13 @@
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-family: Arial, sans-serif;
 }
 
 .post-header .username {
   font-weight: bold;
   font-size: 16px;
   margin-left: 10px;
-  color: #2c3e50; /* Darker tone for the username */
+  color: black; /* Darker tone for the username */
 }
 
 .post-image {
@@ -31,4 +30,8 @@
 
 .post-actions {
   margin: 1rem;
+}
+
+.load-more-comments {
+  color: #198754;
 }

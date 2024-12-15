@@ -17,7 +17,7 @@ export default function UserSection({
   return (
     <Row>
       <Col xs="auto">
-        <Image src={profile_pic} alt="profile pic" roundedCircle />
+        <Image src={profile_pic} alt="profile pic" roundedCircle width={150} height={150}/>
       </Col>
       <Col className="p-1">
         <Row>

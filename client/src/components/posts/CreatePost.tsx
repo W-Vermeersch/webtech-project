@@ -18,7 +18,7 @@ const CreatePost = () => {
 
   return (
     <Container>
-      <Row className="w-75 mx-auto">
+      <Row className="w-75 mx-auto mt-2 mb-3">
         <Col xs="auto">
           <img
             src="/src/assets/add-post.svg"
@@ -27,8 +27,8 @@ const CreatePost = () => {
             alt="add"
           />
         </Col>
-        <Col>
-          <h2 className="fw-bold text-left">Create Post</h2>
+        <Col className="d-flex align-items-center">
+        <h2 className="fw-bold mb-0">Create Post</h2>
         </Col>
       </Row>
       <PostForm />

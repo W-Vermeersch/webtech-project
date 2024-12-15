@@ -12,7 +12,7 @@ import "./feedPage.css";
 // Fetch posts from the backend
 const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
   const response = await axios.get(FETCH_RANDOM_POSTS, {
-    params: { nr_of_posts: 5, page: pageParam },
+    params: { nr_of_posts: 6, page: pageParam },
   });
   return response.data.posts || [];
 };

@@ -61,7 +61,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
           />
 
           <h3 className="dropzone-text">Click or drag</h3>
-          <p className="file-subtitle">JPEG, PNG, JPG, HEIC</p>
+          JPEG, PNG, JPG, HEIC
         </div>
       )}
     </div>

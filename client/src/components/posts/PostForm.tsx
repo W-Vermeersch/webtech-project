@@ -1,4 +1,5 @@
 import { Formik, Form, Field, FormikHelpers } from "formik";
+import FormLabel from "react-bootstrap/FormLabel";
 import { useNavigate } from "react-router-dom";
 import { FormGroup, Button } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
@@ -49,16 +50,14 @@ const PostForm = () => {
     <Formik type initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
-          <FormGroup className="mb-4 " controlId="reactFile">
-            <p className="dropzone-title">
-              Drag and drop some files here, or click to select files
-            </p>
+          <FormGroup className="mb-4" controlId="reactFile">
+              <FormLabel>Drag and drop some files here, or click to select files </FormLabel>
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
-            Caption
+          <FormLabel>Caption</FormLabel>
             <Field
               as="textarea"
               name="caption"
@@ -72,7 +71,7 @@ const PostForm = () => {
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
-            Animal tag
+          <FormLabel>Animal tag</FormLabel>
             <Typeahead
               id="animaltags"
               options={animalTags}
