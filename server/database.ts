@@ -188,8 +188,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     post.tags,
                     post.score,
                     post.rarity,
-                    post.latitude,
                     post.longitude,
+                    post.latitude,
                 ],
             };
         } else {
@@ -347,31 +347,29 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 SELECT 
                     post_id, 
                     user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
                 FROM post_table 
                 WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)
             `,
             values: [longitude, latitude, radius],
         };
-        return this.executeQuery(query).then((res) => {
-            return res.rows.map((row: Post) => ({
-                post_id: row.post_id,
-                user_id: row.user_id,
-                image_url: row.image_url,
-                description: row.description,
-                tags: row.tags,
-                score: row.score,
-                rarity: row.rarity,
-                location: {
-                    longitude: row.longitude,
-                    latitude: row.latitude,
-                }
-            }));
-        });
+        const res = await this.executeQuery(query)
+        return res.rows
+    }
+
+    public async fetchPostsWithinRadiusWithLimit(latitude: number, longitude: number, radius: number, limit: number): Promise<any[]> {
+        const query = {
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                FROM post_table 
+                WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)
+                LIMIT $4
+            `,
+            values: [longitude, latitude, radius, limit],
+        };
+        const res = await this.executeQuery(query)
+        return res.rows
     }
 
     /* Fetch nearest posts */
@@ -381,11 +379,6 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 SELECT 
                     post_id, 
                     user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
                 FROM post_table 
                 ORDER BY ST_Distance(location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) 
                 LIMIT $3
@@ -393,19 +386,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [longitude, latitude, limit],
         };
         const res = await this.executeQuery(query);
-
-        return res.rows.map(row => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-
-        }));
+        return res.rows;
     }
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
@@ -439,7 +420,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         };
     
         const res = await this.executeQuery(query);
-        return res.rows; // Returns an array of objects with post_id and user_id
+        return res.rows;
     }
     
     
