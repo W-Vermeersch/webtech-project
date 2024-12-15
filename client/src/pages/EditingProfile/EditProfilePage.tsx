@@ -8,12 +8,8 @@ const EditProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Default state if location.state is undefined
-  const {
-    profilepicture,
-    username: initName,
-    bio: initBio,
-  } = location.state || {};
+  // default state if location.state is undefined
+  const { profilepicture, user: initName, bio: initBio } = location.state || {};
 
   // Redirect to PageNotFound if state is missing
   useEffect(() => {
@@ -23,7 +19,7 @@ const EditProfilePage = () => {
   }, [navigate, profilepicture, initName, initBio]);
 
   const [profilePic, setProfilePic] = useState(profilepicture);
-  const [username, setUsername] = useState(initName);
+  const [user, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);
 
   const handleFileChange = (field: string, value: string) => {
@@ -31,7 +27,7 @@ const EditProfilePage = () => {
   };
 
   const handleSave = () => {
-    console.log("Updated profile:", { profilePic, username, bio });
+    console.log("Updated profile:", { profilePic, user, bio });
     // Add API logic here to save profile changes
     navigate(-1); // Navigate back to profile page
   };
@@ -57,7 +53,7 @@ const EditProfilePage = () => {
       {/* Profile Picture */}
       <div className="text-center mb-3">
         <Image
-          src={profilePic || "/src/assets/default-profile.jpg"}
+          src={`/src/assets/${profilepicture}`}
           roundedCircle
           width={120}
           height={120}
@@ -67,11 +63,11 @@ const EditProfilePage = () => {
       </div>
 
       {/* Edit Name */}
-      <Form.Group controlId="username" className="mb-3">
+      <Form.Group controlId="user" className="mb-3">
         <Form.Label>Name</Form.Label>
         <Form.Control
           type="text"
-          value={username}
+          value={user}
           onChange={(e) => setUsername(e.target.value)}
           className="bg-dark text-white"
         />
