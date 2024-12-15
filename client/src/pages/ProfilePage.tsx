@@ -84,7 +84,7 @@ export default function ProfilePage() {
 
     if (user) {
       fetchPosts();
-      console.log(posts);
+      console.log("posts :", posts);
     }
   }, [user]);
 

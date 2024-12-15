@@ -80,7 +80,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const commentsToDisplay = post.comments ? post.comments.slice(0, 2) : [];
 
   return (
-    <Container className="post">
+    <div className="post">
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
@@ -140,14 +140,14 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           </p>
 
           <div className="tags-section mb-2">
-            {post.tags.map((tag: string, index: number) => (
+            {post.tags[0] !== "None" ? (post.tags.map((tag: string, index: number) => (
               <span
                 key={`${tag}${index}`}
                 className="badge rounded-pill bg-light text-muted me-1"
               >
                 #{tag}
               </span>
-            ))}
+            )) ) : null}
           </div>
 
           {/* Comment Section */}
@@ -186,7 +186,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           post={post}
         />
       )}
-    </Container>
+    </div>
   );
 };
 

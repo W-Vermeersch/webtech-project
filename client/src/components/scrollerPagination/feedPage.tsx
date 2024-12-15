@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "@mantine/hooks";
 import { useEffect, useRef } from "react";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
 import axios from "../../api/axios";
@@ -51,33 +51,38 @@ const FeedPage = () => {
       </div>
 
       {/* Feed Content */}
-      <div className="feed-content">
-        {posts.map((post, index) => {
-          if (index === posts.length - 1) {
-            // Attach intersection observer to the last post
-            return (
+
+      {posts.map((post, index) => {
+        if (index === posts.length - 1) {
+          // Attach intersection observer to the last post
+          return (
+            <Col key={post.idx} className="mb-4">
               <div ref={ref} key={post.idx}>
                 <SinglePost post={post} />
               </div>
-            );
-          }
-          return <SinglePost key={post.idx} post={post} />;
-        })}
+            </Col>
+          );
+        }
+        return (
+          <Col key={post.idx} className="mb-4">
+            <SinglePost key={post.idx} post={post} />
+          </Col>
+        );
+      })}
 
-        {/* Loading Spinner */}
-        {isFetchingNextPage && (
-          <div className="text-center my-3">
-            <Spinner animation="border" variant="success" />
-          </div>
-        )}
+      {/* Loading Spinner */}
+      {isFetchingNextPage && (
+        <div className="text-center my-3">
+          <Spinner animation="border" variant="success" />
+        </div>
+      )}
 
-        {/* Message when no more posts */}
-        {!hasNextPage && (
-          <div className="text-center my-3">
-            <p>No more posts to load.</p>
-          </div>
-        )}
-      </div>
+      {/* Message when no more posts */}
+      {!hasNextPage && (
+        <div className="text-center my-3">
+          <p>No more posts to load.</p>
+        </div>
+      )}
     </>
   );
 };

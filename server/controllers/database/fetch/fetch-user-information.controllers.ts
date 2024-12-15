@@ -65,7 +65,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
         } else {
             const userObject = users[0]
             const userProfileDecoration = await this.db.fetchProfileDecoration(userObject.user_id);
-            console.log("user profile decoration: ", userProfileDecoration);
+            //console.log("user profile decoration: ", userProfileDecoration);
             //console.log(userProfileDecoration[0].display_name)
             res.json({
                 username: userObject.username,
@@ -106,7 +106,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
     } else {
       const userObject = users[0];
       const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
-      console.log(userPosts);
       res.json({
         posts: userPosts,
       });

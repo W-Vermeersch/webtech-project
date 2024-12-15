@@ -14,11 +14,9 @@ export default function Homepage() {
   }, []);
   return (
     <Container>
-      <Col xs={12} md={8} className="mx-auto">
-        {/* <Row md={3}>  --> show multiple posts per line */}
+      <Row className="feed-container" xs={1} md={2} xl={3} >
         <FeedPage />
-        {/*  </Row> */}
-      </Col>
+      </Row>
     </Container>
   );
 }

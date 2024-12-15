@@ -15,6 +15,7 @@ import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
 import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import { level } from "../api/xp-system";
 
 // later make modules of components
 
@@ -53,10 +54,10 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
-    async function fetchUser(user: string | number) {
+    async function fetchUser(username: string | number) {
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
-          params: { user },
+          params: { username },
         });
         console.log("user: ", resp.data);
         if (resp.data.redirect) {
@@ -104,7 +105,7 @@ export default function FullPost() {
               <UserSection
                 username={user.username}
                 profile_pic={`/src/assets/${post.profile_picture}`}
-                level={user.totalexp}
+                level={level(user.totalexp)}
               />
             </div>
           </Col>
