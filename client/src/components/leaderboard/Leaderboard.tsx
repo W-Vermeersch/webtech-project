@@ -11,11 +11,11 @@ interface LeaderboardEntry{
 const getMedal = (index: number) => {
     switch (index) {
         case 0:
-            return <img src={"src/assets/goldmedal.png"} alt="Gold Medal" className="medal" />;
+            return <img src={"/src/assets/goldmedal.png"} alt="Gold Medal" className="medal" />;
         case 1:
-            return <img src={"src/assets/silvermedal.png"} alt="Silver Medal" className="medal" />;
+            return <img src={"/src/assets/silvermedal.png"} alt="Silver Medal" className="medal" />;
         case 2:
-            return <img src={"src/assets/bronzemedal.png"} alt="Bronze Medal" className="medal" />;
+            return <img src={"/src/assets/bronzemedal.png"} alt="Bronze Medal" className="medal" />;
         default:
             return <span className="rank">{index+1}</span>;
     }

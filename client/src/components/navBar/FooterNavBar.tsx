@@ -35,24 +35,24 @@ export default function FooterNavBar() {
   return (
     <div className="footer-navbar">
       <NavLink to="/home" className="footer-nav-item">
-        <FaHome size={24} />
+        <FaHome size={25} />
         <span>Home</span>
       </NavLink>
       <NavLink to="/map" className="footer-nav-item">
-        <FaMap size={24} />
+        <FaMap size={25} />
         <span>Map</span>
       </NavLink>
       <NavLink to="/create-post" className="footer-nav-item">
         <div className="create-post-icon">
-          <FaPlus size={24} />
+          <FaPlus size={25} />
         </div>
       </NavLink>
       <NavLink to="/leaderboard" className="footer-nav-item">
-        <FaCrown size={24} />
+        <FaCrown size={25} />
         <span>Leaderboard</span>
       </NavLink>
       <div className="footer-nav-item" onClick={handleProfileClick}>
-        <FaUser size={24} />
+        <FaUser size={25} />
         <span>Profile</span>
       </div>
     </div>
