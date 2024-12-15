@@ -1,6 +1,5 @@
 export interface Post {
   user: string;
-  username: string;
   user_id: number;
   image_url: string; // url to the storage api
   idx: number; // index of Post
@@ -11,7 +10,7 @@ export interface Post {
   location: Location;
   // added because profile pictures also exist
   profile_picture?: string;
-  commentsection?: PostComment[];
+  comments?: PostComment[];
 }
 
 export interface User {
@@ -30,7 +29,8 @@ export interface Location {
 }
 
 export interface PostComment {
-  user_id: string;
-  post_id: number; // index to refer to Post
-  description: string;
+  id: number;
+  user: string;
+  text: string;
+  profile_picture?: string;
 }

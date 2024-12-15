@@ -17,7 +17,7 @@ const ViewCommentsModal = ({ show, onHide, post }: ViewCommentsModalProps) => {
   const username = user?.username || "";
   const axiosPrivate = useAxiosPrivate();
   const [comments, setComments] = useState<PostComment[]>(
-    post.commentsection || []
+    post.comments || []
   );
   const [newComment, setNewComment] = useState<string>("");
 
@@ -37,9 +37,9 @@ const ViewCommentsModal = ({ show, onHide, post }: ViewCommentsModalProps) => {
         setComments((prevComments) => [
           ...prevComments,
           {
-            user_id: username,
-            description: newComment,
-            post_id: post.idx,
+            user: username,
+            text: newComment,
+            id: post.idx,
           },
         ]);
         setNewComment("");
@@ -62,7 +62,7 @@ const ViewCommentsModal = ({ show, onHide, post }: ViewCommentsModalProps) => {
           {comments.length > 0 ? (
             comments.map((comment, index) => (
               <div key={index} className="comment-item mb-2">
-                <strong>{comment.user_id}:</strong> {comment.description}
+                <strong>{comment.user}:</strong> {comment.text}
               </div>
             ))
           ) : (
