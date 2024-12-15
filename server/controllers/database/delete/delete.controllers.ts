@@ -2,6 +2,7 @@ import * as express from "express";
 import { BaseDatabaseController } from "../base.database.controller";
 import Database from "../../../database";
 import { authenticateToken } from "../../user-authentification";
+import {Post} from "../../../interfaces";
 
 export class DeleteController extends BaseDatabaseController {
   constructor(private db: Database) {
@@ -71,8 +72,10 @@ export class DeleteController extends BaseDatabaseController {
       const userObject = users[0];
       const user_id = userObject.user_id;
 
-      let likedPostsOfUser = await this.db.fetchLikedPostsOfUser(user_id);
-      likedPostsOfUser = likedPostsOfUser.map((post: any) => post.post_id);
+      let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
+          .map((post: Post) => {
+        return post.post_id
+      });
       if (!likedPostsOfUser.includes(post_id)) {
         res.status(404).send("User has not liked this post");
       } else {

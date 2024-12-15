@@ -20,7 +20,7 @@ interface Post {
     rarity: number,
     location: {
         latitude: Number,
-        Longitude: Number
+        longitude: Number
     },
     likes: number,
     liked: boolean,
@@ -51,16 +51,20 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostLikesAmount(req, response);
         });
 
-        this.router.get("/fetch/post/nearest", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/nearest", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getNearestPosts(req, response);
         });
 
-        this.router.get("/fetch/post/within-radius", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/within-radius", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getPostsWithinRadius(req, response);
         });
 
-        this.router.get("/fetch/tag/posts", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/tag/posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getTagPosts(req, response);
+        });
+
+        this.router.get("/fetch/post/liked", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
+            return this.isPostLiked(req, response);
         });
 
     }
@@ -68,12 +72,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
         return await this.db.fetchLikedUsersOfPost(post_id).then((res) => {
             const resp = {isLiked: false, likes: 0}
-            console.log("User who liked : ", user_id)
             if (res.includes(user_id)) {
                 resp.isLiked = true;
             }
             resp.likes = res.length;
-            console.log("Found post : ", resp);
             return resp;
         })
     }
@@ -121,7 +123,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         const postObject = posts[0]
         const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
-        console.log("Post owner: ", postOwner);
+        console.log("Post owner: ", postOwner[0].user_id, " User requesting : ", userId);
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
         const comments = await this.fetchComments(postId);
@@ -147,18 +149,16 @@ export class FetchPostInformationController extends BaseDatabaseController {
             shownIds = []
         }
         // const shownIds: number[] = req.cookies.shown_post_ids//.split(',').filter((i) => +i);
-        console.log(shownIds);
         if (!req.query.nr_of_posts){
             res.json({error: "No amount of posts have been specified"})
         }
         console.log("getRandomPosts called")
         const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
-        const postIds = await this.db.fetchRandomPosts(post_count, shownIds) 
-        console.log("postIds: "+ postIds)
+        const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
 
         const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
             // @ts-ignore
-            return await this.fetchPost(id, req.query.userId).then((val: Post) => {
+            return await this.fetchPost(id, req.userId).then((val: Post) => {
                 shownIds.push(id)
                 // console.log(val)
                 return val
@@ -238,8 +238,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const post_list = await Promise.all(posts.map(async (postObject) => {
             const post_id = postObject.post_id;
             const user_id = postObject.user_id;
-            const postToReturn = await this.fetchPost(post_id, user_id)
-            return postToReturn;
+            return await this.fetchPost(post_id, user_id);
         }))
         res.json({
             posts: post_list
@@ -260,8 +259,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const post_list = await Promise.all(posts.map(async (postObject) => {
             const post_id = postObject.post_id;
             const user_id = postObject.user_id;
-            const postToReturn = await this.fetchPost(post_id, user_id)
-            return postToReturn;
+            return await this.fetchPost(post_id, user_id);
         }))
         res.json({
             posts: post_list
@@ -285,8 +283,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             post_list = await Promise.all(posts.map(async (postObject) => {
                 const post_id = postObject.post_id;
                 const user_id = postObject.user_id;
-                const postToReturn = await this.fetchPost(post_id, user_id)
-                return postToReturn;
+                return await this.fetchPost(post_id, user_id);
             }))
         } else {
             const posts = await this.db.fetchPostsWithinRadiusWithLimit(lat, long, radius, limit)
@@ -299,6 +296,31 @@ export class FetchPostInformationController extends BaseDatabaseController {
         res.json({
             posts: post_list
         })
+    }
+
+    private async isPostLiked(req: express.Request, res: express.Response){
+        if (!req.query.post_id) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+            return;
+        }
+        // @ts-ignore
+        const user_id = req.user_id;
+        if (user_id !== -1) {
+            const post_id = parseInt(req.query.post_id.toString());
+            let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
+                .map((post) => {
+                    return post.post_id
+                })
+            return res.json({
+                liked: likedPostsOfUser.includes(post_id)
+            });
+        } else {
+        res.json({
+            liked: false
+        });
+    }
     }
 }
 
