@@ -133,7 +133,7 @@ export default function ProfilePage() {
               <Image
                 src={`/src/assets/${user.profilepicture}`}
                 alt="profile pic"
-                className="rounded-circle"
+                className="profile-circle rounded-circle"
               />
               <h3>{user.username}</h3>
               <h4>{level(user.totalexp)}</h4>
@@ -146,7 +146,19 @@ export default function ProfilePage() {
                 />
               </div>
               {authUser?.username === username && (
-                <Button className="edit-button " variant="success">
+                <Button
+                  className="edit-button"
+                  variant="success"
+                  onClick={() =>
+                    navigate("/profile/edit", {
+                      state: {
+                        profilepicture: user.profilepicture,
+                        username: user.username,
+                        bio: user.bio,
+                      },
+                    })
+                  }
+                >
                   Edit Profile
                 </Button>
               )}
