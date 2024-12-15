@@ -2,7 +2,7 @@ import { Row, Col, Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axios from "../../api/axios";
 import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
@@ -16,7 +16,6 @@ interface SinglePostProps {
 }
 
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
-  console.log("This is the posts that have been fetched", post);
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -26,6 +25,24 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+
+  // Fetch the "liked" status when the component mounts
+  useEffect(() => {
+    const fetchLikedStatus = async () => {
+      try {
+        const resp = await axiosPrivate.get("/db/fetch/post/liked", {
+          params: { post_id: post.idx },
+        });
+        console.log("What is returned", resp.data);
+        if (resp.status === 200 && resp.data) {
+          setIsLiked(resp.data.liked);
+        }
+      } catch (error) {
+        console.error("Error fetching liked status:", error);
+      }
+    };
+    fetchLikedStatus();
+  }, [post.idx, axiosPrivate]);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");
@@ -140,14 +157,16 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           </p>
 
           <div className="tags-section mb-2">
-            {post.tags[0] !== "None" ? (post.tags.map((tag: string, index: number) => (
-              <span
-                key={`${tag}${index}`}
-                className="badge rounded-pill bg-light text-muted me-1"
-              >
-                #{tag}
-              </span>
-            )) ) : null}
+            {post.tags[0] !== "None"
+              ? post.tags.map((tag: string, index: number) => (
+                  <span
+                    key={`${tag}${index}`}
+                    className="badge rounded-pill bg-light text-muted me-1"
+                  >
+                    #{tag}
+                  </span>
+                ))
+              : null}
           </div>
 
           {/* Comment Section */}
