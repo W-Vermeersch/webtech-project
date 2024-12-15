@@ -2,6 +2,7 @@ import * as express from "express";
 import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
 import {authenticateToken} from "../../user-authentification";
+import {Post} from "../../../interfaces";
 
 export class StoreUserInformationController extends BaseDatabaseController {
 
@@ -45,8 +46,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
             const userObject = users[0]
             const user_id = userObject.user_id
 
-            let likedPostsOfUser = await this.db.fetchLikedPostsOfUser(user_id)
-            likedPostsOfUser = likedPostsOfUser.map((post: any) => post.post_id)
+            let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
+                .map((post: Post) => {
+                return post.post_id
+            })
             if (!likedPostsOfUser.includes(post_id)) {
                 await this.db.storeLike(user_id, post_id)
                 res.status(200).send("Successfully liked post")

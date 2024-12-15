@@ -223,38 +223,38 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
     /* Returns an array of all the posts that a user has liked, given their user ID. */
 public async fetchLikedPostsOfUser(user_id: string): Promise<Post[]> {
-    return this.executePostQuery(` FROM likes_table l INNER JOIN post_table p ON l.post_id = p.post_id WHERE l.user_id = $1`, [user_id])
-    // const query = {
-    //     text: `
-    //         SELECT
-    //             p.post_id,
-    //             p.user_id,
-    //             p.image_url,
-    //             p.description,
-    //             p.tags,
-    //             ST_X(p.location::geometry) AS longitude,
-    //             ST_Y(p.location::geometry) AS latitude
-    //         FROM likes_table l
-    //         INNER JOIN post_table p ON l.post_id = p.post_id
-    //         WHERE l.user_id = $1
-    //     `,
-    //     values: [user_id],
-    // };
-    // return this.executeQuery(query).then((res) => {
-    //     return res.rows.map((row) => ({
-    //         post_id: row.post_id,
-    //         user_id: row.user_id,
-    //         image_url: row.image_url,
-    //         description: row.description,
-    //         tags: row.tags,
-    //         score: row.score,
-    //         rarity: row.rarity,
-    //         location: {
-    //             longitude: row.longitude,
-    //             latitude: row.latitude,
-    //         }
-    //     }));
-    // });
+    // return this.executePostQuery(` FROM likes_table l INNER JOIN post_table p ON l.post_id = p.post_id WHERE l.user_id = $1`, [user_id])
+    const query = {
+        text: `
+            SELECT
+                p.post_id,
+                p.user_id,
+                p.image_url,
+                p.description,
+                p.tags,
+                ST_X(p.location::geometry) AS longitude,
+                ST_Y(p.location::geometry) AS latitude
+            FROM likes_table l
+            INNER JOIN post_table p ON l.post_id = p.post_id
+            WHERE l.user_id = $1
+        `,
+        values: [user_id],
+    };
+    return this.executeQuery(query).then((res) => {
+        return res.rows.map((row) => ({
+            post_id: row.post_id,
+            user_id: row.user_id,
+            image_url: row.image_url,
+            description: row.description,
+            tags: row.tags,
+            score: row.score,
+            rarity: row.rarity,
+            location: {
+                longitude: row.longitude,
+                latitude: row.latitude,
+            }
+        }));
+    });
 
 
     }
