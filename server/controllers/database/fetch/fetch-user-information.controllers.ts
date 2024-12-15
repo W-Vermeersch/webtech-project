@@ -87,12 +87,16 @@ export class FetchUserInformationController extends BaseDatabaseController {
       });
     } else {
       const userObject = users[0];
-      const userComments = await this.db.fetchCommentsOfUser(
-        userObject.user_id
-      );
-      res.json({
-        user_comments: userComments,
-      });
+      if (userObject.user_id !== null) {
+        const userComments = await this.db.fetchCommentsOfUser(
+          userObject.user_id
+        );
+        res.json({
+          user_comments: userComments,
+        });
+      } else {
+        res.status(400).json({ error: "User ID is null" });
+      }
     }
   }
 
@@ -105,10 +109,14 @@ export class FetchUserInformationController extends BaseDatabaseController {
       });
     } else {
       const userObject = users[0];
-      const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
-      res.json({
-        posts: userPosts,
-      });
+      if (userObject.user_id !== null) {
+        const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+        res.json({
+          posts: userPosts,
+        });
+      } else {
+        res.status(400).json({ error: "User ID is null" });
+      }
     }
   }
 
@@ -121,12 +129,16 @@ export class FetchUserInformationController extends BaseDatabaseController {
       });
     } else {
       const userObject = users[0];
-      const likedPosts = await this.db.fetchLikedPostsOfUser(
-        userObject.user_id
-      );
-      res.json({
-        user_liked_posts: likedPosts,
-      });
+      if (userObject.user_id !== null) {
+        const likedPosts = await this.db.fetchLikedPostsOfUser(
+          userObject.user_id
+        );
+        res.json({
+          user_liked_posts: likedPosts,
+        });
+      } else {
+        res.status(400).json({ error: "User ID is null" });
+      }
     }
   }
 }

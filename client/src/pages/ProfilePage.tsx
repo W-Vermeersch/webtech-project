@@ -37,8 +37,8 @@ export default function ProfilePage() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
 
-  console.log("From the hoook", authUser?.username);
-  console.log("From the fetching profile", username);
+  //console.log("From the hoook", authUser?.username);
+  //console.log("From the fetching profile", username);
 
   // handle editing the profile if it is your own
 
@@ -61,7 +61,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchUser() {
-      console.log("fetching user");
+      //console.log("fetching user");
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
           params: { username },
@@ -85,16 +85,18 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchPosts() {
-      console.log("fetching posts");
+      //console.log("fetching posts");
       const resp = await axiosPrivate.get(FETCH_USER_POSTS, {
         params: { username },
       });
       setPosts(resp.data.posts);
+      console.log("posts :", resp.data.posts);
+      console.log("posts :", posts);
     }
 
     if (user) {
       fetchPosts();
-      console.log("posts :", posts);
+      //console.log("posts :", posts);
     }
   }, [user]);
 
@@ -142,7 +144,7 @@ export default function ProfilePage() {
                   variant="success"
                   now={currentLevelExp(user.totalexp)}
                   max={maxExp}
-                  label={"current progress"}
+                  label={currentLevelExp(user.totalexp)}
                 />
               </div>
               {authUser?.username === username && (

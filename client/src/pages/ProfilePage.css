@@ -1,3 +1,4 @@
+
 #userInfo {
   background-color: rgb(34, 37, 41);
 }
@@ -63,4 +64,13 @@
   margin-top: 1rem;
   width: 100%;
   color: #28a745;
+}
+
+.progress {
+  background-color: gray !important;
+}
+
+.progress-bar {
+  color: rgb(255, 255, 255) !important;
+  overflow:initial !important;
 }
