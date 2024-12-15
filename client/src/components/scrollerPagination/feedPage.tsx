@@ -41,6 +41,7 @@ const posts: Post[] = [
     commentsection: mockcomments,
     location: location,
     description: "kfjlksjfsdlkf",
+    user_id: 1, 
   },
   {
     idx: 2,
@@ -51,6 +52,7 @@ const posts: Post[] = [
     commentsection: mockcomments,
     location: location,
     description: "fsdjfklds",
+    user_id: 2,
   },
   {
     idx: 3,
@@ -61,6 +63,7 @@ const posts: Post[] = [
     commentsection: mockcomments,
     location: location,
     description: "fadsf",
+    user_id: 3,
   },
   {
     idx: 4,
@@ -71,6 +74,7 @@ const posts: Post[] = [
     commentsection: mockcomments,
     location: location,
     description: "dddd",
+    user_id: 4,
   },
   {
     idx: 5,
@@ -81,6 +85,7 @@ const posts: Post[] = [
     commentsection: mockcomments,
     location: location,
     description: "qqqq",
+    user_id: 5,
   },
 ];
 
