@@ -109,7 +109,7 @@ export default function ProfilePage() {
       )}
 
       <Container
-        className="text-white rounded overflow-hidden border border-light shadow"
+        className="profile-container text-white rounded overflow-hidden border border-light shadow"
         onClick={handleToggleMenu}
       >
         <Row>
