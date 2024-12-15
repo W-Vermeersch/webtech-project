@@ -1,9 +1,9 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { Post, PostComment } from "../posts/PostInterface";
+import { Post, PostComment } from "../../posts/PostInterface";
 import React from "react";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { ADD_COMMENT } from "../../api/urls";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { ADD_COMMENT } from "../../../api/urls";
 
 interface CommentModalProps {
   show: boolean;

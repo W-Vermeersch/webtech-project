@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import {Like, Post} from "../Global/post";
 import {User} from "./Modules/User";
 require('dotenv').config();
+import { Comment, UserDecoration} from "./interfaces"
 
 interface QueryWithoutValues {
     text: string;
@@ -188,8 +189,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     post.tags,
                     post.score,
                     post.rarity,
-                    post.latitude,
                     post.longitude,
+                    post.latitude,
                 ],
             };
         } else {
@@ -347,31 +348,29 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 SELECT 
                     post_id, 
                     user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
                 FROM post_table 
                 WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)
             `,
             values: [longitude, latitude, radius],
         };
-        return this.executeQuery(query).then((res) => {
-            return res.rows.map((row: Post) => ({
-                post_id: row.post_id,
-                user_id: row.user_id,
-                image_url: row.image_url,
-                description: row.description,
-                tags: row.tags,
-                score: row.score,
-                rarity: row.rarity,
-                location: {
-                    longitude: row.longitude,
-                    latitude: row.latitude,
-                }
-            }));
-        });
+        const res = await this.executeQuery(query)
+        return res.rows
+    }
+
+    public async fetchPostsWithinRadiusWithLimit(latitude: number, longitude: number, radius: number, limit: number): Promise<any[]> {
+        const query = {
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id, 
+                FROM post_table 
+                WHERE ST_DWithin(location, ST_SetSRID(ST_MakePoint($1, $2), 4326), $3)
+                LIMIT $4
+            `,
+            values: [longitude, latitude, radius, limit],
+        };
+        const res = await this.executeQuery(query)
+        return res.rows
     }
 
     /* Fetch nearest posts */
@@ -381,11 +380,6 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
                 SELECT 
                     post_id, 
                     user_id, 
-                    image_url, 
-                    description, 
-                    tags, 
-                    ST_X(location::geometry) AS longitude, 
-                    ST_Y(location::geometry) AS latitude
                 FROM post_table 
                 ORDER BY ST_Distance(location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) 
                 LIMIT $3
@@ -393,19 +387,7 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
             values: [longitude, latitude, limit],
         };
         const res = await this.executeQuery(query);
-
-        return res.rows.map(row => ({
-            post_id: row.post_id,
-            user_id: row.user_id,
-            image_url: row.image_url,
-            description: row.description,
-            tags: row.tags,
-            location: {
-                longitude: row.longitude,
-                latitude: row.latitude,
-            }
-
-        }));
+        return res.rows;
     }
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
@@ -425,6 +407,24 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         console.log("res: "+ res.rows)
         return res.rows.map(post => post.post_id);
     }
+
+    public async fetchPostsByTag(tag: string): Promise<{ post_id: number, user_id: number }[]> {
+        const query = {
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id
+                FROM post_table 
+                WHERE $1 = ANY(tags);
+            `,
+            values: [tag],
+        };
+    
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+    
+    
 
     /* Deletes a post from the DB given its ID. All comments that belong to this post will automatically be deleted as well. */
     public async deletePost(post_id: number): Promise<void> {
@@ -498,13 +498,22 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         return await this.executeQuery(query);
     }
 
-    public async fetchProfileDecoration(user_id: number): Promise<any> {
+    public async fetchProfileDecoration(user_id: number): Promise<UserDecoration> {
         const query = {
             text: 'SELECT * FROM user_profile_decoration_table WHERE user_id = $1',
             values: [user_id],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return this.executeQuery(query).then( value => {
+            const val = value.rows[0];
+            return {
+                userId: val.user_id,
+                name: val.display_name,
+                bio: val.bio,
+                profilePicture: val.profile_picture_image_url,
+                xp: val.total_exp,
+                badges: val.badges,
+            }
+        });
     }
 
     public async deleteUserDecoration(user_id: number) {
