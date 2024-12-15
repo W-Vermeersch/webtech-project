@@ -13,7 +13,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #343a40;
+  background: rgb(34, 37, 41);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -32,7 +32,7 @@ body {
 }
 
 .footer-nav-item:hover {
-  color: #28a745;
+  color: #7b827b;
 }
 
 .create-post-icon {
