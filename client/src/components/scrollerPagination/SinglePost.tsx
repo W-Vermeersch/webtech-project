@@ -84,7 +84,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
         <Row className="align-items-center">
           <Col xs="auto">
             <NavLink to={`/profile/${post.user}`}>
-              <img className="profilepic" src={post.profile_picture}></img>
+              <img className="profilepic" src={`/src/assets/${post.profile_picture}`}></img>
             </NavLink>
           </Col>
           <Col>
