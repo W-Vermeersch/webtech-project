@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Form, Button, Image } from "react-bootstrap";
+import { Container, Form, Button, Image, Row } from "react-bootstrap";
 import FileUploader from "../../components/posts/FileUploader";
 import "./EditProfilePage.css";
 
@@ -43,6 +43,10 @@ const EditProfilePage = () => {
       className="p-4 text-white bg-dark rounded shadow-lg"
       style={{ maxWidth: "600px" }}
     >
+      <div className="title-container text-center mb-4">
+        <h2 className="title mb-2">Edit Your Profile!</h2>
+        <p className="username">@{username}</p>
+      </div>
       <div className="d-flex justify-content-between mb-4">
         <Button
           variant="link"
@@ -67,17 +71,6 @@ const EditProfilePage = () => {
         />
         <FileUploader setFieldValue={handleFileChange} />
       </div>
-
-      {/* Edit Name */}
-      <Form.Group controlId="username" className="mb-3">
-        <Form.Label>Name</Form.Label>
-        <Form.Control
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="bg-dark text-white"
-        />
-      </Form.Group>
 
       {/* Edit Bio */}
       <Form.Group controlId="bio" className="mb-3">
