@@ -1,5 +1,6 @@
 export interface Post {
   user: string;
+  username: string;
   user_id: number;
   image_url: string; // url to the storage api
   idx: number; // index of Post

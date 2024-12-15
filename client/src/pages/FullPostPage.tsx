@@ -30,6 +30,7 @@ export default function FullPost() {
       try {
         if (state && state.post) {
           setPost(state.post);
+          console.log("state post: ", state.post);
         } else {
           const resp = await axios.get(FETCH_POST, { params: { post_id } });
           if (resp.data.redirect) {
@@ -48,10 +49,11 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
-    async function fetchUser(user_id: number) {
+    async function fetchUser(username: string) {
       try {
+
         const resp = await axios.get(FETCH_USER_PROFILE, {
-          params: { user_id },
+          params: { username },
         });
         console.log("user: ", resp.data);
         if (resp.data.redirect) {
@@ -64,8 +66,8 @@ export default function FullPost() {
       }
     }
 
-    if (post && post.user_id) {
-      fetchUser(post.user_id);
+    if (post && (post.user || post.username)) {
+      fetchUser(post.user ? post.user : post.username);
     }
   }, [post, navigate]);
 
