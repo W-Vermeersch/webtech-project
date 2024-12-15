@@ -1,0 +1,29 @@
+/* default for pc */
+.auth-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  min-width: 250px;
+  z-index: 1050;
+}
+
+/* adjust for mobile */
+@media (max-width: 768px) {
+  .auth-toast {
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 90%;
+  }
+}
+
+.auth-toast .toast-header {
+  background-color: #333;
+  color: #fff;
+  border-bottom: none;
+}
+
+.auth-toast .toast-body {
+  background-color: #fff;
+  color: #333;
+}

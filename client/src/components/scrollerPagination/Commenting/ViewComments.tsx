@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { Post, PostComment } from "../posts/PostInterface";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { ADD_COMMENT } from "../../api/urls";
-import useAuthUser from "../../hooks/useAuthUser";
+import { Post, PostComment } from "../../posts/PostInterface";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { ADD_COMMENT } from "../../../api/urls";
+import useAuthUser from "../../../hooks/useAuthUser";
 import "./ViewComments.css";
 
 interface ViewCommentsModalProps {

@@ -1,4 +1,4 @@
-import { Row, Col, Container, Button } from "react-bootstrap";
+import { Row, Col, Container, Button, Toast } from "react-bootstrap";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
 import { Post } from "../posts/PostInterface";
@@ -6,14 +6,16 @@ import { useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axios from "../../api/axios";
 import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
-import CommentModal from "./PlaceComment";
-import ViewCommentsModal from "./ViewComments";
+import CommentModal from "./Commenting/PlaceComment";
+import ViewCommentsModal from "./Commenting/ViewComments";
+import withAuthCheck from "./withAuthCheck";
 
 interface SinglePostProps {
   post: Post;
+  authCheck: (action: () => void) => void;
 }
 
-const SinglePost = ({ post }: SinglePostProps) => {
+const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");
@@ -115,7 +118,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
             src={isLiked ? "src/assets/liked.svg" : "src/assets/like.svg"}
             alt="Like"
             className="action-icon"
-            onClick={isLiked ? handleUnliking : handleLiking}
+            onClick={() => authCheck(isLiked ? handleUnliking : handleLiking)}
             style={{ cursor: "pointer", width: "24px", marginRight: "10px" }}
           />
           <span>{likes}</span>
@@ -124,7 +127,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
             src="src/assets/comment.svg"
             alt="Comment"
             className="action-icon"
-            onClick={handleOpenCommentModal}
+            onClick={() => authCheck(handleOpenCommentModal)}
             style={{ cursor: "pointer", width: "30px", marginLeft: "20px" }}
           />
         </div>
@@ -186,4 +189,4 @@ const SinglePost = ({ post }: SinglePostProps) => {
   );
 };
 
-export default SinglePost;
+export default withAuthCheck(SinglePost);
