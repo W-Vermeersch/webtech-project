@@ -43,6 +43,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostLikesAmount(req, response);
         });
 
+        this.router.get("/fetch/tag/posts", (req: express.Request, response: express.Response) => {
+            return this.getTagPosts(req, response);
+        });
+
     }
 
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
@@ -182,6 +186,26 @@ export class FetchPostInformationController extends BaseDatabaseController {
         res.json({
             nr_of_likes: user_ids.length
             });  
+        }
+
+
+        private async getTagPosts(req: express.Request, res: express.Response) {
+            if (!req.query.tag) {
+                return res.json({
+                    redirect: '/pageNotFound'
+                });
+            }
+            const tag = req.query.tag;
+            const posts = await this.db.fetchPostsByTag(tag.toString())
+            const post_list = await Promise.all(posts.map(async (postObject) => {
+                const post_id = postObject.post_id;
+                const user_id = postObject.user_id;
+                const postToReturn = await this.fetchPost(post_id, user_id)
+                return postToReturn;
+            }))
+            res.json({
+                posts: post_list
+            })
         }
 }
 

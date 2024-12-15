@@ -426,6 +426,24 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         return res.rows.map(post => post.post_id);
     }
 
+    public async fetchPostsByTag(tag: string): Promise<{ post_id: number, user_id: number }[]> {
+        const query = {
+            text: `
+                SELECT 
+                    post_id, 
+                    user_id
+                FROM post_table 
+                WHERE $1 = ANY(tags);
+            `,
+            values: [tag],
+        };
+    
+        const res = await this.executeQuery(query);
+        return res.rows; // Returns an array of objects with post_id and user_id
+    }
+    
+    
+
     /* Deletes a post from the DB given its ID. All comments that belong to this post will automatically be deleted as well. */
     public async deletePost(post_id: number): Promise<void> {
         const query = {
