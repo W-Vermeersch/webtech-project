@@ -34,7 +34,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
   return (
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} className="dropzone-input" />
-        <p className="dropzone-title">Drag and drop some files here, or click to select files</p>
         {previewUrl ? (
             <>
               <div className="file-uploader-preview-container">
