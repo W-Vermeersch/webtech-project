@@ -12,7 +12,7 @@ const useSignOut = () => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   return signOut;
 };
