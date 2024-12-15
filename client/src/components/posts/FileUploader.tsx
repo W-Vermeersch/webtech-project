@@ -48,7 +48,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
       ) : (
         <div className="file-uploader-box">
           <img
-            src="src/assets/upload-file.svg"
+            src="/src/assets/upload-file.svg"
             width={96}
             height={77}
             alt="file upload"

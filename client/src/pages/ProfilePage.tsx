@@ -120,7 +120,7 @@ export default function ProfilePage() {
           >
             <Stack className="align-items-center" gap={1}>
               <Image
-                src={`src/assets/${user.profilepicture}`}
+                src={`/src/assets/${user.profilepicture}`}
                 alt="profile pic"
                 className="rounded-circle"
               />
@@ -150,7 +150,7 @@ export default function ProfilePage() {
             >
               <Tab eventKey="gallery" title="Gallery">
                 <Container
-                  className="d-flex flex-wrap"
+                  className="d-flex flex-wrap justify-content-center"
                   style={{ maxHeight: "450px", overflowY: "auto" }}
                 >
                   <PostGallery posts={posts || []} />

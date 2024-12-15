@@ -115,7 +115,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
         {/* Like and comment */}
         <div className="post-actions">
           <img
-            src={isLiked ? "src/assets/liked.svg" : "src/assets/like.svg"}
+            src={isLiked ? "/src/assets/liked.svg" : "/src/assets/like.svg"}
             alt="Like"
             className="action-icon"
             onClick={() => authCheck(isLiked ? handleUnliking : handleLiking)}
@@ -124,7 +124,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           <span>{likes}</span>
 
           <img
-            src="src/assets/comment.svg"
+            src="/src/assets/comment.svg"
             alt="Comment"
             className="action-icon"
             onClick={() => authCheck(handleOpenCommentModal)}
