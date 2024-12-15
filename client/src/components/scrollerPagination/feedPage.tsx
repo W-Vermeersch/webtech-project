@@ -58,14 +58,25 @@ const FeedPage = () => {
           return (
             <Col key={post.idx} className="mb-4">
               <div ref={ref} key={post.idx}>
-                <SinglePost post={post} />
+                <SinglePost
+                  post={post}
+                  authCheck={function (action: () => void): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               </div>
             </Col>
           );
         }
         return (
           <Col key={post.idx} className="mb-4">
-            <SinglePost key={post.idx} post={post} />
+            <SinglePost
+              key={post.idx}
+              post={post}
+              authCheck={function (action: () => void): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           </Col>
         );
       })}

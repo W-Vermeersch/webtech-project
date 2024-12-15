@@ -4,6 +4,7 @@ import Database from "../../../database";
 import {authenticateToken} from "../../user-authentification";
 import {ErrorInLogInForm, LogInForm} from "../../../../Global/log-in-forms";
 import {CommentForms, ErrorInCommentInForm} from "../../../../Global/comment-forms";
+import { Comment } from "../../../interfaces"
 
 
 export class StoreCommentInformationController extends BaseDatabaseController {
@@ -27,11 +28,14 @@ export class StoreCommentInformationController extends BaseDatabaseController {
         inputs.post_id = req.body.post_id
      
         const errors: ErrorInCommentInForm = new ErrorInCommentInForm();
-        const user_id = inputs.user_id;
-        const post_id = inputs.post_id;
-        const description = inputs.description;
+        const comment: Comment = {
+            comment_id: 0,
+            user_id: inputs.user_id,
+            post_id: inputs.post_id,
+            description: inputs.description
+        }
 
-        if (description == null || description == "") {
+        if (!comment.description || comment.description == "") {
             errors.description = "Please enter a description";
             inputs.description = "";
         }
@@ -42,7 +46,7 @@ export class StoreCommentInformationController extends BaseDatabaseController {
                 inputs: inputs.toObject(),
             });
         } else {
-            await this.db.storeComment(user_id, post_id, description);
+            await this.db.storeComment(comment);
             res.status(200).send("succesfully stored the comment")
         }
     }

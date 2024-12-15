@@ -6,6 +6,7 @@ import * as jwt from "jsonwebtoken";
 import { ref } from "yup";
 import {hashPassword, validPassword} from "./password.encryption";
 import {ErrorInSignInForm, SignInForm} from "../../../Global/sign-in-form";
+import {User} from "../../interfaces";
 require("dotenv").config();
 
 interface JwtPayloadCustom {
@@ -45,7 +46,7 @@ export class UserAuthenticationController extends BaseController {
         });
 
         this.router.post("/sign-in", (req: express.Request, response: express.Response) => {
-            return this.addPost(req, response);
+            return this.signIn(req, response);
         });
     }
 
@@ -207,7 +208,7 @@ export class UserAuthenticationController extends BaseController {
         }
     }
 
-    async addPost(req: express.Request, res: express.Response): Promise<void> {
+    async signIn(req: express.Request, res: express.Response): Promise<void> {
         const inputs: SignInForm = new SignInForm();
         inputs.fill(req.body);
         const errors: ErrorInSignInForm = new ErrorInSignInForm();
@@ -251,10 +252,15 @@ export class UserAuthenticationController extends BaseController {
                 inputs: inputs.toObject()
             });
         } else {
-            const hashedPassword = hashPassword(inputs.password, inputs.email);
-            await this.db.storeUser(inputs.username, inputs.email, hashedPassword);
-            const user_id = await this.db.getUserID(inputs.username);
-            await this.db.storeProfileDecoration(user_id, inputs.username, "");
+            const user: User = {
+                user_id: null,
+                username: inputs.username,
+                email: inputs.email,
+                password: hashPassword(inputs.password, inputs.email)
+            }
+            await this.db.storeUser(user);
+            user.user_id = await this.db.getUserID(inputs.username);
+            await this.db.storeProfileDecoration(user, "");
             res.json({ redirect: '/user/log-in' });
         }
     }

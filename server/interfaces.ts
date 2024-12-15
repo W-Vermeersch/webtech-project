@@ -14,7 +14,7 @@ export interface Post {
 }
 
 export interface User {
-    id: number | null,
+    user_id: number | null,
     username: string,
     email: string,
     password: string
@@ -29,4 +29,9 @@ export interface UserDecoration {
     badges: String[],
 }
 
-export interface Comment {}
+export interface Comment {
+    comment_id: number,
+    user_id: number,
+    post_id: number,
+    description: string
+}
