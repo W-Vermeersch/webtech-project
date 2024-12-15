@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import {Like, Post} from "../Global/post";
 import {User} from "./Modules/User";
 require('dotenv').config();
+import { Comment, UserDecoration} from "./interfaces"
 
 interface QueryWithoutValues {
     text: string;
@@ -516,13 +517,22 @@ public async fetchLikedPostsOfUser(user_id: string): Promise<any[]> {
         return await this.executeQuery(query);
     }
 
-    public async fetchProfileDecoration(user_id: number): Promise<any> {
+    public async fetchProfileDecoration(user_id: number): Promise<UserDecoration> {
         const query = {
             text: 'SELECT * FROM user_profile_decoration_table WHERE user_id = $1',
             values: [user_id],
         };
-        const res = await this.executeQuery(query);
-        return res.rows;
+        return this.executeQuery(query).then( value => {
+            const val = value.rows[0];
+            return {
+                userId: val.user_id,
+                name: val.display_name,
+                bio: val.bio,
+                profilePicture: val.profile_picture_image_url,
+                xp: val.total_exp,
+                badges: val.badges,
+            }
+        });
     }
 
     public async deleteUserDecoration(user_id: number) {

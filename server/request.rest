@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 // fetch post 1
-GET http://localhost:5000/db/fetch/post/information?post_id=1
+GET http://localhost:5000/db/fetch/post/information?post_id=2
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbW9vb29vIiwidXNlcl9pZCI6MjcsImlhdCI6MTczNDA5MzcxOCwiZXhwIjoxNzM0MDk0NjE4fQ.7O5UKALQRlgnoD_oXhATVIl3IWtE6BMrZsBXRB8rUgU
 

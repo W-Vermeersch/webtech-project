@@ -3,6 +3,12 @@ import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
 import {ifAuthenticatedToken} from "../../user-authentification";
 
+interface comment {
+    user: string,
+    profile_picture: String[],
+    text: string,
+}
+
 interface Post {
     idx: number,
     user: String,
@@ -18,6 +24,7 @@ interface Post {
     },
     likes: number,
     liked: boolean,
+    comments: comment[],
 }
 
 export class FetchPostInformationController extends BaseDatabaseController {
@@ -32,7 +39,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostInformation(req, response);
         });
 
-        this.router.get("/fetch/post/random-posts", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/random-posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getRandomPosts(req, response);
         });
 
@@ -44,7 +51,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostLikesAmount(req, response);
         });
 
-        this.router.get("/fetch/tag/posts", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/tag/posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getTagPosts(req, response);
         });
 
@@ -74,11 +81,29 @@ export class FetchPostInformationController extends BaseDatabaseController {
         // @ts-ignore
         this.fetchPost(post_id, req.userId).then((val) => {
             return res.json(val)
-        }).catch(() => {
+        }).catch((error) => {
+            console.log(error)
             return res.json({
                 redirect: '/pageNotFound'
             });
         })
+    }
+
+    private async fetchComments(postId: number): Promise<comment[]> {
+        return this.db.fetchCommentsOfPost(postId)
+            .then(async val => {
+                return await Promise.all(val.map(async (val) => {
+                    const postOwnerDecoration = await this.db.fetchProfileDecoration(val.user_id);
+                    return {
+                        id: val.comment_id,
+                        user: postOwnerDecoration.name,
+                        profile_picture: postOwnerDecoration.profilePicture,
+                        text: val.description,
+                    }
+                }))
+            }).catch(() => {
+                return []
+            })
     }
 
     private async fetchPost(postId: number, userId: number): Promise<Post> {
@@ -91,10 +116,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
         console.log("Post owner: ", postOwner);
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
+        const comments = await this.fetchComments(postId);
         return {
             idx: postId,
             user: postOwner[0].username,
-            profile_picture: postOwnerDecoration[0].profile_picture_image_url,
+            profile_picture: postOwnerDecoration.profilePicture,
             image_url: postObject.image_url,
             description: postObject.description,
             tags: postObject.tags,
@@ -102,7 +128,8 @@ export class FetchPostInformationController extends BaseDatabaseController {
             rarity: postObject.rarity,
             location: postObject.location,
             likes: likes.likes,
-            liked: likes.isLiked
+            liked: likes.isLiked,
+            comments: comments
         }
     }
 
@@ -165,7 +192,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
                     return {
                     user_id: commentObject.user_id,
                     user: commentOwner[0].username,
-                    profile_picture: commentOwnerDecoration[0].profile_picture_image_url,
+                    profile_picture: commentOwnerDecoration.profilePicture,
                     post_id: commentObject.post_id,
                     description: commentObject.description
                 };
@@ -203,8 +230,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             const post_list = await Promise.all(posts.map(async (postObject) => {
                 const post_id = postObject.post_id;
                 const user_id = postObject.user_id;
-                const postToReturn = await this.fetchPost(post_id, user_id)
-                return postToReturn;
+                return await this.fetchPost(post_id, user_id);
             }))
             res.json({
                 posts: post_list
