@@ -6,7 +6,7 @@
 #userPosts {
   background-color: rgb(72, 78, 84);
 }
-.profile-container{
+.profile-container {
   max-height: 80vh;
 }
 
@@ -53,7 +53,7 @@
   background-color: #942424;
 }
 
-.rounded-circle {
+.profile-circle {
   width: 150px;
   height: 150px;
   object-fit: cover;

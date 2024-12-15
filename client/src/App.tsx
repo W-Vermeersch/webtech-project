@@ -11,6 +11,8 @@ import ResponsiveNavBar from "./components/navBar/ResponsiveNavBar.tsx";
 import HomePage from "./pages/Homepage.tsx";
 import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import EditProfilePage from "./pages/EditingProfile/EditProfilePage.tsx";
+
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 
@@ -26,12 +28,13 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/map" element={<Map />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
-          
+
           <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />
           </Route>
           <Route element={<RequireAuth />}>
             <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/profile/edit" element={<EditProfilePage />} />
           </Route>
           <Route element={<RequireAuth />}>
             <Route path="/post/:post_id" element={<FullPost />} />
