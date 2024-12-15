@@ -153,7 +153,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
               </div>
             ))}
 
-            {post.commentsection && post.commentsection.length > 2 && (
+            {post.commentsection && (
               <div
                 className="load-more-comments"
                 style={{ cursor: "pointer" }}
