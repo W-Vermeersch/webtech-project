@@ -57,11 +57,15 @@ const FeedPage = () => {
             // Attach intersection observer to the last post
             return (
               <div ref={ref} key={post.idx}>
-                <SinglePost post={post} />
+                <SinglePost post={post} authCheck={function (action: () => void): void {
+                  throw new Error("Function not implemented.");
+                } } />
               </div>
             );
           }
-          return <SinglePost key={post.idx} post={post} />;
+          return <SinglePost key={post.idx} post={post} authCheck={function (action: () => void): void {
+            throw new Error("Function not implemented.");
+          } } />;
         })}
 
         {/* Loading Spinner */}

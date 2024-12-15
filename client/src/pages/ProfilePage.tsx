@@ -3,7 +3,7 @@ import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "../api/axios";
-import { maxExp, level, currentLevelExp} from "./../api/xp-system";
+import { maxExp, level, currentLevelExp } from "./../api/xp-system";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -22,6 +22,7 @@ import { FaEllipsisV } from "react-icons/fa";
 import useSignOut from "../hooks/useSignOut";
 import useAuthUser from "../hooks/useAuthUser";
 import { LOG_IN, FETCH_USER_POSTS } from "../api/urls";
+import { Button } from "react-bootstrap";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -36,8 +37,17 @@ export default function ProfilePage() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
 
+  console.log("From the hoook", authUser?.username);
+  console.log("From the fetching profile", username);
+
+  // handle editing the profile if it is your own
+
   const handleToggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Toggle menu visibility
+  };
+
+  const ToglleLogoutOff = () => {
+    setIsMenuVisible(false);
   };
 
   async function handleLogOut() {
@@ -110,7 +120,7 @@ export default function ProfilePage() {
 
       <Container
         className="text-white rounded overflow-hidden border border-light shadow"
-        onClick={handleToggleMenu}
+        onClick={ToglleLogoutOff}
       >
         <Row>
           <Col
@@ -135,6 +145,11 @@ export default function ProfilePage() {
                   label={"current progress"}
                 />
               </div>
+              {authUser?.username === username && (
+                <Button className="edit-button " variant="success">
+                  Edit Profile
+                </Button>
+              )}
               <Container className="p-3 bio-container">
                 <p className="text-center">{user.bio}</p>
               </Container>

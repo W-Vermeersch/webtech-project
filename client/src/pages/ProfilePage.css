@@ -32,7 +32,6 @@
 .popup-menu {
   position: absolute;
   right: 8px;
-  top: 40px;
   background-color: #a02828;
   padding: 10px;
   border-radius: 5px;
@@ -48,4 +47,17 @@
 
 .logout-button:hover {
   background-color: #942424;
+}
+
+.rounded-circle {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.edit-button {
+  margin-top: 1rem;
+  width: 100%;
+  color: #28a745;
 }
