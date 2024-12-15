@@ -24,7 +24,7 @@ export async function getCityCountry(latitude: number, longitude: number): Promi
 
     const { state, country } = results[0].address_components.reduce(
       (acc: { state: string; country: string }, component: AddressComponent) => {
-        if (component.types.includes("administrative_area_level_1")) {
+        if (component.types.includes("locality")) {
           acc.state = component.long_name;
         } else if (component.types.includes("country")) {
           acc.country = component.long_name;
