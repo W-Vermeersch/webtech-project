@@ -21,7 +21,6 @@ const withAuthCheck = <P extends object>(
     return (
       <>
         <WrappedComponent {...props} authCheck={authCheck} />
-        {/* Toast Notification */}
         <Toast
           onClose={() => setShowToast(false)}
           show={showToast}
