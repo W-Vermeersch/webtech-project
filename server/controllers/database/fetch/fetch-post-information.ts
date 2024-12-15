@@ -4,6 +4,7 @@ import Database from "../../../database";
 import {ifAuthenticatedToken} from "../../user-authentification";
 
 interface Post {
+    idx: number,
     user: String,
     profile_picture: String[],
     image_url: String[],
@@ -31,7 +32,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostInformation(req, response);
         });
 
-        this.router.get("/fetch/post/random-posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/random-posts", (req: express.Request, response: express.Response) => {
             return this.getRandomPosts(req, response);
         });
 
@@ -87,9 +88,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         const postObject = posts[0]
         const postOwner = await this.db.fetchUserUsingID(postObject.user_id)
+        console.log("Post owner: ", postOwner);
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
         return {
+            idx: postId,
             user: postOwner[0].username,
             profile_picture: postOwnerDecoration[0].profile_picture_image_url,
             image_url: postObject.image_url,
@@ -114,13 +117,13 @@ export class FetchPostInformationController extends BaseDatabaseController {
             res.json({error: "No amount of posts have been specified"})
         }
         console.log("getRandomPosts called")
-        const post_count = parseInt(req.query.nr_of_posts.toString());
+        const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
         const postIds = await this.db.fetchRandomPosts(post_count, shownIds) 
         console.log("postIds: "+ postIds)
 
         const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
             // @ts-ignore
-            return await this.fetchPost(id, req.userId).then((val: Post) => {
+            return await this.fetchPost(id, req.query.userId).then((val: Post) => {
                 shownIds.push(id)
                 // console.log(val)
                 return val

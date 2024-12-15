@@ -6,23 +6,23 @@ import { useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axios from "../../api/axios";
 import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
-import CommentModal from "./Comment";
+import CommentModal from "./PlaceComment";
+import ViewCommentsModal from "./ViewComments";
 
 interface SinglePostProps {
   post: Post;
 }
 
 const SinglePost = ({ post }: SinglePostProps) => {
+  console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const handleViewAllComments = () => {
-    navigate("/log-in");
-  };
 
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
+  const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");
@@ -36,23 +36,24 @@ const SinglePost = ({ post }: SinglePostProps) => {
   };
 
   const handleUnliking = async () => {
-    const post_id = post.idx;
-    console.log("handleunliking has been called");
-    const resp = await axiosPrivate.get(DELETE_LIKE, {
-      params: { post_id },
-    });
-    if (!(resp.status === 404)) {
-      setLikes((prev) => prev - 1);
-      setIsLiked(!isLiked);
-    } else {
-      console.log("Error post has not been liked yet");
-    }
-  };
+    try {
+      const post_id = post.idx;
+      console.log("handleunliking has been called");
 
-  const handleLike = () => {
-    if (isLiked) {
-      handleUnliking;
-    } else handleLiking;
+      // Use DELETE method with params
+      const resp = await axiosPrivate.delete(DELETE_LIKE, {
+        params: { post_id },
+      });
+
+      if (resp.status === 200) {
+        setLikes((prev) => prev - 1);
+        setIsLiked(false);
+      } else {
+        console.error("Error unliking post");
+      }
+    } catch (err) {
+      console.error("Error during unliking:", err);
+    }
   };
 
   const handleOpenCommentModal = () => {
@@ -63,9 +64,12 @@ const SinglePost = ({ post }: SinglePostProps) => {
     setShowCommentModal(false);
   };
 
-  const handleComment = () => {
-    // Handle comment logic here
-    console.log("Comment button clicked");
+  const handleViewAllComments = () => {
+    setShowViewCommentsModal(true);
+  };
+
+  const handleCloseViewCommentsModal = () => {
+    setShowViewCommentsModal(false);
   };
 
   // For each post, display the first two comments,
@@ -96,7 +100,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
 
       <div className="post-content">
         <div className="post-image-wrapper">
-          <NavLink to={`/post/${post.idx}`}>
+          <NavLink to={`/post/${post.idx}`} state={{ post }}>
             <img
               src={post.image_url}
               alt="Post content"
@@ -150,16 +154,14 @@ const SinglePost = ({ post }: SinglePostProps) => {
               </div>
             ))}
 
-            {post.commentsection && post.commentsection.length > 2 && (
-              <NavLink to={`/post/${post.idx}`}>
-                <div
-                  className="load-more-comments muted"
-                  style={{ cursor: "pointer" }}
-                  onClick={handleViewAllComments}
-                >
-                  View all comments
-                </div>
-              </NavLink>
+            {post.commentsection && (
+              <div
+                className="load-more-comments"
+                style={{ cursor: "pointer" }}
+                onClick={handleViewAllComments}
+              >
+                View all comments
+              </div>
             )}
           </div>
         </div>
@@ -170,6 +172,13 @@ const SinglePost = ({ post }: SinglePostProps) => {
         <CommentModal
           show={showCommentModal}
           onHide={handleCloseCommentModal}
+          post={post}
+        />
+      )}
+      {showViewCommentsModal && (
+        <ViewCommentsModal
+          show={showViewCommentsModal}
+          onHide={handleCloseViewCommentsModal}
           post={post}
         />
       )}

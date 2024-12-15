@@ -26,13 +26,16 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/map" element={<Map />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
+          
           <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />
           </Route>
           <Route element={<RequireAuth />}>
             <Route path="/profile/:username" element={<ProfilePage />} />
           </Route>
-          <Route path="/post/:post_id" element={<FullPost />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/post/:post_id" element={<FullPost />} />
+          </Route>
         </Route>
 
         <Route path="/user">

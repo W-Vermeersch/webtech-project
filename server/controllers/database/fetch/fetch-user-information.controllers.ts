@@ -43,8 +43,21 @@ export class FetchUserInformationController extends BaseDatabaseController {
     req: express.Request,
     res: express.Response
   ) {
-    const username = req.query.username ? req.query.username : " ";
-        const users = await this.db.fetchUserUsingUsername(username.toString())
+    const username = req.query.username ? req.query.username : "";
+    const user_id = req.query.user_id ? req.query.user_id : "";
+
+    let users;
+    console.log("username: ", username);
+    console.log("user_id: ", user_id);
+
+    if (username) {
+      users = await this.db.fetchUserUsingUsername(username.toString());
+    } else if (user_id) {
+      users = await this.db.fetchUserUsingID(Number(user_id));
+    } else {
+      return res.status(400).json({ error: "Username or user ID must be provided" });
+    }
+    console.log("users: ", users);
         if (users.length === 0) {
             res.json({
                 redirect: '/pageNotFound'
@@ -94,8 +107,9 @@ export class FetchUserInformationController extends BaseDatabaseController {
     } else {
       const userObject = users[0];
       const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+      console.log(userPosts);
       res.json({
-        user_posts: userPosts,
+        posts: userPosts,
       });
     }
   }

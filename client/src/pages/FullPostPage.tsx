@@ -1,6 +1,6 @@
 import "./FullPostPage.css";
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import axios from "../api/axios";
 
@@ -20,6 +20,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate.tsx";
 export default function FullPost() {
   const axios = useAxiosPrivate();
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { post_id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -27,12 +28,16 @@ export default function FullPost() {
   useEffect(() => {
     async function fetchPost() {
       try {
-        const resp = await axios.get(FETCH_POST, { params: { post_id } });
-        if (resp.data.redirect) {
-          navigate(resp.data.redirect, { replace: true });
+        if (state && state.post) {
+          setPost(state.post);
         } else {
-          console.log(resp.data);
-          setPost(resp.data);
+          const resp = await axios.get(FETCH_POST, { params: { post_id } });
+          if (resp.data.redirect) {
+            navigate(resp.data.redirect, { replace: true });
+          } else {
+            console.log(resp.data);
+            setPost(resp.data);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch post:", error);
@@ -43,11 +48,12 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
-    async function fetchUser(username: string) {
+    async function fetchUser(user_id: number) {
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
-          params: { username },
+          params: { user_id },
         });
+        console.log("user: ", resp.data);
         if (resp.data.redirect) {
           navigate(resp.data.redirect, { replace: true });
         } else {
@@ -58,8 +64,8 @@ export default function FullPost() {
       }
     }
 
-    if (post) {
-      fetchUser(post.user);
+    if (post && post.user_id) {
+      fetchUser(post.user_id);
     }
   }, [post, navigate]);
 
@@ -85,7 +91,7 @@ export default function FullPost() {
           <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
             <UserSection
               username={user.username}
-              profile_pic={user.profilepicture}
+              profile_pic={`src/assets/${post.profile_picture}`}
               level={user.totalexp}
             />
           </div>

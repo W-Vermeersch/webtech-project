@@ -22,3 +22,14 @@
     right: 2vw;
     z-index: 1000;
 }
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    margin-top: -3.5vw;
+    left: 50%;
+    margin-left: -3.5vw;
+    width: 7vw !important;
+    height: 7vw !important;
+    z-index: 1000;
+}

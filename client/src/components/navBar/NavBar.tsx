@@ -35,6 +35,7 @@ export default function NavBar() {
       return;
     }
     await signOut();
+    localStorage.removeItem("posts")
     navigate(LOG_IN);
     // deal with error handling
   }

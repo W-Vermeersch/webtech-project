@@ -39,6 +39,7 @@ export class UserAuthenticationController extends BaseController {
                 ({ username, refreshToken }) => refreshToken !== refresh_token
             );
             res.clearCookie("refreshToken", { httpOnly: true });
+            res.clearCookie("shown_post_ids") // temporary to clear the shown_post_ids cookie -> remove when app done
             //console.log("logging out, new list: " + this.refreshTokens);
             return res.status(204).send("Succesfully deleted refresh token");
         });

@@ -1,20 +1,42 @@
 .custom-icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .custom-icon {
-    width: 64px;
-    height: 64px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 50%; /* Make the icon round */
-    border: 2px solid white; /* Optional: Add a border */
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .popup-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px; /* Optional: Round the popup image corners */
-  }
+.custom-icon {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%; /* Make the icon round */
+  border: 2px solid white; /* Optional: Add a border */
+}
+
+.popup .leaflet-popup-content-wrapper {
+  padding: 10px;
+  background-color: #19875482
+}
+
+.popup .leaflet-popup-tip {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.popup .leaflet-popup-close-button {
+  visibility: hidden;
+}
+
+.popup .leaflet-popup-content {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-image {
+  max-width: 50vw;
+  max-height: 40vh;
+  object-fit: contain;
+  border-radius: 10px;
+}

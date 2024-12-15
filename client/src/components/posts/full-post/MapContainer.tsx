@@ -8,8 +8,8 @@ import "./map.css";
 import "leaflet/dist/leaflet.css";
 
 interface Location {
-  latitude: number,
-  longitude: number,
+  latitude: number;
+  longitude: number;
 }
 
 interface MapContainerProps {
@@ -27,7 +27,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapContainer({ location, zoom, className }: MapContainerProps) {
+export default function MapContainer({
+  location,
+  zoom,
+  className,
+}: MapContainerProps) {
   return (
     <div className={"map-wrapper-fp mb-3 mb-md-0 " + className}>
       <LeafletMapContainer
@@ -37,8 +41,8 @@ export default function MapContainer({ location, zoom, className }: MapContainer
         className="map-container-fp"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
+          attribution="Google Maps"
         />
 
         <Marker position={[location.latitude, location.longitude]} />
