@@ -14,6 +14,7 @@ interface SinglePostProps {
 }
 
 const SinglePost = ({ post }: SinglePostProps) => {
+  console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -153,7 +154,7 @@ const SinglePost = ({ post }: SinglePostProps) => {
               </div>
             ))}
 
-            {post.commentsection && post.commentsection.length > 2 && (
+            {post.commentsection && (
               <div
                 className="load-more-comments"
                 style={{ cursor: "pointer" }}
