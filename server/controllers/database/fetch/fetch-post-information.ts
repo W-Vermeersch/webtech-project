@@ -51,7 +51,15 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostLikesAmount(req, response);
         });
 
-        this.router.get("/fetch/tag/posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/nearest", (req: express.Request, response: express.Response) => {
+            return this.getNearestPosts(req, response);
+        });
+
+        this.router.get("/fetch/post/within-radius", (req: express.Request, response: express.Response) => {
+            return this.getPostsWithinRadius(req, response);
+        });
+
+        this.router.get("/fetch/tag/posts", (req: express.Request, response: express.Response) => {
             return this.getTagPosts(req, response);
         });
 
@@ -219,23 +227,79 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
 
 
-        private async getTagPosts(req: express.Request, res: express.Response) {
-            if (!req.query.tag) {
-                return res.json({
-                    redirect: '/pageNotFound'
-                });
-            }
-            const tag = req.query.tag;
-            const posts = await this.db.fetchPostsByTag(tag.toString())
-            const post_list = await Promise.all(posts.map(async (postObject) => {
+    private async getTagPosts(req: express.Request, res: express.Response) {
+        if (!req.query.tag) {
+            return res.json({
+                redirect: '/pageNotFound'
+            });
+        }
+        const tag = req.query.tag;
+        const posts = await this.db.fetchPostsByTag(tag.toString())
+        const post_list = await Promise.all(posts.map(async (postObject) => {
+            const post_id = postObject.post_id;
+            const user_id = postObject.user_id;
+            const postToReturn = await this.fetchPost(post_id, user_id)
+            return postToReturn;
+        }))
+        res.json({
+            posts: post_list
+        })
+    }
+
+    private async getNearestPosts(req: express.Request, res: express.Response) {
+        if (!req.query.longitude || !req.query.latitude  || !req.query.limit) {
+            return res.json({
+                redirect: '/pageNotFound'
+            });
+        }
+        const long = parseInt(req.query.longitude.toString());
+        const lat = parseInt(req.query.latitude.toString());
+        const limit = parseInt(req.query.limit.toString());
+
+        const posts = await this.db.fetchNearestPosts(lat, long, limit)
+        const post_list = await Promise.all(posts.map(async (postObject) => {
+            const post_id = postObject.post_id;
+            const user_id = postObject.user_id;
+            const postToReturn = await this.fetchPost(post_id, user_id)
+            return postToReturn;
+        }))
+        res.json({
+            posts: post_list
+        })
+    }
+
+    private async getPostsWithinRadius(req: express.Request, res: express.Response) {
+        if (!req.query.longitude || !req.query.latitude  || !req.query.radius || !req.query.limit) {
+            return res.json({
+                redirect: '/pageNotFound'
+            });
+        }
+        const long = parseInt(req.query.longitude.toString());
+        const lat = parseInt(req.query.latitude.toString());
+        const radius = parseInt(req.query.radius.toString())
+        const limit = parseInt(req.query.limit.toString());
+
+        let post_list: any[] = []
+        if (limit == -1) {
+            const posts = await this.db.fetchPostsWithinRadius(lat, long, radius)
+            post_list = await Promise.all(posts.map(async (postObject) => {
+                const post_id = postObject.post_id;
+                const user_id = postObject.user_id;
+                const postToReturn = await this.fetchPost(post_id, user_id)
+                return postToReturn;
+            }))
+        } else {
+            const posts = await this.db.fetchPostsWithinRadiusWithLimit(lat, long, radius, limit)
+            post_list = await Promise.all(posts.map(async (postObject) => {
                 const post_id = postObject.post_id;
                 const user_id = postObject.user_id;
                 return await this.fetchPost(post_id, user_id);
             }))
-            res.json({
-                posts: post_list
-            })
         }
+        res.json({
+            posts: post_list
+        })
+    }
 }
 
 
