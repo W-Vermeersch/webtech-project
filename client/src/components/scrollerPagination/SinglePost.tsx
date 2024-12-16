@@ -214,6 +214,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           show={showViewCommentsModal}
           onHide={handleCloseViewCommentsModal}
           post={post}
+          authCheck={authCheck}
         />
       )}
     </div>

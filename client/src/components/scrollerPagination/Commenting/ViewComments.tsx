@@ -10,45 +10,51 @@ interface ViewCommentsModalProps {
   show: boolean;
   onHide: () => void;
   post: Post;
+  authCheck: (action: () => void) => void;
 }
 
-const ViewCommentsModal = ({ show, onHide, post }: ViewCommentsModalProps) => {
+const ViewCommentsModal = ({
+  show,
+  onHide,
+  post,
+  authCheck,
+}: ViewCommentsModalProps) => {
   const user = useAuthUser();
   const username = user?.username || "";
   const axiosPrivate = useAxiosPrivate();
-  const [comments, setComments] = useState<PostComment[]>(
-    post.comments || []
-  );
+  const [comments, setComments] = useState<PostComment[]>(post.comments || []);
   const [newComment, setNewComment] = useState<string>("");
 
   const handleAddComment = async () => {
-    if (newComment.trim() === "") return;
+    authCheck(async () => {
+      if (newComment.trim() === "") return;
 
-    const commentData = {
-      post_id: post.idx,
-      description: newComment,
-    };
+      const commentData = {
+        post_id: post.idx,
+        description: newComment,
+      };
 
-    try {
-      const resp = await axiosPrivate.post(ADD_COMMENT, commentData);
+      try {
+        const resp = await axiosPrivate.post(ADD_COMMENT, commentData);
 
-      if (resp.status === 200) {
-        // Append the new comment to the local comments array
-        setComments((prevComments) => [
-          ...prevComments,
-          {
-            user: username,
-            text: newComment,
-            id: post.idx,
-          },
-        ]);
-        setNewComment("");
-      } else {
-        console.error("Failed to add comment");
+        if (resp.status === 200) {
+          // Append the new comment to the local comments array
+          setComments((prevComments) => [
+            ...prevComments,
+            {
+              user: username,
+              text: newComment,
+              id: post.idx,
+            },
+          ]);
+          setNewComment("");
+        } else {
+          console.error("Failed to add comment");
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
       }
-    } catch (error) {
-      console.error("Error adding comment:", error);
-    }
+    });
   };
 
   return (
