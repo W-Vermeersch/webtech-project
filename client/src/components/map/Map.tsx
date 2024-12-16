@@ -77,13 +77,13 @@ function Map() {
   useEffect(() => {
     if (mapRef.current) {
       if (state && state.posts && state.posts.length > 0) {
-          const bounds = L.latLngBounds(
-            state.posts.map((post) => [
-              post.location.latitude,
-              post.location.longitude,
-            ])
-          );
-          mapRef.current.fitBounds(bounds, { padding: [100, 100] });
+        const bounds = L.latLngBounds(
+          state.posts.map((post) => [
+            post.location.latitude,
+            post.location.longitude,
+          ])
+        );
+        mapRef.current.fitBounds(bounds, { padding: [100, 100] });
       } else if (posts && posts.length > 0) {
         const bounds = L.latLngBounds(
           posts.map((post) => [post.location.latitude, post.location.longitude])
