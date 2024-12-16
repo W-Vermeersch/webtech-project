@@ -12,7 +12,8 @@ export const FETCH_USER_POSTS = "/db/fetch/user/posts"; // geeft posts van de us
 export const FETCH_USER_LIKED = "/db/fetch/user/liked-posts"; // geeft alle posts terug die de user heeft geliked
 export const FETCH_HAS_USER_LIKED = "/db/fetch/post/liked"; //geeft als response a json {liked: boolean}
 
-export const SEARCH_USER = "/db/fetch/user/search"; // geeft alle users terug die een bepaalde string in hun username hebben. heeft search in de parameters nodig (req.params.username)
+export const SEARCH_USER = "/db/fetch/search/user"; // geeft alle users terug die een bepaalde string in hun username hebben. heeft search in de parameters nodig (req.params.username)
+export const SEARCH_TAG = "/db/fetch/search/tag"; // geeft alle posts terug die een bepaalde tag hebben. heeft search in de parameters nodig (req.params.tag, longitude, latitude, radius, filter_enabled)
 
 //FetchCommentInformation, heeft comment_id nodig in de parameters (req.params.comment_id)
 export const FETCH_COMMENT = "/db/fetch/comment/information"; // geeft alle values van een comment terug, user, description en post

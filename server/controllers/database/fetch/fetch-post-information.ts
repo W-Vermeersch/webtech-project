@@ -227,9 +227,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
 
     private async getTagPosts(req: express.Request, res: express.Response) {
-        if (!req.query.tag || !req.query.longitude || !req.query.latitude || !req.query.radius) {
-            return res.status(404).send("One or more parameters missing.")
-        }
+ //       if (!req.query.tag || !req.query.longitude || !req.query.latitude || !req.query.radius) {
+ //           return res.status(404).send("One or more parameters missing.")
+ //       }
         const tag = req.query.tag;
         const long = parseFloat(req.query.longitude.toString());
         const lat = parseFloat(req.query.latitude.toString());

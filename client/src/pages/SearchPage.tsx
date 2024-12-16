@@ -2,7 +2,8 @@ import "./SearchPage.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "../api/axios";
-import { SEARCH_USER } from "../api/urls";
+import { SEARCH_USER, SEARCH_TAG } from "../api/urls";
+import { getLatLng } from "../geocoding";
 
 import { User, Post } from "../components/posts/PostInterface";
 import PostTile from "../components/searchResults/PostTile";
@@ -20,9 +21,38 @@ export default function SearchPage() {
   const [radius, setRadius] = useState(0);
   const radius_input = useRef<HTMLInputElement>(null);
   const location_input = useRef<HTMLInputElement>(null);
+  const [filterToggle, setFilterToggle] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
+  useEffect(() => {
+    async function fetchFiltered() {
+      console.log("fetching filtered");
+      const locationValue = location_input.current?.value;
+      let latLng;
+      if (locationValue) {
+        latLng = await getLatLng(locationValue);
+        console.log(latLng);
+      }
+      try {
+        const resp = await axios.get(SEARCH_TAG, {
+          params: {
+            tag: search,
+            latitude: latLng?.lat,
+            longitude: latLng?.lng,
+            radius: radius * 1000,
+            filter_enabled: true,
+          },
+        });
+        setUsers([]);
+        //console.log(resp.data.posts);
+        setPosts(resp.data.posts);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      }
+    }
+    fetchFiltered();
+  }, [filterToggle]);
 
   useEffect(() => {
     async function fetchSearchResults() {
@@ -35,20 +65,45 @@ export default function SearchPage() {
         setUsers(resp.data.users);
       } else {
         // fetch posts
+        try {
+          const resp = await axios.get(SEARCH_TAG, {
+            params: {
+              tag: search,
+              latitude: 1000,
+              longitude: 1000,
+              radius,
+              filter_enabled: false,
+            },
+          });
+          setUsers([]);
+          setPosts(resp.data.posts);
+        } catch (error) {
+          console.error("Failed to fetch posts:", error);
+        }
       }
-
-      // call fetchSearchResults
     }
+
+    fetchSearchResults();
   }, [search]);
 
   return (
     <>
-      <Form className="search-filter mb-3">
-        <Row xs={2} className="justify-content-end">
+      <Form
+        className={`search-filter mb-3 ${searchType === "@" ? "d-none" : ""}`}
+      >
+        <Row
+          xs={3}
+          className="d-flex align-items-center justify-content-center"
+        >
           <Col>
             <Form.Group className="country-filter mb-3">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" placeholder="Belgium" disabled={searchType === "@"} ref={location_input}/>
+              <Form.Control
+                type="text"
+                placeholder="Belgium"
+                disabled={searchType === "@"}
+                ref={location_input}
+              />
             </Form.Group>
           </Col>
           <Col>
@@ -57,14 +112,25 @@ export default function SearchPage() {
               <Form.Range
                 className="radius-input"
                 min={0}
-                max={10000000}
+                max={2000}
                 value={radius}
                 onChange={(e) => setRadius(Number(e.target.value))}
-                step={100000}
+                step={50}
                 disabled={searchType === "@"}
                 ref={radius_input}
               />
             </Form.Group>
+          </Col>
+          <Col
+            xs="auto"
+            className="d-flex align-items-center justify-content-center"
+          >
+            <Button
+              variant="danger"
+              onClick={() => setFilterToggle(!filterToggle)}
+            >
+              Apply Filter
+            </Button>
           </Col>
         </Row>
       </Form>
