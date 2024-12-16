@@ -150,6 +150,7 @@ export default function FullPost() {
           show={showViewCommentsModal}
           onHide={handleCloseViewCommentsModal}
           post={post}
+          authCheck={(action) => action()}
         />
       )}
     </>
