@@ -31,35 +31,45 @@ export default function Leaderboard() {
     fetchLeaderboard();
   }, []);
 
+  const leftColumn = leaderboard.slice(0, 5);
+  const rightColumn = leaderboard.slice(5, 10);
+
   return (
     <div className="leaderboard-container">
       <h1 className="leaderboard-title">LEADERBOARD</h1>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <ol className="leaderboard-list">
-          {leaderboard.map((user, index) => (
-            <li key={index} className="leaderboard-entry">
-              <span className="rank">{index + 1}</span>
-              <span className="username">{user.username}</span>
-              <span className="points">{user.totalexp} XP</span>
-            </li>
-          ))}
-        </ol>
+        <div className="leaderboard-columns">
+          <ul className="leaderboard-list left">
+            {leftColumn.map((user, index) => (
+              <li key={index} className="leaderboard-entry">
+                <span className="rank">{index + 1}</span>
+                <span className="username">{user.username}</span>
+                <span className="points">{user.totalexp} XP</span>
+              </li>
+            ))}
+          </ul>
+          <ul className="leaderboard-list right">
+            {rightColumn.map((user, index) => (
+              <li key={index + 5} className="leaderboard-entry">
+                <span className="rank">{index + 6}</span>
+                <span className="username">{user.username}</span>
+                <span className="points">{user.totalexp} XP</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
-      {/* Ghosts at the Bottom */}
       <div className="animals">
         <Col>
           <img
             src="/src/assets/animals.svg"
             alt="Animals"
             className="cropped-image"
-            style={{ width: 600, objectFit: "fill" }}
-          ></img>
+          />
         </Col>
       </div>
-
-      {/* Press Enter Text */}
       <div className="catch-more">Catch more animals!</div>
     </div>
   );

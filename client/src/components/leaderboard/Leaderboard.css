@@ -2,6 +2,7 @@
   text-align: center;
   padding: 20px;
   min-height: 100vh;
+  color: white;
 }
 
 .leaderboard-title {
@@ -9,55 +10,68 @@
   margin-bottom: 20px;
 }
 
+.leaderboard-columns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
 .leaderboard-list {
   list-style: none;
   padding: 0;
-  margin: 0 auto;
-  width: 50%;
-  color: white;
+  width: 100%;
 }
 
 .leaderboard-entry {
   display: flex;
   justify-content: space-between;
-  margin: 5px 0;
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  background: none;
+  padding: 10px;
+  background-color: #35495e;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .rank {
-  margin-right: 20px;
+  font-weight: bold;
+  color: yellow;
 }
 
 .username {
   flex: 1;
   text-align: left;
+  margin-left: 10px;
 }
 
 .points {
-  color: yellow;
-  text-align: right;
+  color: #f9ca24;
+  font-weight: bold;
+}
+
+.animals {
+  display: flex;
+  justify-content: center;
 }
 
 .catch-more {
   margin-top: 20px;
   font-size: 1rem;
-  text-transform: uppercase;
+  color: #f1c40f;
+}
+
+.cropped-image {
+  width: 100%;
+  max-width: 800px;
 }
 
 @media (max-width: 768px) {
-  .leaderboard-entry {
-    font-size: 0.9rem;
-    padding: 6px 0;
+  .cropped-image {
+    max-width: 80%;
   }
-
-  .rank,
-  .points {
-    flex: 0 0 25%;
-  }
-  .username {
-    text-align: left;
+  .leaderboard-columns {
+    flex-direction: column;
+    gap: 0;
   }
 }
