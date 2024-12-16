@@ -139,10 +139,10 @@ export default function SearchPage() {
               <Form.Range
                 className="radius-input"
                 min={0}
-                max={2000}
+                max={300}
                 value={radius}
                 onChange={(e) => setRadius(Number(e.target.value))}
-                step={50}
+                step={25}
                 disabled={searchType === "@"}
                 ref={radius_input}
               />

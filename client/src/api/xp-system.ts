@@ -1,4 +1,4 @@
-export const maxExp = 2000;
+export const maxExp = 1000;
 
 export function level(exp: number) {
   return Math.floor(exp / maxExp) + 1;

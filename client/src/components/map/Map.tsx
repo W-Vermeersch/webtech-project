@@ -100,9 +100,12 @@ function Map() {
 
   return (
     <div className="map-container">
-      <Button id="post-refresh" variant="success" onClick={handleRefresh}>
-        Refresh
-      </Button>
+      {!state && (
+        <Button id="post-refresh" variant="success" onClick={handleRefresh}>
+          Refresh
+        </Button>
+      )}
+
       {state && state.posts && (
         <Button
           id="post-search"
