@@ -8,3 +8,6 @@
   background-color: rgba(0, 0, 0, 0.284);
 }
 
+.comment-container {
+  max-width: 800px;
+}
