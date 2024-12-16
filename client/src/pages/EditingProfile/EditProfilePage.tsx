@@ -37,17 +37,21 @@ const EditProfilePage = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
-    if (profilePic) {
-      formData.append("profilepicture", profilePic);
-    }
     formData.append("username", username);
+    if (profilePic) {
+      formData.append("file", profilePic);
+      const resp2 = await axiosPrivate.post(UPDATE_PFP, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }});
+      console.log("Upload file : ", resp2);
+    }
     formData.append("new_bio", bio);
 
     // console.log("Updated profile:", { profilePic, username, bio });
-    const newPFP = profilePic;
     const objectbio = { new_bio: bio };
     const resp = await axiosPrivate.post(UPDATE_BIO, objectbio);
-    // const resp2 = await axiosPrivate.post(UPDATE_PFP, newPFP);
+
 
     navigate(-1); // Navigate back to profile page
   };
