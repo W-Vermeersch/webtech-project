@@ -1,5 +1,5 @@
 import "./SearchPage.css";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "../api/axios";
 import { SEARCH_USER, SEARCH_TAG } from "../api/urls";
@@ -17,6 +17,7 @@ import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 
 export default function SearchPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { posts: Post[] } | undefined;
   const [searchType, setSearchType] = useState("@");
@@ -144,11 +145,13 @@ export default function SearchPage() {
             xs="auto"
             className="d-flex align-items-center justify-content-center"
           >
-            <NavLink to="/map" state={{ posts }}>
-              <Button variant="dark" className={search ? "" : "disabled"}>
-                View on Map
-              </Button>
-            </NavLink>
+            <Button
+              variant="dark"
+              className={search ? "" : "disabled"}
+              onClick={() => navigate("/map", { state: { posts } })}
+            >
+              View on Map
+            </Button>
           </Col>
         </Row>
       </Form>
