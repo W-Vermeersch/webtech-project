@@ -52,6 +52,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             };
             console.log(location)
             const geoData = await GPSDataExtractor(filePath, location);
+            return res.status(200).json(geoData)
 
             const imageUrl = await this.imageApi.postImage(filePath);
             let [tags, evaluation] = await Promise.all([
@@ -79,17 +80,15 @@ export class StorePostInformationController extends BaseDatabaseController {
             await this.db.addUserExp(userId, xp);
             await this.db.storePost(post);
 
-            fs.unlinkSync(filePath);
-
             return res.status(200).json(post);
         } catch (error) {
             console.error("Error processing post:", error);
 
+            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
+        } finally {
             if (file?.path && fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
             }
-
-            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
         }
     }
 }
