@@ -199,7 +199,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
                     return {
                     user_id: commentObject.user_id,
                     user: commentOwner[0].username,
-                    profile_picture: commentOwnerDecoration.profilePicture,
                     post_id: commentObject.post_id,
                     description: commentObject.description
                 };
