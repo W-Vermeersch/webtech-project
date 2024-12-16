@@ -1,49 +1,53 @@
 import "./Search.css";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Button from "react-bootstrap/Button";
 
 interface SearchProps {
-  onSearchComplete?: () => void;
+  setSearchType: (searchType: string) => void;
+  onSearchComplete: (search: string) => void;
+  className?: string;
 }
 
-export default function Search({ onSearchComplete }: SearchProps) {
-  const navigate = useNavigate();
+export default function Search({
+  setSearchType,
+  onSearchComplete,
+  className = "",
+}: SearchProps) {
   const [search, setSearch] = useState("");
-  const [searchType, setSearchType] = useState("@");
+  const [localSearchType, setLocalSearchType] = useState("@");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.currentTarget.value);
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    onSearchComplete && onSearchComplete();
     e.preventDefault();
-    navigate(`/search/${searchType === "#" ? "tag" : "user"}/${search}`);
-    setSearch("");
+    onSearchComplete(search);
   }
 
   return (
-    <Form className="form-inline" onSubmit={handleSubmit}>
+    <Form className={`form-inline ${className}`} onSubmit={handleSubmit}>
       <InputGroup>
-        <InputGroup.Text className="p-lg-0 bg-dark text-light">
-          <NavDropdown title={searchType} className="m-0">
-            <NavDropdown.Item
-              className="bg-dark text-light"
-              onClick={() => setSearchType(searchType === "@" ? "#" : "@")}
-            >
-              {searchType === "@" ? "#" : "@"}
-            </NavDropdown.Item>
-          </NavDropdown>
+        <InputGroup.Text className="search-type bg-dark text-light">
+          <Button
+            variant="dark"
+            onClick={() => {
+              setSearchType(localSearchType === "@" ? "#" : "@");
+              setLocalSearchType(localSearchType === "@" ? "#" : "@");
+            }}
+          >
+            {localSearchType}
+            </Button>
         </InputGroup.Text>
         <Form.Control
           className="bg-dark text-light"
           type="text"
-          placeholder={searchType === "@" ? "Username" : "Animal"}
+          placeholder={localSearchType === "@" ? "Username" : "Animal"}
           value={search}
           onChange={handleChange}
         />

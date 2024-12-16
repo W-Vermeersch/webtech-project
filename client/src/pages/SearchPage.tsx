@@ -8,6 +8,7 @@ import { getLatLng } from "../geocoding";
 import { User, Post } from "../components/posts/PostInterface";
 import PostTile from "../components/searchResults/PostTile";
 import ProfileTile from "../components/searchResults/ProfileTile";
+import Search from "../components/navBar/Search";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -16,43 +17,39 @@ import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 
 export default function SearchPage() {
-  const { type, search } = useParams();
-  const searchType = type === "tag" ? "#" : "@";
+  const [searchType, setSearchType] = useState("@");
+  const [search, setSearch] = useState("");
   const [radius, setRadius] = useState(0);
   const radius_input = useRef<HTMLInputElement>(null);
   const location_input = useRef<HTMLInputElement>(null);
-  const [filterToggle, setFilterToggle] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    async function fetchFiltered() {
-      console.log("fetching filtered");
-      const locationValue = location_input.current?.value;
-      let latLng;
-      if (locationValue) {
-        latLng = await getLatLng(locationValue);
-        console.log(latLng);
-      }
-      try {
-        const resp = await axios.get(SEARCH_TAG, {
-          params: {
-            tags: search,
-            latitude: latLng?.lat,
-            longitude: latLng?.lng,
-            radius: radius * 1000,
-            filter_enabled: true,
-          },
-        });
-        setUsers([]);
-        //console.log(resp.data.posts);
-        setPosts(resp.data.posts);
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      }
+  async function fetchFiltered() {
+    console.log("fetching filtered");
+    const locationValue = location_input.current?.value;
+    let latLng;
+    if (locationValue) {
+      latLng = await getLatLng(locationValue);
+      console.log(latLng);
     }
-    fetchFiltered();
-  }, [filterToggle]);
+    try {
+      const resp = await axios.get(SEARCH_TAG, {
+        params: {
+          tags: search,
+          latitude: latLng?.lat,
+          longitude: latLng?.lng,
+          radius: radius * 1000,
+          filter_enabled: true,
+        },
+      });
+      setUsers([]);
+      //console.log(resp.data.posts);
+      setPosts(resp.data.posts);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  }
 
   useEffect(() => {
     async function fetchSearchResults() {
@@ -68,7 +65,7 @@ export default function SearchPage() {
         try {
           const resp = await axios.get(SEARCH_TAG, {
             params: {
-              tags: search,
+              tags: [search],
               latitude: 1000,
               longitude: 1000,
               radius,
@@ -88,6 +85,11 @@ export default function SearchPage() {
 
   return (
     <>
+      <Search
+        setSearchType={setSearchType}
+        onSearchComplete={setSearch}
+        className="mb-4"
+      />
       <Form
         className={`search-filter mb-3 ${searchType === "@" ? "d-none" : ""}`}
       >
@@ -100,7 +102,7 @@ export default function SearchPage() {
               <Form.Label>Location</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Belgium"
+                placeholder="e.g. Belgium"
                 disabled={searchType === "@"}
                 ref={location_input}
               />
@@ -108,7 +110,7 @@ export default function SearchPage() {
           </Col>
           <Col>
             <Form.Group className="radius-filter">
-              <Form.Label>Radius: {radius}</Form.Label>
+              <Form.Label>Radius: {radius} km</Form.Label>
               <Form.Range
                 className="radius-input"
                 min={0}
@@ -125,10 +127,7 @@ export default function SearchPage() {
             xs="auto"
             className="d-flex align-items-center justify-content-center"
           >
-            <Button
-              variant="danger"
-              onClick={() => setFilterToggle(!filterToggle)}
-            >
+            <Button variant="danger" onClick={fetchFiltered}>
               Apply Filter
             </Button>
           </Col>
