@@ -462,7 +462,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     ) {
         const query = {
             text: 'INSERT INTO user_profile_decoration_table (user_id, display_name, bio, profile_picture_image_url, total_exp, badges) VALUES ($1, $2, $3, $4, $5, $6)',
-            values: [user.user_id, user.username, bio, "default-profile-picture.jpg", 0, []],
+            values: [user.user_id, user.username, bio, "/src/assets/default-profile-picture.jpg", 0, []],
         };
         return await this.executeQuery(query);
     }

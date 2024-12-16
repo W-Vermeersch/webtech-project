@@ -138,7 +138,7 @@ export default function ProfilePage() {
           >
             <Stack className="align-items-center" gap={3}>
               <Image
-                src={`/src/assets/${user.profilepicture}`}
+                src={user.profilepicture}
                 alt="profile pic"
                 className="profile-circle rounded-circle"
               />

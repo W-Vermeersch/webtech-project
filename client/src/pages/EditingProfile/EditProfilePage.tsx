@@ -30,24 +30,32 @@ const EditProfilePage = () => {
 
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(
-    profilepicture ? `/src/assets/${profilepicture}` : "/default-profile.png"
+    profilepicture ? { profilepicture } : "/src/assets/default-profile.png"
   );
   const [username, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);
 
   const handleSave = async () => {
     const formData = new FormData();
-    if (profilePic) {
-      formData.append("profilepicture", profilePic);
-    }
     formData.append("username", username);
+    if (profilePic) {
+      // Via a image file
+      formData.append("file", profilePic);
+
+      // Via a public url to a image
+      // formData.append("file_url", file_url);
+      const resp2 = await axiosPrivate.post(UPDATE_PFP, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Upload file : ", resp2);
+    }
     formData.append("new_bio", bio);
 
     // console.log("Updated profile:", { profilePic, username, bio });
-    const newPFP = profilePic;
     const objectbio = { new_bio: bio };
     const resp = await axiosPrivate.post(UPDATE_BIO, objectbio);
-    // const resp2 = await axiosPrivate.post(UPDATE_PFP, newPFP);
 
     navigate(-1); // Navigate back to profile page
   };
@@ -77,13 +85,6 @@ const EditProfilePage = () => {
 
       {/* Profile Picture */}
       <div className="mb-3">
-        <Image
-          src={previewUrl}
-          roundedCircle
-          width={50}
-          height={50}
-          className="mb-2"
-        />{" "}
         Profile picture
         <div className="file-uploader-container"></div>
         {/* FileUploader component */}
