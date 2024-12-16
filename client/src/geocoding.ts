@@ -50,12 +50,12 @@ export async function getCityCountry(
   }
 }
 
-export async function getLatLng(address: string) {
+export async function getLatLng(address: string): Promise<{ lat: number; lng: number }> {
   try {
-    await geocode(RequestType.ADDRESS, address).then(({ results }) => {
-      const { lat, lng } = results[0].geometry.location;
-      return {lat: lat, lng: lng};
-    });
+    const { results } = await geocode(RequestType.ADDRESS, address);
+    const { lat, lng } = results[0].geometry.location;
+    console.log(lat, lng);
+    return { lat: lat, lng: lng };
   } catch (error) {
     console.error(error);
     return {lat: 1000, lng: 1000};

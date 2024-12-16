@@ -24,7 +24,7 @@ export default function ProfileTile({ post }: PostTileProps) {
           {post.tags[0] !== "None"
             ? post.tags.map((tag) => (
                 <Col key={post.idx} xs="auto"> 
-                  <Badge key={tag} bg="dark" className="badge-tag m-2">
+                  <Badge key={post.idx} bg="dark" className="badge-tag m-2">
                     #{tag}
                   </Badge>
                 </Col>

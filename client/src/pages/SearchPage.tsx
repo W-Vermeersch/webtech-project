@@ -1,5 +1,5 @@
 import "./SearchPage.css";
-import { useParams } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "../api/axios";
 import { SEARCH_USER, SEARCH_TAG } from "../api/urls";
@@ -17,6 +17,8 @@ import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 
 export default function SearchPage() {
+  const location = useLocation();
+  const state = location.state as { posts: Post[] } | undefined;
   const [searchType, setSearchType] = useState("@");
   const [search, setSearch] = useState("");
   const [radius, setRadius] = useState(0);
@@ -26,17 +28,17 @@ export default function SearchPage() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   async function fetchFiltered() {
-    console.log("fetching filtered");
     const locationValue = location_input.current?.value;
     let latLng;
     if (locationValue) {
       latLng = await getLatLng(locationValue);
-      console.log(latLng);
     }
     try {
+      const tags = search.split(" ");
+      console.log(latLng);
       const resp = await axios.get(SEARCH_TAG, {
         params: {
-          tags: search,
+          tags: tags,
           latitude: latLng?.lat,
           longitude: latLng?.lng,
           radius: radius * 1000,
@@ -44,7 +46,6 @@ export default function SearchPage() {
         },
       });
       setUsers([]);
-      //console.log(resp.data.posts);
       setPosts(resp.data.posts);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -53,7 +54,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     async function fetchSearchResults() {
-      if (searchType === "@") {
+      if (searchType === "@" && search !== "") {
         // Fetch users
         const resp = await axios.get(SEARCH_USER, {
           params: { username: search },
@@ -62,10 +63,11 @@ export default function SearchPage() {
         setUsers(resp.data.users);
       } else {
         // fetch posts
+        const tags = search.split(" ");
         try {
           const resp = await axios.get(SEARCH_TAG, {
             params: {
-              tags: [search],
+              tags: tags,
               latitude: 1000,
               longitude: 1000,
               radius,
@@ -80,7 +82,13 @@ export default function SearchPage() {
       }
     }
 
-    fetchSearchResults();
+    if (state) {
+      setSearchType("#");
+      setPosts(state.posts);
+      setUsers([]);
+    } else {
+      fetchSearchResults();
+    }
   }, [search]);
 
   return (
@@ -88,6 +96,7 @@ export default function SearchPage() {
       <Search
         setSearchType={setSearchType}
         onSearchComplete={setSearch}
+        symbol={searchType}
         className="mb-4"
       />
       <Form
@@ -130,6 +139,16 @@ export default function SearchPage() {
             <Button variant="danger" onClick={fetchFiltered}>
               Apply Filter
             </Button>
+          </Col>
+          <Col
+            xs="auto"
+            className="d-flex align-items-center justify-content-center"
+          >
+            <NavLink to="/map" state={{ posts }}>
+              <Button variant="dark" className={search ? "" : "disabled"}>
+                View on Map
+              </Button>
+            </NavLink>
           </Col>
         </Row>
       </Form>

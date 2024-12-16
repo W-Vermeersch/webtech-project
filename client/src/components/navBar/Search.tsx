@@ -6,20 +6,24 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
+import { Typeahead } from "react-bootstrap-typeahead";
 
 interface SearchProps {
   setSearchType: (searchType: string) => void;
   onSearchComplete: (search: string) => void;
+  symbol: string;
   className?: string;
+  
 }
 
 export default function Search({
   setSearchType,
   onSearchComplete,
+  symbol,
   className = "",
 }: SearchProps) {
   const [search, setSearch] = useState("");
-  const [localSearchType, setLocalSearchType] = useState("@");
+  
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.currentTarget.value);
@@ -37,20 +41,19 @@ export default function Search({
           <Button
             variant="dark"
             onClick={() => {
-              setSearchType(localSearchType === "@" ? "#" : "@");
-              setLocalSearchType(localSearchType === "@" ? "#" : "@");
+              setSearchType(symbol === "@" ? "#" : "@");
             }}
           >
-            {localSearchType}
+            {symbol}
             </Button>
         </InputGroup.Text>
-        <Form.Control
+          <Form.Control
           className="bg-dark text-light"
           type="text"
-          placeholder={localSearchType === "@" ? "Username" : "Animal"}
+          placeholder={symbol === "@" ? "Username" : "Animal"}
           value={search}
           onChange={handleChange}
-        />
+        />    
       </InputGroup>
     </Form>
   );

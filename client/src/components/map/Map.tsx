@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 import "./map.css";
 
 import { MapContainer, TileLayer } from "react-leaflet";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import L from "leaflet";
 import axios from "../../api/axios";
@@ -23,9 +24,17 @@ interface Location {
   lng: number;
 }
 
+interface State {
+  posts: Post[];
+}
+
 function Map() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as State | undefined;
   const mapRef = useRef<L.Map | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [searchPosts, setSearchPosts] = useState<Post[] | null>(null);
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useAuthUser();
@@ -71,19 +80,39 @@ function Map() {
   }, [refresh]);
 
   useEffect(() => {
-    if (mapRef.current && posts && posts.length > 0) {
-      const bounds = L.latLngBounds(
-        posts.map((post) => [post.location.latitude, post.location.longitude])
-      );
-      mapRef.current.fitBounds(bounds, { padding: [100, 100] });
+    if (mapRef.current) {
+      if (state && state.posts && state.posts.length > 0) {
+        const bounds = L.latLngBounds(
+          state.posts.map((post) => [
+            post.location.latitude,
+            post.location.longitude,
+          ])
+        );
+        mapRef.current.fitBounds(bounds, { padding: [100, 100] });
+      } else if (posts && posts.length > 0) {
+        const bounds = L.latLngBounds(
+          posts.map((post) => [post.location.latitude, post.location.longitude])
+        );
+        mapRef.current.fitBounds(bounds, { padding: [100, 100] });
+      }
     }
-  }, [mapRef, posts]);
+  }, [mapRef, posts, state]);
 
   return (
     <div className="map-container">
       <Button id="post-refresh" variant="success" onClick={handleRefresh}>
         Refresh
       </Button>
+      {state && state.posts && (
+        <Button
+          id="post-search"
+          variant="dark"
+          onClick={() => navigate("/search", { state: { posts: state.posts } })}
+        >
+          Back to Search
+        </Button>
+      )}
+
       {isLoading && (
         <Spinner className="spinner" animation="border" variant="success" />
       )}
@@ -102,8 +131,14 @@ function Map() {
           maxClusterRadius={50}
           showCoverageOnHover={false}
         >
-          {posts &&
-            posts.map((post, index) => <MapMarker key={index} post={post} />)}
+          {state && state.posts
+            ? // from search results
+              state.posts.map((post, index) => (
+                <MapMarker key={index} post={post} />
+              ))
+            : // from random posts
+              posts &&
+              posts.map((post, index) => <MapMarker key={index} post={post} />)}
         </MarkerClusterGroup>
       </MapContainer>
     </div>
