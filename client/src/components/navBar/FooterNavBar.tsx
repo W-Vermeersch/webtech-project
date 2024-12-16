@@ -42,10 +42,10 @@ export default function FooterNavBar() {
         <FaMap size={25} />
         <span>Map</span>
       </NavLink>
-      
+
       <NavLink to="/leaderboard" className="footer-nav-item">
         <FaCrown size={25} />
-        <span>Leaderboard</span>
+        <span>Ranking</span>
       </NavLink>
       <div className="footer-nav-item" onClick={handleProfileClick}>
         <FaUser size={25} />

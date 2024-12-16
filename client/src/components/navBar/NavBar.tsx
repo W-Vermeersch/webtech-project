@@ -35,7 +35,7 @@ export default function NavBar() {
       return;
     }
     await signOut();
-    localStorage.removeItem("posts")
+    localStorage.removeItem("posts");
     navigate(LOG_IN);
     // deal with error handling
   }
@@ -78,9 +78,13 @@ export default function NavBar() {
                 size={20}
                 onClick={() => setModalShow(true)}
               />
-              <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
+              <Modal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                centered
+              >
                 <ModalBody className="search-modal rounded">
-                  <Search onSearchComplete={handleSearchComplete}/>
+                  <Search onSearchComplete={handleSearchComplete} />
                 </ModalBody>
               </Modal>
             </div>

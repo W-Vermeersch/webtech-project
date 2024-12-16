@@ -13,9 +13,6 @@
   color: #ffffff;
 }
 
-.username {
-  font-family: "Press Start 2P";
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffffff;
+.file-uploader-container {
+  margin-top: 1rem;
 }
