@@ -22,9 +22,9 @@ export default function SearchPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { posts: Post[] } | undefined;
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchType, setSearchType] = useState("@");
-  const [search, setSearch] = useState("");
   const [radius, setRadius] = useState(0);
   const radius_input = useRef<HTMLInputElement>(null);
   const location_input = useRef<HTMLInputElement>(null);
@@ -32,7 +32,15 @@ export default function SearchPage() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    async function fetchSearchResults() {
+    if (state) {
+      setSearchType("#");
+      setPosts(state.posts);
+      setUsers([]);
+    }
+  }, [state]);
+
+  async function fetchSearchResults(search: string) {
+    setSearch(search);
       setIsLoading(true);
       if (searchType === "@" && search.length > 2) {
         // Fetch users
@@ -64,15 +72,6 @@ export default function SearchPage() {
         }
       }
     }
-
-    if (state) {
-      setSearchType("#");
-      setPosts(state.posts);
-      setUsers([]);
-    } else {
-      fetchSearchResults();
-    }
-  }, [search]);
 
 
   async function fetchFiltered() {
@@ -111,7 +110,7 @@ export default function SearchPage() {
 
       <Search
         setSearchType={setSearchType}
-        onSearchComplete={setSearch}
+        onSearchComplete={fetchSearchResults}
         symbol={searchType}
         className="mb-4"
       />

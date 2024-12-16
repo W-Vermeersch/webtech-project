@@ -58,7 +58,7 @@ export async function getLatLng(address: string): Promise<{ lat: number; lng: nu
     return { lat: lat, lng: lng };
   } catch (error) {
     console.error(error);
-    return {lat: 1000, lng: 1000};
+    return {lat: NaN, lng: NaN};
   }
 }
 

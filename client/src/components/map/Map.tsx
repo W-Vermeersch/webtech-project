@@ -15,14 +15,8 @@ import { Post } from "../posts/PostInterface";
 import MapMarker from "../profile/MapMarker";
 
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Spinner from "react-bootstrap/Spinner";
 import "../../Spinner.css";
-
-interface Location {
-  lat: number;
-  lng: number;
-}
 
 interface State {
   posts: Post[];
@@ -34,7 +28,6 @@ function Map() {
   const state = location.state as State | undefined;
   const mapRef = useRef<L.Map | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
-  const [searchPosts, setSearchPosts] = useState<Post[] | null>(null);
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useAuthUser();
