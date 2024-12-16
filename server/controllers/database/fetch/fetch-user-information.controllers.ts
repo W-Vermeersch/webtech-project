@@ -36,6 +36,13 @@ export class FetchUserInformationController extends BaseDatabaseController {
         return this.getUserLikedPosts(req, response);
       }
     );
+
+    this.router.get(
+      "/fetch/leaderboard",
+      (req: express.Request, response: express.Response) => {
+        return this.getLeaderboard(req, response);
+      }
+    );
   }
 
   // All fetching operations require the username inside the request parameters.
@@ -148,5 +155,29 @@ export class FetchUserInformationController extends BaseDatabaseController {
         res.status(400).json({ error: "User ID is null" });
       }
     }
+  }
+
+  private async getLeaderboard(req: express.Request, res: express.Response) {
+    const users = await this.db.fetchTopTen();
+    const topTenUsers = await Promise.all(users.map(async (user) => {
+      console.log("user: " + JSON.stringify(user, null, 2)) ;
+      const user_id = user.user_id;
+      const totalexp = user.totalexp;
+      console.log("total exp: " + totalexp)
+      const userObject = await this.db.fetchUserUsingID(user_id);
+      console.log("user object: "+ JSON.stringify(userObject[0], null, 2));
+      console.log("username: "+ userObject[0].username);
+      const username = userObject[0].username;
+      user = {
+        username: username,
+        totalexp: totalexp,
+      };
+      return user;
+    }))
+
+    res.json({
+      users: topTenUsers
+    });
+
   }
 }

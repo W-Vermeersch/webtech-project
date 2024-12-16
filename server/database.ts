@@ -517,6 +517,29 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
 
+    public async fetchTopTen() {
+        const query = {
+            text: ` WITH RankedUsers AS (
+                        SELECT 
+                            user_id,
+                            total_exp AS totalexp,
+                            ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY total_exp DESC) AS rank
+                        FROM user_profile_decoration_table
+                    )               
+                    SELECT 
+                        user_id,
+                        totalexp
+                    FROM RankedUsers
+                    WHERE rank = 1
+                    ORDER BY totalexp DESC
+                    LIMIT 10;
+                    `,
+        }
+        const res =  await this.executeQuery(query)
+        return res.rows
+    }
+
+
 
     public async init(): Promise<void> {
         // Adding the extensions to the DB
