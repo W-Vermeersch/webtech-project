@@ -15,8 +15,8 @@ interface SinglePostProps {
   authCheck: (action: () => void) => void;
 }
 
-interface fetchCommentProps {
-  user_id: number;
+export interface fetchCommentProps {
+  user_id?: number;
   user: string;
   post_id: number;
   description: string;

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { Post, PostComment } from "../../posts/PostInterface";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { ADD_COMMENT } from "../../../api/urls";
+import { ADD_COMMENT, FETCH_POST_COMMENTS } from "../../../api/urls";
 import useAuthUser from "../../../hooks/useAuthUser";
+import { fetchCommentProps } from "../SinglePost";
 import "./ViewComments.css";
 
 interface ViewCommentsModalProps {
@@ -22,8 +23,32 @@ const ViewCommentsModal = ({
   const user = useAuthUser();
   const username = user?.username || "";
   const axiosPrivate = useAxiosPrivate();
-  const [comments, setComments] = useState<PostComment[]>(post.comments || []);
+  const [comments, setComments] = useState<fetchCommentProps[]>([]);
   const [newComment, setNewComment] = useState<string>("");
+
+  const fetchComments = async () => {
+    try {
+      const resp = await axiosPrivate.get(FETCH_POST_COMMENTS, {
+        params: { post_id: post.idx },
+      });
+
+      if (resp.status === 200) {
+        // Safeguard to ensure comments are always an array
+        setComments(resp.data.post_comments);
+        console.log(resp.data.post_comments);
+      } else {
+        console.error("Failed to fetch comments, status:", resp.status);
+        setComments([]); // Set empty array on failure
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      setComments([]); // Set empty array on error
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [post]);
 
   const handleAddComment = async () => {
     authCheck(async () => {
@@ -43,8 +68,8 @@ const ViewCommentsModal = ({
             ...prevComments,
             {
               user: username,
-              text: newComment,
-              id: post.idx,
+              description: newComment,
+              post_id: post.idx,
             },
           ]);
           setNewComment("");
@@ -68,7 +93,7 @@ const ViewCommentsModal = ({
           {comments.length > 0 ? (
             comments.map((comment, index) => (
               <div key={index} className="comment-item mb-2">
-                <strong>{comment.user}:</strong> {comment.text}
+                <strong>{comment.user}:</strong> {comment.description}
               </div>
             ))
           ) : (
