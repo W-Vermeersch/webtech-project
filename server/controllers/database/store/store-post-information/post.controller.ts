@@ -46,7 +46,12 @@ export class StorePostInformationController extends BaseDatabaseController {
             const caption = req.body.caption;
             const bodyTags = req.body.tags;
 
-            const geoData = await GPSDataExtractor(filePath);
+            const location = {
+                latitude: req.body.latitude || null,
+                longitude: req.body.longitude || null,
+            };
+            console.log(location)
+            const geoData = await GPSDataExtractor(filePath, location);
 
             const imageUrl = await this.imageApi.postImage(filePath);
             let [tags, evaluation] = await Promise.all([

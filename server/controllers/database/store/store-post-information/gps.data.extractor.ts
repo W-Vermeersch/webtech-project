@@ -40,7 +40,7 @@ function getRandomLatLonInBelgium() {
     return { latitude, longitude };
 }
 
-export async function GPSDataExtractor(file: string) {
+export async function GPSDataExtractor(file: string, location: GeoData) {
     let output: GeoData = {longitude: null, latitude: null};
 
     try {
@@ -84,9 +84,11 @@ export async function GPSDataExtractor(file: string) {
 
     // If no GPS data is available, generate random coordinates
     if (!output.latitude || !output.longitude) {
-        // console.log("No GPS data found. Generating random coordinates.");
-        output = getRandomLatLonInBelgium();
+        if (!location.longitude || !location.latitude) {
+            return getRandomLatLonInBelgium();
+        } else {
+            return location;
+        }
     }
-
     return output;
 }

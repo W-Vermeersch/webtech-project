@@ -8,11 +8,16 @@ import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
+import {useState} from "react";
 
 interface PostFormValues {
   caption: string;
   file: string;
   tags: string[];
+}
+interface geolocation {
+  lat: number,
+  long: number
 }
 
 const animalTags: string[] = ["Cat", "Dog", "Lion"];
@@ -21,12 +26,30 @@ const PostForm = () => {
   const axios = useAxiosPrivate();
   const navigate = useNavigate();
   const user = useAuthUser();
+  const [location, setLocation] = useState<geolocation | null>(null);
+  if (navigator.geolocation) {
+    console.log("Try to find coordinates")
+    navigator.geolocation.getCurrentPosition(success, nop);
+  }
 
   const initialValues: PostFormValues = {
     caption: "",
     file: "",
     tags: [],
   };
+
+  function success(position) {
+    console.log("Found location", position)
+    setLocation({
+      lat: position.coords.latitude,
+      long : position.coords.longitude
+    })
+  }
+
+  function nop(){
+    console.log("No coordinates")
+    setLocation(null)
+  }
 
   async function onSubmit(
     values: PostFormValues,
@@ -36,8 +59,17 @@ const PostForm = () => {
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
     formData.append("tags", values.tags[0]);
+    if (navigator.geolocation) {
+      console.log("Try to find coordinates")
+      navigator.geolocation.getCurrentPosition(success, nop);
+    }
+    if (location?.lat && location?.long) {
+      formData.append("latitude", location.lat.toString());
+      formData.append("longitude", location.long.toString());
+    }
+
     try {
-      const resp = await axios.post(ADD_POST, values, {
+      await axios.post(ADD_POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
