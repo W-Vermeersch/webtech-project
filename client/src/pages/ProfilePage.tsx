@@ -123,7 +123,7 @@ export default function ProfilePage() {
       )}
 
       {isLoading && 
-        <Spinner animation="border" className="spinner" variant="success"/>}
+        <Spinner animation="border" className="spinner" variant="dark"/>}
 
       <Container
         className=" text-white rounded overflow-hidden border border-light shadow"

@@ -15,11 +15,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
+import "./../Spinner.css";
 
 export default function SearchPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { posts: Post[] } | undefined;
+  const [isLoading, setIsLoading] = useState(false);
   const [searchType, setSearchType] = useState("@");
   const [search, setSearch] = useState("");
   const [radius, setRadius] = useState(0);
@@ -28,7 +31,52 @@ export default function SearchPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
+  useEffect(() => {
+    async function fetchSearchResults() {
+      setIsLoading(true);
+      if (searchType === "@" && search.length > 2) {
+        // Fetch users
+        const resp = await axios.get(SEARCH_USER, {
+          params: { username: search },
+        });
+        setPosts([]);
+        setUsers(resp.data.users);
+        setIsLoading(false);
+      } else {
+        // fetch posts
+        const tags = search.split(" ");
+        try {
+          const resp = await axios.get(SEARCH_TAG, {
+            params: {
+              tags: tags,
+              latitude: 1000,
+              longitude: 1000,
+              radius,
+              filter_enabled: false,
+            },
+          });
+          setUsers([]);
+          setPosts(resp.data.posts);
+        } catch (error) {
+          console.error("Failed to fetch posts:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    if (state) {
+      setSearchType("#");
+      setPosts(state.posts);
+      setUsers([]);
+    } else {
+      fetchSearchResults();
+    }
+  }, [search]);
+
+
   async function fetchFiltered() {
+    setIsLoading(true);
     const locationValue = location_input.current?.value;
     let latLng;
     if (locationValue) {
@@ -50,50 +98,17 @@ export default function SearchPage() {
       setPosts(resp.data.posts);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  useEffect(() => {
-    async function fetchSearchResults() {
-      if (searchType === "@" && search !== "") {
-        // Fetch users
-        const resp = await axios.get(SEARCH_USER, {
-          params: { username: search },
-        });
-        setPosts([]);
-        setUsers(resp.data.users);
-      } else {
-        // fetch posts
-        const tags = search.split(" ");
-        try {
-          const resp = await axios.get(SEARCH_TAG, {
-            params: {
-              tags: tags,
-              latitude: 1000,
-              longitude: 1000,
-              radius,
-              filter_enabled: false,
-            },
-          });
-          setUsers([]);
-          setPosts(resp.data.posts);
-        } catch (error) {
-          console.error("Failed to fetch posts:", error);
-        }
-      }
-    }
-
-    if (state) {
-      setSearchType("#");
-      setPosts(state.posts);
-      setUsers([]);
-    } else {
-      fetchSearchResults();
-    }
-  }, [search]);
-
   return (
     <>
+      {isLoading && (
+        <Spinner animation="border" className="spinner" variant="success" />
+      )}
+
       <Search
         setSearchType={setSearchType}
         onSearchComplete={setSearch}
