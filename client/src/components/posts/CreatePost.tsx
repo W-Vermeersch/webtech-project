@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PostForm from "./PostForm";
+import "./CreatePost.css";
 
 const CreatePost = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -19,17 +20,7 @@ const CreatePost = () => {
   return (
     <Container>
       <Row className="w-75 mx-auto mt-2 mb-3">
-        <Col xs="auto">
-          <img
-            src="/src/assets/add-post.svg"
-            width={36}
-            height={36}
-            alt="add"
-          />
-        </Col>
-        <Col className="d-flex align-items-center">
         <h2 className="fw-bold mb-0">Create Post</h2>
-        </Col>
       </Row>
       <PostForm />
     </Container>
