@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Form, Button, Image, Row } from "react-bootstrap";
-import { Formik, Form as FormikForm, Field, FormikHelpers } from "formik";
 import FileUploader from "../../components/posts/FileUploader";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "./EditProfilePage.css";
+import { UPDATE_BIO, UPDATE_PFP } from "../../api/urls";
 
 const EditProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   // default state if location.state is undefined
   const {
@@ -39,7 +41,11 @@ const EditProfilePage = () => {
     formData.append("bio", bio);
 
     console.log("Updated profile:", { profilePic, username, bio });
-    // Add API logic here to save profile changes
+    const newPFP = profilePic;
+    const newBio = bio;
+    const resp = await axiosPrivate.post(UPDATE_BIO, newBio);
+    // const resp2 = await axiosPrivate.post(UPDATE_PFP, newPFP);
+
     navigate(-1); // Navigate back to profile page
   };
 
