@@ -41,38 +41,38 @@ export default function SearchPage() {
 
   async function fetchSearchResults(search: string) {
     setSearch(search);
-      setIsLoading(true);
-      if (searchType === "@" && search.length > 2) {
-        // Fetch users
-        const resp = await axios.get(SEARCH_USER, {
-          params: { username: search },
+    setIsLoading(true);
+    if (searchType === "@" && search.length > 2) {
+      // Fetch users
+      const resp = await axios.get(SEARCH_USER, {
+        params: { username: search },
+      });
+      setPosts([]);
+      setUsers(resp.data.users);
+      setIsLoading(false);
+    } else {
+      // fetch posts
+      const tags = search.split(" ");
+      try {
+        const resp = await axios.get(SEARCH_TAG, {
+          params: {
+            tags: tags,
+            latitude: 1000,
+            longitude: 1000,
+            radius,
+            filter_enabled: false,
+          },
         });
-        setPosts([]);
-        setUsers(resp.data.users);
+        setUsers([]);
+        setPosts(resp.data.posts);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
         setIsLoading(false);
-      } else {
-        // fetch posts
-        const tags = search.split(" ");
-        try {
-          const resp = await axios.get(SEARCH_TAG, {
-            params: {
-              tags: tags,
-              latitude: 1000,
-              longitude: 1000,
-              radius,
-              filter_enabled: false,
-            },
-          });
-          setUsers([]);
-          setPosts(resp.data.posts);
-        } catch (error) {
-          console.error("Failed to fetch posts:", error);
-        } finally {
-          setIsLoading(false);
         }
       }
     }
-
+  
 
   async function fetchFiltered() {
     setIsLoading(true);
