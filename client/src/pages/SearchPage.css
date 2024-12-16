@@ -1,0 +1,15 @@
+
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none;
+  background: #a72828; /* Thumb color */
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none;
+  background: #a72828; /* Thumb color */
+  cursor: pointer;
+}
