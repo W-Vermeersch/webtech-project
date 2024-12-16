@@ -27,24 +27,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
 
-  // // Fetch the "liked" status when the component mounts
-  // useEffect(() => {
-  //   const fetchLikedStatus = async () => {
-  //     try {
-  //       const resp = await axiosPrivate.get(FETCH_HAS_USER_LIKED, {
-  //         params: { post_id: post.idx },
-  //       });
-  //       //console.log("What is returned", resp.data);
-  //       if (resp.status === 200 && resp.data) {
-  //         setIsLiked(resp.data.liked);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching liked status:", error);
-  //     }
-  //   };
-  //   fetchLikedStatus();
-  // }, [post.idx, axiosPrivate]);
-
   const handleLiking = async () => {
     // console.log("Handlelike has been called");
     const post_id = post.idx;
