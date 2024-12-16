@@ -37,7 +37,7 @@ export default function SearchPage() {
       try {
         const resp = await axios.get(SEARCH_TAG, {
           params: {
-            tag: search,
+            tags: search,
             latitude: latLng?.lat,
             longitude: latLng?.lng,
             radius: radius * 1000,
@@ -68,7 +68,7 @@ export default function SearchPage() {
         try {
           const resp = await axios.get(SEARCH_TAG, {
             params: {
-              tag: search,
+              tags: search,
               latitude: 1000,
               longitude: 1000,
               radius,
