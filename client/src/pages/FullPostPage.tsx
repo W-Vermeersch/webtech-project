@@ -16,6 +16,7 @@ import PostImage from "../components/posts/full-post/PostImage";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
 import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
 import { level } from "../api/xp-system";
+import ViewCommentsModal from "../components/scrollerPagination/Commenting/ViewComments.tsx";
 
 // later make modules of components
 
@@ -27,6 +28,15 @@ export default function FullPost() {
   const [post, setPost] = useState<Post | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+
+  const handleViewAllComments = () => {
+    setShowViewCommentsModal(true);
+  };
+
+  const handleCloseViewCommentsModal = () => {
+    setShowViewCommentsModal(false);
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -54,7 +64,6 @@ export default function FullPost() {
   }, [post_id, navigate]);
 
   useEffect(() => {
-    
     async function fetchUser(username: string | number) {
       try {
         const resp = await axios.get(FETCH_USER_PROFILE, {
@@ -79,7 +88,8 @@ export default function FullPost() {
       } else {
         fetchUser(post.user_id);
       }
-    }}, [post, navigate]);
+    }
+  }, [post, navigate]);
 
   if (!post || !user) {
     return null;
@@ -87,7 +97,9 @@ export default function FullPost() {
 
   return (
     <>
-      {isLoading && <Spinner className="spinner" animation="border" variant="success" />}
+      {isLoading && (
+        <Spinner className="spinner" animation="border" variant="success" />
+      )}
 
       <div id="full-post">
         <Row
@@ -95,13 +107,19 @@ export default function FullPost() {
           id="full-post-row"
           className="flex-nowrap flex-md-wrap row-cols-md-3"
         >
-          <Col xs={12} md={6} className="order-md-4 order-2">
+          <Col xs={12} md={6} className=" order-md-4 order-2">
             <PostImage
               image_url={post.image_url}
               tags={post.tags}
               location={post.location}
             />
           </Col>
+          <Col xs={12} className="comment-container order-md-5">
+            <div className="comments" onClick={handleViewAllComments}>
+              Click here to view the comments.
+            </div>
+          </Col>
+
           <Col xs={12} md={6} className="order-md-1 order-1">
             <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
               <UserSection
@@ -127,6 +145,13 @@ export default function FullPost() {
           </Col>
         </Row>
       </div>
+      {showViewCommentsModal && (
+        <ViewCommentsModal
+          show={showViewCommentsModal}
+          onHide={handleCloseViewCommentsModal}
+          post={post}
+        />
+      )}
     </>
   );
 }
