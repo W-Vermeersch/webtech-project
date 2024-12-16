@@ -27,7 +27,7 @@ export class CloudinaryApi {
                 throw new Error(response.statusText);
             } else {
                 // console.log(response);
-                return response.url;
+                return response.secure_url;
             }
         } catch (error) {
             throw error;
