@@ -12,8 +12,9 @@ import HomePage from "./pages/Homepage.tsx";
 import CreatePost from "./components/posts/CreatePost.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import EditProfilePage from "./pages/EditingProfile/EditProfilePage.tsx";
-
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
+import SearchPage from "./pages/SearchPage.tsx";
+
 import PageNotFound from "./pages/PageNotFound.tsx";
 
 import FullPost from "./pages/FullPostPage.tsx";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/map" element={<Map />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/search/:type/:search" element={<SearchPage />} />
 
           <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />

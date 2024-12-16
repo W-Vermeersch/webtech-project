@@ -7,6 +7,9 @@ export interface Post {
   post_id?: number; // index of Post
   description: string;
   tags: string[];
+  score?: number;
+  rarity?: number;
+  liked?: boolean;
   likes?: number; // in DB each posts has a list of all Users who liked
   location: Location;
   // added because profile pictures also exist
@@ -17,11 +20,10 @@ export interface Post {
 export interface User {
   username: string;
   user_id?: number;
-  displayname: string;
   profilepicture: string;
   bio: string;
   totalexp: number;
-  badges: string[];
+  badges?: string[];
 }
 
 export interface Location {

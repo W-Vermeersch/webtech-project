@@ -81,10 +81,6 @@ function Map() {
 
   return (
     <div className="map-container">
-      <ButtonGroup id="post-filter" aria-label="Basic example">
-        <Button variant="success">All</Button>
-        <Button variant="success">Following</Button>
-      </ButtonGroup>
       <Button id="post-refresh" variant="success" onClick={handleRefresh}>
         Refresh
       </Button>

@@ -1,31 +1,32 @@
 import { axiosPrivate } from "../api/axios";
 import { useEffect } from "react";
-import useRefreshToken from "./useRefreshToken";
-import useAuth from "./useAuth";
-import useRefreshTokenIfAuth from "./userRefreshIfAuthentificated.tsx";
+import useAuthUser from "./useAuthUser";
+import useRefreshTokenIfAuth from "./userRefreshIfAuthentificated";
 
-const useAxiosPrivate = () => {
-    const refresh = useRefreshTokenIfAuth();//useRefreshToken();
-    const { auth } = useAuth();
+const useAxiosWithToken = () => {
+    const refresh = useRefreshTokenIfAuth();
+    const { auth } = useAuthUser();
 
     useEffect(() => {
-
         const requestIntercept = axiosPrivate.interceptors.request.use(
             config => {
-                if (!config.headers['Authorization']) {
-                    config.headers['Authorization'] = `Bearer ${auth?.token}`;
-                }
+                // Always set Authorization header, even if token is null
+                config.headers['Authorization'] = auth?.token
+                    ? `Bearer ${auth.token}`
+                    : null;
                 return config;
-            }, (error) => Promise.reject(error)
+            },
+            (error) => Promise.reject(error)
         );
 
         const responseIntercept = axiosPrivate.interceptors.response.use(
-            response => response, 
+            response => response,
             async (error) => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 403 && !prevRequest?.sent) {
                     prevRequest.sent = true;
                     const newAccessToken = await refresh();
+                    auth.token = newAccessToken; // Optionally update auth state if needed
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                     return axiosPrivate(prevRequest);
                 }
@@ -36,12 +37,10 @@ const useAxiosPrivate = () => {
         return () => {
             axiosPrivate.interceptors.request.eject(requestIntercept);
             axiosPrivate.interceptors.response.eject(responseIntercept);
-        }
-
-    }, [auth, refresh])
+        };
+    }, [auth, refresh]);
 
     return axiosPrivate;
+};
 
-}
-
-export default useAxiosPrivate;
+export default useAxiosWithToken;

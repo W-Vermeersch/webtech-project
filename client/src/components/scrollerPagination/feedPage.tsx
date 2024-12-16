@@ -8,16 +8,18 @@ import axios from "../../api/axios";
 import { FETCH_RANDOM_POSTS } from "../../api/urls";
 import Search from "../navBar/Search";
 import "./feedPage.css";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-// Fetch posts from the backend
-const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
-  const response = await axios.get(FETCH_RANDOM_POSTS, {
-    params: { nr_of_posts: 6, page: pageParam },
-  });
-  return response.data.posts || [];
-};
+export default function FeedPage() {
+    const axios = useAxiosPrivate()
+    // Fetch posts from the backend
+    const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
+        const response = await axios.get(FETCH_RANDOM_POSTS, {
+            params: { nr_of_posts: 6, page: pageParam },
+        });
+        return response.data.posts || [];
+    };
 
-const FeedPage = () => {
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ["posts"],
@@ -28,6 +30,8 @@ const FeedPage = () => {
       },
       initialPageParam: 1,
     });
+
+
 
   const lastPostRef = useRef<HTMLElement>(null);
   const { ref, entry } = useIntersection({
@@ -97,5 +101,3 @@ const FeedPage = () => {
     </>
   );
 };
-
-export default FeedPage;

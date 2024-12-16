@@ -66,7 +66,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             text: 'INSERT INTO user_table (username, email, password) VALUES ($1, $2, $3)',
             values: [user.username, user.email, user.password],
         };
-        return this.executeQuery(query).then(res => {console.log("User Registered :", res)}).catch(console.error);
+        return this.executeQuery(query).catch(console.error);
     }
     /* Returns an array with all the column values of a user given their username.*/
     public async fetchUserUsingUsername(username: string): Promise<User[]> {
@@ -232,7 +232,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Execute the query
         return this.executeQuery(query)
-            .then(() => console.log('Post stored successfully.'))
+            // .then(() => console.log('Post stored successfully.'))
             .catch(error => {
                 console.error('Error storing post:', error);
                 throw error; // Re-throw the error for upstream handling
@@ -380,7 +380,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
     public async fetchRandomPosts(n: Number, shownPosts) {
-        console.log("fetch in database (random)")
+        // console.log("fetch in database (random)")
         const query = {
             text: `SELECT 
                     post_id
@@ -392,7 +392,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             values: [shownPosts, n]
         }
         const res = await this.executeQuery(query);
-        console.log("res: "+ res.rows)
+        // console.log("res: "+ res.rows)
         return res.rows.map(post => post.post_id);
     }
 

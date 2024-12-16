@@ -59,7 +59,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
     const identifier = req.query.username ? req.query.username : "";
 
     let users;
-    console.log("identifier: ", identifier);
+    // console.log("identifier: ", identifier);
 
     if (!identifier) {
       return res
@@ -79,9 +79,9 @@ export class FetchUserInformationController extends BaseDatabaseController {
         redirect: "/pageNotFound",
       });
     } else {
-      console.log("users: ", users);
+      // console.log("users: ", users);
       const userObject = users[0];
-      console.log("user object: ", userObject);
+      // console.log("user object: ", userObject);
       const userProfileDecoration = await this.db.fetchProfileDecoration(
         userObject.user_id
       );
@@ -166,13 +166,13 @@ export class FetchUserInformationController extends BaseDatabaseController {
   private async getLeaderboard(req: express.Request, res: express.Response) {
     const users = await this.db.fetchTopTen();
     const topTenUsers = await Promise.all(users.map(async (user) => {
-      console.log("user: " + JSON.stringify(user, null, 2)) ;
+      // console.log("user: " + JSON.stringify(user, null, 2)) ;
       const user_id = user.user_id;
       const totalexp = user.totalexp;
-      console.log("total exp: " + totalexp)
+      // console.log("total exp: " + totalexp)
       const userObject = await this.db.fetchUserUsingID(user_id);
-      console.log("user object: "+ JSON.stringify(userObject[0], null, 2));
-      console.log("username: "+ userObject[0].username);
+      // console.log("user object: "+ JSON.stringify(userObject[0], null, 2));
+      // console.log("username: "+ userObject[0].username);
       const username = userObject[0].username;
       user = {
         username: username,

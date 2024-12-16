@@ -23,7 +23,7 @@ export default function Search({ onSearchComplete }: SearchProps) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     onSearchComplete && onSearchComplete();
     e.preventDefault();
-    searchType === "@" ? navigate(`/profile/${search}`) : navigate("/home"); // change when we have tags to search for animal posts
+    navigate(`/search/${searchType === "#" ? "tag" : "user"}/${search}`);
     setSearch("");
   }
 

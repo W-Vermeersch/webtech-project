@@ -10,6 +10,9 @@ const EditProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  interface sendbio {
+    new_bio: string;
+  }
 
   // default state if location.state is undefined
   const {
@@ -38,12 +41,12 @@ const EditProfilePage = () => {
       formData.append("profilepicture", profilePic);
     }
     formData.append("username", username);
-    formData.append("bio", bio);
+    formData.append("new_bio", bio);
 
-    console.log("Updated profile:", { profilePic, username, bio });
+    // console.log("Updated profile:", { profilePic, username, bio });
     const newPFP = profilePic;
-    const newBio = bio;
-    const resp = await axiosPrivate.post(UPDATE_BIO, newBio);
+    const objectbio = { new_bio: bio };
+    const resp = await axiosPrivate.post(UPDATE_BIO, objectbio);
     // const resp2 = await axiosPrivate.post(UPDATE_PFP, newPFP);
 
     navigate(-1); // Navigate back to profile page

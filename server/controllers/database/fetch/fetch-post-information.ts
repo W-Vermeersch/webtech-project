@@ -151,7 +151,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         if (!req.query.nr_of_posts){
             res.json({error: "No amount of posts have been specified"})
         }
-        console.log("getRandomPosts called")
+        // console.log("getRandomPosts called")
         const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
         const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
 
@@ -325,7 +325,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return;
         }
         // @ts-ignore
-        const user_id = req.user_id;
+        const user_id = req.userId;
         if (user_id !== -1) {
             const post_id = parseInt(req.query.post_id.toString());
             let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))

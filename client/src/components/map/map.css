@@ -9,16 +9,10 @@
     width: 100%;
 }
 
-#post-filter {
-    position: absolute;
-    top: 2vh;
-    right: 2vw;
-    z-index: 1000;
-}
 
 #post-refresh {
     position: absolute;
-    top: 9vh;
+    top: 2vh;
     right: 2vw;
     z-index: 1000;
 }
