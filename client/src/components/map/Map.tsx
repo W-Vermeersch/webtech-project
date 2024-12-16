@@ -20,6 +20,8 @@ import "../../Spinner.css";
 
 interface State {
   posts: Post[];
+  location: string;
+  radius: number;
 }
 
 function Map() {
@@ -103,7 +105,15 @@ function Map() {
         <Button
           id="post-search"
           variant="dark"
-          onClick={() => navigate("/search", { state: { posts: state.posts } })}
+          onClick={() =>
+            navigate("/search", {
+              state: {
+                posts: state.posts,
+                location: state.location,
+                radius: state.radius,
+              },
+            })
+          }
         >
           Back to Search
         </Button>

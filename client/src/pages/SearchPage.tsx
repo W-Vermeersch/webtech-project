@@ -21,7 +21,7 @@ import "./../Spinner.css";
 export default function SearchPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as { posts: Post[] } | undefined;
+  const state = location.state as { posts: Post[], location: string, radius: number } | undefined;
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchType, setSearchType] = useState("@");
@@ -34,6 +34,10 @@ export default function SearchPage() {
   useEffect(() => {
     if (state) {
       setSearchType("#");
+      if (location_input.current) {
+        location_input.current.value = state.location;
+      }
+      setRadius(state.radius);
       setPosts(state.posts);
       setUsers([]);
     }
@@ -141,7 +145,7 @@ export default function SearchPage() {
                 max={300}
                 value={radius}
                 onChange={(e) => setRadius(Number(e.target.value))}
-                step={25}
+                step={10}
                 disabled={searchType === "@"}
                 ref={radius_input}
               />
@@ -161,8 +165,8 @@ export default function SearchPage() {
           >
             <Button
               variant="dark"
-              className={search ? "" : "disabled"}
-              onClick={() => navigate("/map", { state: { posts } })}
+              className={posts.length !== 0 ? "" : "disabled"}
+              onClick={() => navigate("/map", { state: { posts, location: location_input.current!.value, radius } })}
             >
               View on Map
             </Button>
