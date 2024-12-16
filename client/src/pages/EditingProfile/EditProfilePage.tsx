@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Form, Button, Image, Row } from "react-bootstrap";
+import { Formik, Form as FormikForm, Field, FormikHelpers } from "formik";
 import FileUploader from "../../components/posts/FileUploader";
 import "./EditProfilePage.css";
 
@@ -15,8 +16,6 @@ const EditProfilePage = () => {
     bio: initBio,
   } = location.state || {};
 
-  console.log("the profile picture", profilepicture);
-
   // Redirect to PageNotFound if state is missing
   useEffect(() => {
     if (!profilepicture && !initName && !initBio) {
@@ -24,15 +23,21 @@ const EditProfilePage = () => {
     }
   }, [navigate, profilepicture, initName, initBio]);
 
-  const [profilePic, setProfilePic] = useState(profilepicture);
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    profilepicture ? `/src/assets/${profilepicture}` : "/default-profile.png"
+  );
   const [username, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);
 
-  const handleFileChange = (field: string, value: string) => {
-    setProfilePic(value);
-  };
+  const handleSave = async () => {
+    const formData = new FormData();
+    if (profilePic) {
+      formData.append("profilepicture", profilePic);
+    }
+    formData.append("username", username);
+    formData.append("bio", bio);
 
-  const handleSave = () => {
     console.log("Updated profile:", { profilePic, username, bio });
     // Add API logic here to save profile changes
     navigate(-1); // Navigate back to profile page
@@ -46,6 +51,7 @@ const EditProfilePage = () => {
       <div className="title-container text-center mb-4">
         <h2 className="title mb-2">Edit Your Profile!</h2>
         <p className="username">@{username}</p>
+        <hr className="my-3" />
       </div>
       <div className="d-flex justify-content-between mb-4">
         <Button
@@ -61,15 +67,26 @@ const EditProfilePage = () => {
       </div>
 
       {/* Profile Picture */}
-      <div className="text-center mb-3">
+      <div className="mb-3">
         <Image
-          src={`/src/assets/${profilepicture}`}
+          src={previewUrl}
           roundedCircle
-          width={120}
-          height={120}
+          width={50}
+          height={50}
           className="mb-2"
+        />{" "}
+        Profile picture
+        <div className="file-uploader-container"></div>
+        {/* FileUploader component */}
+        <FileUploader
+          setFieldValue={(field, value) => {
+            if (field === "file") {
+              setProfilePic(value);
+              const preview = URL.createObjectURL(value);
+              setPreviewUrl(preview);
+            }
+          }}
         />
-        <FileUploader setFieldValue={handleFileChange} />
       </div>
 
       {/* Edit Bio */}

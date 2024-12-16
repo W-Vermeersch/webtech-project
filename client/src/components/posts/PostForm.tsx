@@ -34,14 +34,16 @@ const PostForm = () => {
   ) {
     console.log("Form data:", values);
     const formData = new FormData();
-    formData.append('file', values.file); // Attach the file
-    formData.append('caption', values.caption);
-    formData.append('tags', values.tags[0]);
+    formData.append("file", values.file); // Attach the file
+    formData.append("caption", values.caption);
+    formData.append("tags", values.tags[0]);
+    console.log("this is the image", values.file);
     try {
       const resp = await axios.post(ADD_POST, values, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        }});
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("Response:", resp.data);
       navigate(`/profile/${user?.username}`);
     } catch (error) {
@@ -56,13 +58,15 @@ const PostForm = () => {
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
           <FormGroup className="mb-4" controlId="reactFile">
-              <FormLabel>Drag and drop some files here, or click to select files </FormLabel>
+            <FormLabel>
+              Drag and drop some files here, or click to select files{" "}
+            </FormLabel>
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
-          <FormLabel>Caption</FormLabel>
+            <FormLabel>Caption</FormLabel>
             <Field
               as="textarea"
               name="caption"
@@ -76,7 +80,7 @@ const PostForm = () => {
 
           {/* Tags field */}
           <FormGroup className="mb-4" controlId="formTags">
-          <FormLabel>Animal tag</FormLabel>
+            <FormLabel>Animal tag</FormLabel>
             <Typeahead
               id="animaltags"
               options={animalTags}
