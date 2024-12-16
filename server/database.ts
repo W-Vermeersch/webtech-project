@@ -380,7 +380,6 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
     public async fetchRandomPosts(n: Number, shownPosts) {
-        // console.log("fetch in database (random)")
         const query = {
             text: `SELECT 
                     post_id
@@ -392,7 +391,6 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             values: [shownPosts, n]
         }
         const res = await this.executeQuery(query);
-        // console.log("res: "+ res.rows)
         return res.rows.map(post => post.post_id);
     }
 

@@ -145,7 +145,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
 
 
   private async getProfileInformation(req, res) {
-    const username = req.query.username ? req.query.username : "";
+    const username = req.query.username;
     if (!username) {
       return res
         .status(400)
@@ -322,13 +322,9 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
   private async getLeaderboard(req: express.Request, res: express.Response) {
     const users = await this.db.fetchTopTen();
     const topTenUsers = await Promise.all(users.map(async (user) => {
-      // console.log("user: " + JSON.stringify(user, null, 2)) ;
       const user_id = user.user_id;
       const totalexp = user.totalexp;
-      // console.log("total exp: " + totalexp)
       const userObject = await this.db.fetchUserUsingID(user_id);
-      // console.log("user object: "+ JSON.stringify(userObject[0], null, 2));
-      // console.log("username: "+ userObject[0].username);
       const username = userObject[0].username;
       user = {
         username: username,

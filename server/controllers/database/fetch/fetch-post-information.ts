@@ -155,11 +155,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
         if (!req.cookies.shown_post_ids) {
             shownIds = []
         }
-        // const shownIds: number[] = req.cookies.shown_post_ids//.split(',').filter((i) => +i);
         if (!req.query.nr_of_posts){
             res.json({error: "No amount of posts have been specified"})
         }
-        // console.log("getRandomPosts called")
         const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
         const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
 
@@ -167,7 +165,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
             // @ts-ignore
             return await this.fetchPost(id, req.userId).then((val: Post) => {
                 shownIds.push(id)
-                // console.log(val)
                 return val
             }).catch((err: string) => {
                 console.log(err)
@@ -314,8 +311,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         
             post_list = this.shuffleArray(post_list);
-            console.log("shuffled tags" + 
-                await Promise.all(post_list.map(async (postObject) => {return postObject.idx})))
             res.json({
                 posts: post_list
             });
@@ -377,8 +372,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
     
             post_list = this.shuffleArray(post_list);
-            console.log("shuffled tags" + 
-                await Promise.all(post_list.map(async (postObject) => {return postObject.idx})));
             res.json({
                 posts: post_list
             });
