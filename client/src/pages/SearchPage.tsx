@@ -6,6 +6,8 @@ import PostTile from "../components/searchResults/PostTile";
 import ProfileTile from "../components/searchResults/ProfileTile";
 
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export default function SearchPage() {
   const { type, search } = useParams();
@@ -13,85 +15,36 @@ export default function SearchPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const mockUsers: User[] = [
-    {
-      user_id: 1,
-      username: "user1",
-      profilepicture: "https://via.placeholder.com/150",
-      bio: "I am user1",
-      totalexp: 100,
-    },
-    {
-      user_id: 2,
-      username: "user2",
-      profilepicture: "https://via.placeholder.com/150",
-      bio: "I am user2",
-      totalexp: 200,
-    },
-    {
-      user_id: 3,
-      username: "user3",
-      profilepicture: "https://via.placeholder.com/150",
-      bio: "I am user3",
-      totalexp: 300,
-    },
-  ];
-
-  const mockPosts: Post[] = [
-    {
-      idx: 1,
-      image_url: "https://via.placeholder.com/150",
-      tags: ["tag1", "tag2"],
-      description: "This is a post",
-      user_id: 1,
-      user: "user1",
-      username: "user1",
-      location: { latitude: 0, longitude: 0 },
-    },
-    {
-      idx: 2,
-      image_url: "https://via.placeholder.com/150",
-      tags: ["tag3", "tag4"],
-      description: "This is another post",
-      user_id: 2,
-      user: "user1",
-      username: "user1",
-      location: { latitude: 0, longitude: 0 },
-    },
-    {
-      idx: 3,
-      image_url: "https://via.placeholder.com/150",
-      tags: ["tag5", "tag6", "tag7"],
-      description: "This is yet another post",
-      user_id: 3,
-      user: "user1",
-      username: "user1",
-      location: { latitude: 0, longitude: 0 },
-    },
-  ];
 
   useEffect(() => {
-     if (searchType === "#") {
-       setUsers([]);
-       setPosts(mockPosts);
-     } else {
-       setPosts([]);
-       setUsers(mockUsers);
-     }
-
+    if (searchType === "#") {
+      setUsers([]);
+      setPosts(mockPosts);
+    } else {
+      setPosts([]);
+      setUsers(mockUsers);
+    }
   });
 
   return (
     <div>
       <Container
         className="d-flex flex-wrap justify-content-center"
-        style={{ maxHeight: "80vh", overflowY: "auto" }}
+        style={{ maxHeight: "80vh"}}
       >
-        {searchType === "#"
-          ? posts?.map((post: Post) => <PostTile post={post} key={post.idx} />)
-          : users?.map((user: User) => (
-              <ProfileTile user={user} key={user.user_id} />
-            ))}
+        <Row className="justify-content-center">
+          {searchType === "#"
+            ? posts?.map((post: Post) => (
+                <Col xs="auto">
+                  <PostTile post={post} key={post.idx} />
+                </Col>
+              ))
+            : users?.map((user: User) => (
+                <Col xs="auto">
+                  <ProfileTile user={user} key={user.user_id} />
+                </Col>
+              ))}
+        </Row>
       </Container>
     </div>
   );

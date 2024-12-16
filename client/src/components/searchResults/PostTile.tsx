@@ -17,7 +17,7 @@ export default function ProfileTile({ post }: PostTileProps) {
       <Stack gap={4} className="d-flex flex-column align-items-center">
         <NavLink to={`/post/${post.idx}`} state={{ post }}>
           <div>
-            <Image src={post.image_url} rounded />
+            <Image className='' src={post.image_url} rounded />
           </div>
         </NavLink>
         <div className="badge-container">
