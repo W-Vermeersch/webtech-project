@@ -182,43 +182,38 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getPostComments(req: express.Request, res: express.Response) {
-        try {
-            if (!req.query.post_id) {
-                res.json({
-                    redirect: '/pageNotFound'
-                });
-                return;
-            }
-            const post_id = parseInt(req.query.post_id.toString());
+        if (!req.query.post_id) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+            return;
+        }
+        const post_id = parseInt(req.query.post_id.toString());
 
-            const posts = await this.db.fetchPostsByIds([post_id])
-            if (posts.length === 0) {
-                res.json({
-                    redirect: '/pageNotFound'
-                });
-            } else {
-                const postObject = posts[0]
-                const commentIds = (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
-                const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
-
-                    const comments = await this.db.fetchCommentByIds([comment_id])
-                    const commentObject = comments[0]
-                    const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
-                    const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
+        const posts = await this.db.fetchPostsByIds([post_id])
+        if (posts.length === 0) {
+            res.json({
+                redirect: '/pageNotFound'
+            });
+        } else {
+            const postObject = posts[0]
+            const commentIds = (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
+            const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
+        
+                const comments = await this.db.fetchCommentByIds([comment_id])
+                const commentObject = comments[0]
+                const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
+                const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
                     return {
-                        user_id: commentObject.user_id,
-                        user: commentOwner[0].username,
-                        profile_picture: commentOwnerDecoration.profilePicture,
-                        post_id: commentObject.post_id,
-                        description: commentObject.description
-                    };
-                }));
-                res.json({
-                    post_comments: comment_list
-                })
-            }
-        } catch (error){
-            res.status(400).send(error)
+                    user_id: commentObject.user_id,
+                    user: commentOwner[0].username,
+                    post_id: commentObject.post_id,
+                    description: commentObject.description
+                };
+            }));
+            res.json({
+                post_comments: comment_list
+            })
         }
     }
 
