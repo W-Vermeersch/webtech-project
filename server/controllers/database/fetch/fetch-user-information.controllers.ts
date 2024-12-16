@@ -43,6 +43,12 @@ export class FetchUserInformationController extends BaseDatabaseController {
         return this.getLeaderboard(req, response);
       }
     );
+
+    this.router.get(
+      "/fetch/search/user", 
+      (req: Express.Request, response: Express.Response) => {
+      return this.getUserSearchResults(req, response);
+  });
   }
 
   // All fetching operations require the username inside the request parameters.
@@ -178,6 +184,30 @@ export class FetchUserInformationController extends BaseDatabaseController {
     res.json({
       users: topTenUsers
     });
+  }
 
+  private async getUserSearchResults(req, res) {
+    const searchQuery = req.query.username; 
+
+    const matchingUsers = await this.db.fetchUsersMatchingSearch(searchQuery);
+
+    const user_list = await Promise.all(matchingUsers.map(async (user) => {
+        
+        const user_id = user.user_id;
+        const userProfileDecoration = await this.db.fetchProfileDecoration(user_id);
+        const username = user.username;
+        return {
+            username: username,
+            user_id: user_id,
+            profilepicture: userProfileDecoration.profilePicture,
+            bio: userProfileDecoration.bio,
+            totalexp: userProfileDecoration.xp,
+            badges: userProfileDecoration.badges,
+        };
+    }));
+
+    res.json({
+      users: user_list,
+    });
   }
 }

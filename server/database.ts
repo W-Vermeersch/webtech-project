@@ -80,6 +80,23 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         // if you need that metadata you can remove .rows and extract what you need.
     };
 
+    public async fetchUsersMatchingSearch(searchQuery: string) {
+        const query = {
+            text: `
+                SELECT *, similarity(username, $1) AS similarity_score
+                FROM user_table
+                WHERE username ILIKE '%' || $1 || '%'
+                ORDER BY
+                    (username = $1) DESC, 
+                    similarity_score DESC; 
+            `,
+            values: [searchQuery],
+        };
+    
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+
     /* Returns an array with all the column values of a user given their ID.*/
     public async fetchUserUsingID(user_id: number): Promise<User> {
         const query = {
@@ -386,12 +403,41 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                     post_id,
                     user_id
                 FROM post_table
-                WHERE $1 = ANY(tags);
+                WHERE
+                    EXISTS (
+                        SELECT 1
+                        FROM unnest(tags) AS tag_element
+                        WHERE tag_element ILIKE $1
+                    );
             `,
             values: [tag],
         };
-        // return this.executePostQuery(`FROM post_table WHERE $1 = ANY(tags)`, [tag])
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
 
+    public async fetchPostsByTagWithinRadius(tag: string, latitude: number, longitude: number, radius: number): Promise<any[]> {
+        const query = {
+            text: `
+                SELECT
+                    post_id,
+                    user_id
+                FROM post_table
+                WHERE 
+                    EXISTS (
+                        SELECT 1
+                        FROM unnest(tags) AS tag_element
+                        WHERE tag_element ILIKE $1
+                    )
+                    AND ST_DWithin(
+                        ST_Transform(location::geometry, 3857),  
+                        ST_Transform(ST_SetSRID(ST_MakePoint($2, $3), 4326), 3857), 
+                        $4  -- Radius in meters
+                    );
+            `,
+            values: [tag, longitude, latitude, radius],
+        };
+    
         const res = await this.executeQuery(query);
         return res.rows;
     }
@@ -547,6 +593,11 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             text: 'CREATE EXTENSION IF NOT EXISTS postgis;'
         };
         await this.executeQuery(query);
+
+        query = {
+            text: 'CREATE EXTENSION IF NOT EXISTS pg_trgm;'
+        };
+        await this.executeQuery(query)
 
         // Create Table for Users
         query = {

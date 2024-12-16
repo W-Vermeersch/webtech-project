@@ -59,7 +59,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getPostsWithinRadius(req, response);
         });
 
-        this.router.get("/fetch/tag/posts", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/search/tag", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getTagPosts(req, response);
         });
 
@@ -227,21 +227,41 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
 
     private async getTagPosts(req: express.Request, res: express.Response) {
-        if (!req.query.tag) {
-            return res.json({
-                redirect: '/pageNotFound'
-            });
+        if (!req.query.tag || !req.query.longitude || !req.query.latitude || !req.query.radius) {
+            return res.status(404).send("One or more parameters missing.")
         }
         const tag = req.query.tag;
-        const posts = await this.db.fetchPostsByTag(tag.toString())
-        const post_list = await Promise.all(posts.map(async (postObject) => {
-            const post_id = postObject.post_id;
-            const user_id = postObject.user_id;
-            return await this.fetchPost(post_id, user_id);
-        }))
+        const long = parseFloat(req.query.longitude.toString());
+        const lat = parseFloat(req.query.latitude.toString());
+        const radius = parseInt(req.query.radius.toString());
+        const filterEnabled = req.query.filter_enabled;
+        console.log("tag: "+tag)
+        console.log("long: " + long)
+        console.log("lat: " + lat)
+        console.log("radius: " + radius)
+        console.log("filterEnabled: " + filterEnabled)
+
+        let post_list: Post[] = []
+
+        if (filterEnabled === 'true') {
+            const posts = await this.db.fetchPostsByTagWithinRadius(tag.toString(), lat, long, radius)
+            post_list = await Promise.all(posts.map(async (postObject) => {
+                const post_id = postObject.post_id;
+                const user_id = postObject.user_id;
+                return await this.fetchPost(post_id, user_id);
+            }))
+        } else if (filterEnabled === 'false') {
+            const posts = await this.db.fetchPostsByTag(tag.toString())
+            post_list = await Promise.all(posts.map(async (postObject) => {
+                const post_id = postObject.post_id;
+                const user_id = postObject.user_id;
+                return await this.fetchPost(post_id, user_id);
+            }))
+        } else res.status(404).send("filter_enabled was neither true or false.")
+
         res.json({
             posts: post_list
-        })
+        });
     }
 
     private async getNearestPosts(req: express.Request, res: express.Response) {
