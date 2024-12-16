@@ -54,11 +54,11 @@ export async function getLatLng(address: string) {
   try {
     await geocode(RequestType.ADDRESS, address).then(({ results }) => {
       const { lat, lng } = results[0].geometry.location;
-      return [lat, lng];
+      return {lat: lat, lng: lng};
     });
   } catch (error) {
     console.error(error);
-    return [0, 0];
+    return {lat: 1000, lng: 1000};
   }
 }
 

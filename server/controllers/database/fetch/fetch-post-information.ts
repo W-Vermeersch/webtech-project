@@ -225,39 +225,75 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });  
         }
 
-
     private async getTagPosts(req: express.Request, res: express.Response) {
-        if (!req.query.tag || !req.query.longitude || !req.query.latitude 
+        if (!req.query.tags || !req.query.longitude || !req.query.latitude 
             || !req.query.radius || !req.query.filter_enabled) {
             return res.status(404).send("One or more parameters missing.")
         }
-        const tag = req.query.tag;
+        const tags: string[] = (req.query.tags as string[]).map(tag => tag.toString());
         const long = parseFloat(req.query.longitude.toString());
         const lat = parseFloat(req.query.latitude.toString());
         const radius = parseInt(req.query.radius.toString());
         const filterEnabled = req.query.filter_enabled;
-        let post_list: Post[] = []
-
-        if (filterEnabled === 'true') {
-            const posts = await this.db.fetchPostsByTagWithinRadius(tag.toString(), lat, long, radius)
-            post_list = await Promise.all(posts.map(async (postObject) => {
-                const post_id = postObject.post_id;
-                const user_id = postObject.user_id;
-                return await this.fetchPost(post_id, user_id);
-            }))
-        } else if (filterEnabled === 'false') {
-            const posts = await this.db.fetchPostsByTag(tag.toString())
-            post_list = await Promise.all(posts.map(async (postObject) => {
-                const post_id = postObject.post_id;
-                const user_id = postObject.user_id;
-                return await this.fetchPost(post_id, user_id);
-            }))
-        } else res.status(404).send("filter_enabled was neither true or false.")
-
-        res.json({
-            posts: post_list
+        let post_list: Post[] = [];
+        
+        try {
+            if (filterEnabled === 'true') {
+            const posts = await Promise.all(
+                tags.map(tag => this.db.fetchPostsByTagWithinRadius(tag, lat, long, radius))
+            );
+                const uniquePosts = this.removeDuplicates(posts.flat());
+                post_list = await Promise.all(uniquePosts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }));
+            } else if (filterEnabled === 'false') {
+                const posts = await Promise.all(
+                    tags.map(tag => this.db.fetchPostsByTag(tag))
+                );
+                const uniquePosts = this.removeDuplicates(posts.flat());
+                post_list = await Promise.all(uniquePosts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }));
+            } else {
+                return res.status(404).send("filter_enabled was neither true nor false.");
+            }
+        
+            post_list = this.shuffleArray(post_list);
+            console.log("shuffled tags" + 
+                await Promise.all(post_list.map(async (postObject) => {return postObject.idx})))
+            res.json({
+                posts: post_list
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                posts: []
+            });
+        }
+    }
+    private removeDuplicates(posts: any[]): any[] {
+        const seen = new Set();
+        return posts.filter(post => {
+            if (seen.has(post.post_id)) {
+                return false;
+            } else {
+                seen.add(post.post_id);
+                return true;
+            }
         });
     }
+    private shuffleArray(array: any[]): any[] {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+    
 
     private async getNearestPosts(req: express.Request, res: express.Response) {
         if (!req.query.longitude || !req.query.latitude  || !req.query.limit) {
