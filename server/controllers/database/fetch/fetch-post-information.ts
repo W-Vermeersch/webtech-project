@@ -305,7 +305,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return;
         }
         // @ts-ignore
-        const user_id = req.user_id;
+        const user_id = req.userId;
         if (user_id !== -1) {
             const post_id = parseInt(req.query.post_id.toString());
             let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
