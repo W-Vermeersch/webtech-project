@@ -2,7 +2,6 @@ import * as express from "express";
 import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../../interfaces";
-import * as ExifReader from 'exifreader';
 import { authenticateToken } from "../../../user-authentification";
 import * as multer from "multer";
 import * as path from "path";
@@ -52,7 +51,6 @@ export class StorePostInformationController extends BaseDatabaseController {
             };
             console.log(location)
             const geoData = await GPSDataExtractor(filePath, location);
-            return res.status(200).json(geoData)
 
             const imageUrl = await this.imageApi.postImage(filePath);
             let [tags, evaluation] = await Promise.all([

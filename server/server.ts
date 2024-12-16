@@ -1,9 +1,7 @@
 import * as express from 'express';
 import * as controller from './controllers';
-import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
-import {BaseController, UserAuthenticationController} from "./controllers";
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
@@ -19,7 +17,6 @@ class FrontEndController extends controller.BaseController {
     initializeRoutes(): void {
         this.router.get("/", (req, res) => {
             const header = JSON.stringify(req.headers.host)
-            console.log(header);
             return res.redirect(`https://${header.split(':')[0].split('"')[1]}:${5173}`)
         });
     }
@@ -79,10 +76,6 @@ export class App {
 
         this.app.use(express.json({ limit: "150mb" }));
         this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
-        // this.app.use(express.static(path.join(__dirname, "../client")));
-        // this.app.get("*", (req, res) => {
-        //     res.sendFile(path.join(__dirname, "../client", "index.html"));
-        // });
 
         this.database.init()
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

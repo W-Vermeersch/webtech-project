@@ -14,7 +14,6 @@ export class StoreCommentInformationController extends BaseDatabaseController {
     }
 
     initializeRoutes(): void {
-
         this.router.post("/store/comment", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.storeComment(req, response);
         });
@@ -22,32 +21,36 @@ export class StoreCommentInformationController extends BaseDatabaseController {
 
 
     private async storeComment(req, res): Promise<void> {
-        const inputs: CommentForms = new CommentForms();
-        inputs.user_id = req.user.user_id;  //extract from token
-        inputs.description = req.body.description
-        inputs.post_id = req.body.post_id
-     
-        const errors: ErrorInCommentInForm = new ErrorInCommentInForm();
-        const comment: Comment = {
-            comment_id: 0,
-            user_id: inputs.user_id,
-            post_id: inputs.post_id,
-            description: inputs.description
-        }
+        try {
+            const inputs: CommentForms = new CommentForms();
+            inputs.user_id = req.user.user_id;  //extract from token
+            inputs.description = req.body.description
+            inputs.post_id = req.body.post_id
 
-        if (!comment.description || comment.description == "") {
-            errors.description = "Please enter a description";
-            inputs.description = "";
-        }
+            const errors: ErrorInCommentInForm = new ErrorInCommentInForm();
+            const comment: Comment = {
+                comment_id: 0,
+                user_id: inputs.user_id,
+                post_id: inputs.post_id,
+                description: inputs.description
+            }
 
-        if (errors.hasErrors()) {
-            res.status(206).json({
-                errors: errors.toObject(),
-                inputs: inputs.toObject(),
-            });
-        } else {
-            await this.db.storeComment(comment);
-            res.status(200).send("succesfully stored the comment")
+            if (!comment.description || comment.description == "") {
+                errors.description = "Please enter a description";
+                inputs.description = "";
+            }
+
+            if (errors.hasErrors()) {
+                res.status(206).json({
+                    errors: errors.toObject(),
+                    inputs: inputs.toObject(),
+                });
+            } else {
+                await this.db.storeComment(comment);
+                res.status(200).send("succesfully stored the comment")
+            }
+        } catch (error){
+            res.status(400).send(error)
         }
     }
 

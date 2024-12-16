@@ -81,22 +81,26 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getPostInformation(req: express.Request, res: express.Response) {
-        if (!req.query.post_id) {
-            return res.json({
-                redirect: '/pageNotFound'
-            });
-        }
-        const post_id = parseInt(req.query.post_id.toString());
+        try {
+            if (!req.query.post_id) {
+                return res.json({
+                    redirect: '/pageNotFound'
+                });
+            }
+            const post_id = parseInt(req.query.post_id.toString());
 
-        // @ts-ignore
-        this.fetchPost(post_id, req.userId).then((val) => {
-            return res.json(val)
-        }).catch((error) => {
-            console.log(error)
-            return res.json({
-                redirect: '/pageNotFound'
-            });
-        })
+            // @ts-ignore
+            this.fetchPost(post_id, req.userId).then((val) => {
+                return res.json(val)
+            }).catch((error) => {
+                console.log(error)
+                return res.json({
+                    redirect: '/pageNotFound'
+                });
+            })
+        } catch (error){
+            res.status(400).send(error)
+        }
     }
 
     private async fetchComments(postId: number): Promise<comment[]> {
@@ -120,7 +124,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const posts = await this.db.fetchPostsByIds([postId])
         if (posts.length === 0) {
             throw new Error("No posts found.");
-            }
+        }
         const postObject = posts[0]
         const postOwner = (await this.db.fetchUserUsingID(postObject.user_id))[0];
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
@@ -143,90 +147,102 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getRandomPosts(req: express.Request, res: express.Response) {
-        let shownIds: number[] = req.cookies.shown_post_ids
-        if (!req.cookies.shown_post_ids) {
-            shownIds = []
-        }
-        // const shownIds: number[] = req.cookies.shown_post_ids//.split(',').filter((i) => +i);
-        if (!req.query.nr_of_posts){
-            res.json({error: "No amount of posts have been specified"})
-        }
-        // console.log("getRandomPosts called")
-        const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
-        const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
+        try {
+            let shownIds: number[] = req.cookies.shown_post_ids
+            if (!req.cookies.shown_post_ids) {
+                shownIds = []
+            }
+            // const shownIds: number[] = req.cookies.shown_post_ids//.split(',').filter((i) => +i);
+            if (!req.query.nr_of_posts){
+                res.json({error: "No amount of posts have been specified"})
+            }
+            // console.log("getRandomPosts called")
+            const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
+            const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
 
-        const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
-            // @ts-ignore
-            return await this.fetchPost(id, req.userId).then((val: Post) => {
-                shownIds.push(id)
-                // console.log(val)
-                return val
-            }).catch((err: string) => {
-                console.log(err)
-                return undefined
-            })
-        }))
+            const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
+                // @ts-ignore
+                return await this.fetchPost(id, req.userId).then((val: Post) => {
+                    shownIds.push(id)
+                    // console.log(val)
+                    return val
+                }).catch((err: string) => {
+                    console.log(err)
+                    return undefined
+                })
+            }))
 
-        res.cookie("shown_post_ids", shownIds)
-        res.json({
-            posts: processedPosts.filter((val: Post | undefined) => val !== undefined),
-        });
+            res.cookie("shown_post_ids", shownIds)
+            res.json({
+                posts: processedPosts.filter((val: Post | undefined) => val !== undefined),
+            });
+        } catch (error){
+            res.status(400).send(error)
+        }
     }
 
     private async getPostComments(req: express.Request, res: express.Response) {
-        if (!req.query.post_id) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-            return;
-        }
-        const post_id = parseInt(req.query.post_id.toString());
+        try {
+            if (!req.query.post_id) {
+                res.json({
+                    redirect: '/pageNotFound'
+                });
+                return;
+            }
+            const post_id = parseInt(req.query.post_id.toString());
 
-        const posts = await this.db.fetchPostsByIds([post_id])
-        if (posts.length === 0) {
-            res.json({
-                redirect: '/pageNotFound'
-            });
-        } else {
-            const postObject = posts[0]
-            const commentIds = (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
-            const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
-        
-                const comments = await this.db.fetchCommentByIds([comment_id])
-                const commentObject = comments[0]
-                const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
-                const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
+            const posts = await this.db.fetchPostsByIds([post_id])
+            if (posts.length === 0) {
+                res.json({
+                    redirect: '/pageNotFound'
+                });
+            } else {
+                const postObject = posts[0]
+                const commentIds = (await this.db.fetchCommentsOfPost(postObject.post_id)).map(comment => comment.comment_id)
+                const comment_list: any[] = await Promise.all(commentIds.map(async (comment_id: number) => {
+
+                    const comments = await this.db.fetchCommentByIds([comment_id])
+                    const commentObject = comments[0]
+                    const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
+                    const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
                     return {
-                    user_id: commentObject.user_id,
-                    user: commentOwner[0].username,
-                    profile_picture: commentOwnerDecoration.profilePicture,
-                    post_id: commentObject.post_id,
-                    description: commentObject.description
-                };
-            }));
-            res.json({
-                post_comments: comment_list
-            })
+                        user_id: commentObject.user_id,
+                        user: commentOwner[0].username,
+                        profile_picture: commentOwnerDecoration.profilePicture,
+                        post_id: commentObject.post_id,
+                        description: commentObject.description
+                    };
+                }));
+                res.json({
+                    post_comments: comment_list
+                })
+            }
+        } catch (error){
+            res.status(400).send(error)
         }
     }
 
     private async getPostLikesAmount(req: express.Request, res: express.Response) {
-        if (!req.query.post_id) {
+        try {
+            if (!req.query.post_id) {
+                res.json({
+                    redirect: '/pageNotFound'
+                });
+                return;
+            }
+            const post_id = parseInt(req.query.post_id.toString());
+            const user_ids = await this.db.fetchLikedUsersOfPost(post_id)
+
             res.json({
-                redirect: '/pageNotFound'
+                nr_of_likes: user_ids.length
             });
-            return;
+        } catch (error){
+            res.status(400).send(error)
         }
-        const post_id = parseInt(req.query.post_id.toString());
-        const user_ids = await this.db.fetchLikedUsersOfPost(post_id)
-    
-        res.json({
-            nr_of_likes: user_ids.length
-            });  
-        }
+    }
 
     private async getTagPosts(req: express.Request, res: express.Response) {
-        if (!req.query.tags || !req.query.longitude || !req.query.latitude 
+        if (!req.query.tags || !req.query.longitude || !req.query.latitude
             || !req.query.radius || !req.query.filter_enabled) {
             return res.status(404).send("One or more parameters missing.")
         }
@@ -236,12 +252,12 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const radius = parseInt(req.query.radius.toString());
         const filterEnabled = req.query.filter_enabled;
         let post_list: Post[] = [];
-        
+
         try {
             if (filterEnabled === 'true') {
-            const posts = await Promise.all(
-                tags.map(tag => this.db.fetchPostsByTagWithinRadius(tag, lat, long, radius))
-            );
+                const posts = await Promise.all(
+                    tags.map(tag => this.db.fetchPostsByTagWithinRadius(tag, lat, long, radius))
+                );
                 const uniquePosts = this.removeDuplicates(posts.flat());
                 post_list = await Promise.all(uniquePosts.map(async (postObject) => {
                     const post_id = postObject.post_id;
@@ -261,9 +277,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
             } else {
                 return res.status(404).send("filter_enabled was neither true nor false.");
             }
-        
+
             post_list = this.shuffleArray(post_list);
-            console.log("shuffled tags" + 
+            console.log("shuffled tags" +
                 await Promise.all(post_list.map(async (postObject) => {return postObject.idx})))
             res.json({
                 posts: post_list
@@ -293,59 +309,68 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
         return array;
     }
-    
+
 
     private async getNearestPosts(req: express.Request, res: express.Response) {
-        if (!req.query.longitude || !req.query.latitude  || !req.query.limit) {
-            return res.json({
-                redirect: '/pageNotFound'
-            });
-        }
-        const long = parseInt(req.query.longitude.toString());
-        const lat = parseInt(req.query.latitude.toString());
-        const limit = parseInt(req.query.limit.toString());
+        try {
+            if (!req.query.longitude || !req.query.latitude  || !req.query.limit) {
+                return res.json({
+                    redirect: '/pageNotFound'
+                });
+            }
+            const long = parseInt(req.query.longitude.toString());
+            const lat = parseInt(req.query.latitude.toString());
+            const limit = parseInt(req.query.limit.toString());
 
-        const posts = await this.db.fetchNearestPosts(lat, long, limit)
-        const post_list = await Promise.all(posts.map(async (postObject) => {
-            const post_id = postObject.post_id;
-            const user_id = postObject.user_id;
-            return await this.fetchPost(post_id, user_id);
-        }))
-        res.json({
-            posts: post_list
-        })
+            const posts = await this.db.fetchNearestPosts(lat, long, limit)
+            const post_list = await Promise.all(posts.map(async (postObject) => {
+                const post_id = postObject.post_id;
+                const user_id = postObject.user_id;
+                return await this.fetchPost(post_id, user_id);
+            }))
+            res.json({
+                posts: post_list
+            })
+        } catch (error){
+            res.status(400).send(error)
+        }
     }
 
     private async getPostsWithinRadius(req: express.Request, res: express.Response) {
-        if (!req.query.longitude || !req.query.latitude  || !req.query.radius || !req.query.limit) {
-            return res.json({
-                redirect: '/pageNotFound'
-            });
-        }
-        const long = parseInt(req.query.longitude.toString());
-        const lat = parseInt(req.query.latitude.toString());
-        const radius = parseInt(req.query.radius.toString())
-        const limit = parseInt(req.query.limit.toString());
+        try {
+            if (!req.query.longitude || !req.query.latitude  || !req.query.radius || !req.query.limit) {
+                return res.json({
+                    redirect: '/pageNotFound'
+                });
+            }
+            const long = parseInt(req.query.longitude.toString());
+            const lat = parseInt(req.query.latitude.toString());
+            const radius = parseInt(req.query.radius.toString())
+            const limit = parseInt(req.query.limit.toString());
 
-        let post_list: any[] = []
-        if (limit == -1) {
-            const posts = await this.db.fetchPostsWithinRadius(lat, long, radius)
-            post_list = await Promise.all(posts.map(async (postObject) => {
-                const post_id = postObject.post_id;
-                const user_id = postObject.user_id;
-                return await this.fetchPost(post_id, user_id);
-            }))
-        } else {
-            const posts = await this.db.fetchPostsWithinRadiusWithLimit(lat, long, radius, limit)
-            post_list = await Promise.all(posts.map(async (postObject) => {
-                const post_id = postObject.post_id;
-                const user_id = postObject.user_id;
-                return await this.fetchPost(post_id, user_id);
-            }))
+            let post_list: any[] = []
+            if (limit == -1) {
+                const posts = await this.db.fetchPostsWithinRadius(lat, long, radius)
+                post_list = await Promise.all(posts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }))
+            } else {
+                const posts = await this.db.fetchPostsWithinRadiusWithLimit(lat, long, radius, limit)
+                post_list = await Promise.all(posts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }))
+            }
+            res.json({
+                posts: post_list
+            })
+        } catch (error){
+            res.status(400).send(error)
         }
-        res.json({
-            posts: post_list
-        })
+
     }
 
     private async isPostLiked(req: express.Request, res: express.Response){
@@ -367,10 +392,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
                 liked: likedPostsOfUser.includes(post_id)
             });
         } else {
-        res.json({
-            liked: false
-        });
-    }
+            res.json({
+                liked: false
+            });
+        }
     }
 }
 
