@@ -42,7 +42,7 @@ const PostForm = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Response:", resp.data);
+      // console.log("Response:", resp.data);
       navigate(`/profile/${user?.username}`);
     } catch (error) {
       console.error("Error submitting form:", error);

@@ -215,7 +215,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
 
         // Execute the query
         return this.executeQuery(query)
-            .then(() => console.log('Post stored successfully.'))
+            // .then(() => console.log('Post stored successfully.'))
             .catch(error => {
                 console.error('Error storing post:', error);
                 throw error; // Re-throw the error for upstream handling

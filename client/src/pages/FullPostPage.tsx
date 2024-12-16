@@ -45,7 +45,7 @@ export default function FullPost() {
       try {
         if (state && state.post) {
           setPost(state.post);
-          console.log("state post: ", state.post);
+          // console.log("state post: ", state.post);
         } else {
           const resp = await axios.get(FETCH_POST, { params: { post_id } });
           if (resp.data.redirect) {
@@ -69,7 +69,7 @@ export default function FullPost() {
         const resp = await axios.get(FETCH_USER_PROFILE, {
           params: { username },
         });
-        console.log("user: ", resp.data);
+        // console.log("user: ", resp.data);
         if (resp.data.redirect) {
           navigate(resp.data.redirect, { replace: true });
         } else {

@@ -23,10 +23,10 @@ export class CloudinaryApi {
                 return url
             })
             if (!response) {
-                console.log(response)
+                // console.log(response)
                 throw new Error(response.statusText);
             } else {
-                console.log(response);
+                // console.log(response);
                 return response.url;
             }
         } catch (error) {
@@ -50,7 +50,7 @@ export class CloudinaryApi {
                     return val.value
                 })
                 if (this.debugging)
-                    console.log('Response:', tag);
+                    // console.log('Response:', tag);
                 if (tag === undefined || tag[0].split('.')[0] == "None") {
                     return []
                 }

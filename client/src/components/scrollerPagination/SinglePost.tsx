@@ -20,7 +20,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  console.log(post)
 
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
@@ -47,20 +46,20 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   // }, [post.idx, axiosPrivate]);
 
   const handleLiking = async () => {
-    console.log("Handlelike has been called");
+    // console.log("Handlelike has been called");
     const post_id = post.idx;
     const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
     }
-    console.log("amount of likes", isLiked);
+    // console.log("amount of likes", isLiked);
   };
 
   const handleUnliking = async () => {
     try {
       const post_id = post.idx;
-      console.log("handleunliking has been called");
+      // console.log("handleunliking has been called");
 
       // Use DELETE method with params
       const resp = await axiosPrivate.delete(DELETE_LIKE, {

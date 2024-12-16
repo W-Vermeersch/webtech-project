@@ -43,7 +43,7 @@ const EditProfilePage = () => {
     formData.append("username", username);
     formData.append("new_bio", bio);
 
-    console.log("Updated profile:", { profilePic, username, bio });
+    // console.log("Updated profile:", { profilePic, username, bio });
     const newPFP = profilePic;
     const objectbio = { new_bio: bio };
     const resp = await axiosPrivate.post(UPDATE_BIO, objectbio);

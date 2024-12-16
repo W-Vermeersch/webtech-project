@@ -46,7 +46,7 @@ export async function GPSDataExtractor(file: string) {
     try {
         // Attempt to parse GPS data using exifr
         const exifrData = await parser.parse(file, {gps: true});
-        console.log(exifrData);
+        // console.log(exifrData);
 
         if (exifrData?.latitude && exifrData?.longitude) {
             output = {
@@ -56,7 +56,7 @@ export async function GPSDataExtractor(file: string) {
         } else {
             // Fallback to ExifReader if exifr fails to find GPS data
             const tags = await ExifReader.load(file);
-            console.log(tags);
+            // console.log(tags);
             const latitudeTag = tags.GPSLatitude;
             const longitudeTag = tags.GPSLongitude;
             const latitudeRef = tags.GPSLatitudeRef?.description; // N or S
@@ -84,7 +84,7 @@ export async function GPSDataExtractor(file: string) {
 
     // If no GPS data is available, generate random coordinates
     if (!output.latitude || !output.longitude) {
-        console.log("No GPS data found. Generating random coordinates.");
+        // console.log("No GPS data found. Generating random coordinates.");
         output = getRandomLatLonInBelgium();
     }
 

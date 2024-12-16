@@ -27,9 +27,9 @@ const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
       description: comment,
     };
     const resp = await axiosPrivate.post(ADD_COMMENT, values);
-    console.log("Comment Submitted: ", values);
-    console.log("Response", resp.status);
-    console.log("Response", resp.data);
+    // console.log("Comment Submitted: ", values);
+    // console.log("Response", resp.status);
+    // console.log("Response", resp.data);
     onHide(); // close the modal after submission
   };
 
