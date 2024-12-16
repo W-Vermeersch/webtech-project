@@ -26,10 +26,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
             return this.likePost(req, response);
         });
 
-        this.router.post("/store/user/follow-user", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/follow", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.followUser(req, response);
         });
- 
+
         this.router.post("/store/user/update-bio", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.updateBio(req, response);
         });
@@ -68,9 +68,29 @@ export class StoreUserInformationController extends BaseDatabaseController {
             }
         }
     }
-    private async followUser(req: express.Request, res: express.Response) {
-        console.log("TO DO");
+    private async followUser(req, res) {
+        const username = req.user.username
+        const usernameToFollow = req.query.username;
+        const userIdToFollow = (await this.db.fetchUserUsingUsername(usernameToFollow))[0].user_id
+
+        const users = await this.db.fetchUserUsingUsername(username.toString())
+        if (users.length === 0) {
+            res.status(404).send("username not found in database")
+        } else {
+            const userObject = users[0]
+            const user_id = userObject.user_id
+
+            let userFollowed: number[] = (await this.db.fetchUserFollowed(user_id))
+    
+            if (!userFollowed.includes(userIdToFollow)) {
+                await this.db.followUser(user_id, userIdToFollow)
+                res.status(200).send("Successfully followed user")
+            } else {
+                res.status(404).send("User has already followed this user")
+            }
+        }
     }
+
     private async updateBio(req, res) {
         const newBio = req.body.new_bio
         const username = req.user.username

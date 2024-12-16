@@ -27,6 +27,14 @@ export class DeleteController extends BaseDatabaseController {
     );
 
     this.router.delete(
+      "/delete/user/unfollow",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.unfollowUser(req, response);
+      }
+    );
+
+    this.router.delete(
       "/delete/comment/delete",
       authenticateToken,
       (req: express.Request, response: express.Response) => {
@@ -106,4 +114,29 @@ export class DeleteController extends BaseDatabaseController {
       await this.db.deletePost(post_id);
     }
   }
+
+  private async unfollowUser(req, res) {
+    const username = req.user.username;
+    const usernameToUnFollow = req.query.username;
+    const userIdToUnFollow = (await this.db.fetchUserUsingUsername(usernameToUnFollow))[0].user_id
+
+    const users = await this.db.fetchUserUsingUsername(username.toString());
+    if (users.length === 0) {
+      res.status(404).send("user not found in database")
+    } else {
+      const userObject = users[0];
+      const user_id = userObject.user_id;
+
+      let userFollowed: number[] = (await this.db.fetchUserFollowed(user_id))
+
+      if (!userFollowed.includes(userIdToUnFollow)) {
+        res.status(404).send("User has not followed this user");
+      } else {
+        await this.db.unfollowUser(user_id, userIdToUnFollow);
+        return res.status(200).send("Succesfully unfollowed this user");
+      }
+    }
+  }
+
+
 }

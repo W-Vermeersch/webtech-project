@@ -1,7 +1,7 @@
 import * as express from "express";
 import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
-import {ifAuthenticatedToken} from "../../user-authentification";
+import {authenticateToken, ifAuthenticatedToken} from "../../user-authentification";
 
 interface comment {
     user: string,
@@ -65,6 +65,14 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
         this.router.get("/fetch/post/liked", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.isPostLiked(req, response);
+        });
+
+        this.router.get("/fetch/post/get-random-follower-posts", authenticateToken, (req: express.Request, response: express.Response) => {
+            return this.getRandomFollowerPosts(req, response);
+        });
+
+        this.router.get("/fetch/search/tag-and-followers", authenticateToken, (req: express.Request, response: express.Response) => {
+            return this.getFollowerAndTagPosts(req, response);
         });
 
     }
@@ -173,6 +181,49 @@ export class FetchPostInformationController extends BaseDatabaseController {
         });
     }
 
+    private async getRandomFollowerPosts(req, res) {
+        let shownIds: number[] = req.cookies.shown_post_ids || [];
+        const user_id = req.user.user_id;
+    
+        if (!req.query.nr_of_posts) {
+            return res.json({ error: "No amount of posts have been specified" });
+        }
+    
+        const postCount = parseInt(req.query.nr_of_posts.toString());
+        try {
+            const user_follower_list = await this.db.fetchUserFollowers(user_id);
+                if (user_follower_list.length === 0) {
+                return res.json({ posts: [] });
+            }
+            const random_post_ids = await this.db.fetchRandomsPostsOfGivenUsers(postCount, shownIds, user_follower_list);
+                if (random_post_ids.length === 0) {
+                return res.json({ posts: [] });
+            }
+            const processedPosts: (Post | undefined)[] = await Promise.all(
+                random_post_ids.map(async (id: number) => {
+                    return await this.fetchPost(id, user_id)
+                        .then((val: Post) => {
+                            shownIds.push(id);
+                            return val;
+                        })
+                        .catch((err: string) => {
+                            console.log(err);
+                            return undefined;
+                        });
+                })
+            );
+    
+            res.cookie("shown_post_ids", shownIds);
+    
+            res.json({
+                posts: processedPosts.filter((val: Post | undefined) => val !== undefined),
+            });
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    }
+    
     private async getPostComments(req: express.Request, res: express.Response) {
         if (!req.query.post_id) {
             res.json({
@@ -275,6 +326,70 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         }
     }
+
+    
+    private async getFollowerAndTagPosts(req, res) {
+        if (!req.query.tags || !req.query.longitude || !req.query.latitude 
+            || !req.query.radius || !req.query.filter_enabled) {
+            return res.status(404).send("One or more parameters missing.");
+        }
+    
+        const tags: string[] = (req.query.tags as string[]).map(tag => tag.toString());
+        const long = parseFloat(req.query.longitude.toString());
+        const lat = parseFloat(req.query.latitude.toString());
+        const radius = parseInt(req.query.radius.toString());
+        const filterEnabled = req.query.filter_enabled;
+        const userId = req.user.user_id;
+    
+        let post_list: Post[] = [];
+    
+        try {
+            const followedList = await this.db.fetchUserFollowed(userId);
+    
+            if (followedList.length === 0) {
+                return res.json({ posts: [] });
+            }
+    
+            if (filterEnabled === 'true') {
+                const posts = await Promise.all(
+                    tags.map(tag => 
+                        this.db.fetchPostsByTagWithinRadiusGivenUsers(tag, lat, long, radius, followedList)
+                    )
+                );
+                const uniquePosts = this.removeDuplicates(posts.flat());
+                post_list = await Promise.all(uniquePosts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }));
+            } else if (filterEnabled === 'false') {
+                const posts = await Promise.all(
+                    tags.map(tag => this.db.fetchPostsByTagOfGivenUsers(tag, followedList))
+                );
+                const uniquePosts = this.removeDuplicates(posts.flat());
+                post_list = await Promise.all(uniquePosts.map(async (postObject) => {
+                    const post_id = postObject.post_id;
+                    const user_id = postObject.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }));
+            } else {
+                return res.status(404).send("filter_enabled was neither true nor false.");
+            }
+    
+            post_list = this.shuffleArray(post_list);
+            console.log("shuffled tags" + 
+                await Promise.all(post_list.map(async (postObject) => {return postObject.idx})));
+            res.json({
+                posts: post_list
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                posts: []
+            });
+        }
+    }
+    
     private removeDuplicates(posts: any[]): any[] {
         const seen = new Set();
         return posts.filter(post => {
