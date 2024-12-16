@@ -19,7 +19,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
         this.router.post("/store/user/follow-user", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.followUser(req, response);
         });
-
+ 
         this.router.post("/store/user/update-bio", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.updateBio(req, response);
         });
@@ -62,7 +62,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
         console.log("TO DO");
     }
     private async updateBio(req, res) {
-        const newBio = req.query.new_bio
+        const newBio = req.body.new_bio
         const username = req.user.username
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
@@ -74,10 +74,12 @@ export class StoreUserInformationController extends BaseDatabaseController {
             const user_id = userObject.user_id
 
             await this.db.updateBio(user_id, newBio.toString())
+            res.status(200).send("Successfully updated bio")
+            
         }
     }
     private async updatePFP(req, res) {
-        const newPFP = req.query.new_profile_picture
+        const newPFP = req.body.new_profile_picture
         const username = req.user.username
         const users = await this.db.fetchUserUsingUsername(username.toString())
         if (users.length === 0) {
@@ -89,6 +91,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
             const user_id = userObject.user_id
 
             await this.db.updateProfilePicture(user_id, newPFP.toString())
+            res.status(200).send("Successfully updated profile picture")
         }
     }
     private async updateDisplayname(req, res) {
