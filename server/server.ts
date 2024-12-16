@@ -86,6 +86,20 @@ export class App {
         };
         // Handle shutdown signals
         process.on('SIGINT', shutdown);  //Ensures the database connection pool closes when terminating the server.
+        process.on('SIGTERM', shutdown);
+        process.on('uncaughtException', (err) => {
+            console.error('Uncaught Exception:', err);
+            shutdown().finally(() => process.exit(1));
+          });
+        process.on('unhandledRejection', (reason, promise) => {
+            console.error('Unhandled Rejection:', reason);
+            shutdown().finally(() => process.exit(1));
+          });
+        process.on('SIGUSR1', shutdown);
+        process.on('SIGUSR2', shutdown);
+
+          
+
     }
 
 
