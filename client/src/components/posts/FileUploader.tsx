@@ -9,7 +9,7 @@ interface FileUploaderProps {
 const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const onDrop = useCallback(
+   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
         const file: File = acceptedFiles[0];

@@ -324,10 +324,9 @@ export function authenticateToken(req, res, next) {
 }
 
 export function ifAuthenticatedToken(req, res, next){
-    const authHeader: string = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
-    //check if we have a valid token
     try {
+        const authHeader: string = req.headers["authorization"];
+        const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
         if (token !== null) {
             const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
             if (!accessTokenSecret) {
@@ -338,7 +337,6 @@ export function ifAuthenticatedToken(req, res, next){
                         req.userId = -1;
                     } else {
                     const userPayload = user as JwtPayloadCustom;
-                    console.log(user)
                     req.userId = userPayload.user_id;
                     }
                 });

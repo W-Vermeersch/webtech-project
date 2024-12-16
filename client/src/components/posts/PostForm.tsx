@@ -32,12 +32,10 @@ const PostForm = () => {
     values: PostFormValues,
     actions: FormikHelpers<PostFormValues>
   ) {
-    console.log("Form data:", values);
     const formData = new FormData();
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
     formData.append("tags", values.tags[0]);
-    console.log("this is the image", values.file);
     try {
       const resp = await axios.post(ADD_POST, values, {
         headers: {

@@ -20,30 +20,31 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  console.log(post)
 
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(post.liked || false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
 
-  // Fetch the "liked" status when the component mounts
-  useEffect(() => {
-    const fetchLikedStatus = async () => {
-      try {
-        const resp = await axiosPrivate.get(FETCH_HAS_USER_LIKED, {
-          params: { post_id: post.idx },
-        });
-        //console.log("What is returned", resp.data);
-        if (resp.status === 200 && resp.data) {
-          setIsLiked(resp.data.liked);
-        }
-      } catch (error) {
-        console.error("Error fetching liked status:", error);
-      }
-    };
-    fetchLikedStatus();
-  }, [post.idx, axiosPrivate]);
+  // // Fetch the "liked" status when the component mounts
+  // useEffect(() => {
+  //   const fetchLikedStatus = async () => {
+  //     try {
+  //       const resp = await axiosPrivate.get(FETCH_HAS_USER_LIKED, {
+  //         params: { post_id: post.idx },
+  //       });
+  //       //console.log("What is returned", resp.data);
+  //       if (resp.status === 200 && resp.data) {
+  //         setIsLiked(resp.data.liked);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching liked status:", error);
+  //     }
+  //   };
+  //   fetchLikedStatus();
+  // }, [post.idx, axiosPrivate]);
 
   const handleLiking = async () => {
     console.log("Handlelike has been called");

@@ -7,6 +7,7 @@ export interface Post {
   post_id?: number; // index of Post
   description: string;
   tags: string[];
+  liked?: boolean;
   likes?: number; // in DB each posts has a list of all Users who liked
   location: Location;
   // added because profile pictures also exist
