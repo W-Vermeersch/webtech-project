@@ -1,0 +1,14 @@
+.post-tile {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  
+}
+
+.badge-container {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+}

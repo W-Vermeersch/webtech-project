@@ -17,11 +17,10 @@ export interface Post {
 export interface User {
   username: string;
   user_id?: number;
-  displayname: string;
   profilepicture: string;
   bio: string;
   totalexp: number;
-  badges: string[];
+  badges?: string[];
 }
 
 export interface Location {

@@ -41,7 +41,7 @@ export default function PostImage({
         <Stack id="tags" direction="horizontal" className="mb-auto">
           {tags[0] !== "None" ? tags.map((tag) => (
             <Badge key={tag} bg="dark" className="badge-tag m-2">
-              {tag}
+              #{tag}
             </Badge>
           )) : null}
         </Stack>
