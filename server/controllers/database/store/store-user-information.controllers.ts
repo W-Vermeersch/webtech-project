@@ -91,7 +91,8 @@ export class StoreUserInformationController extends BaseDatabaseController {
     private async updatePFP(req, res) {
         // @ts-ignore
         const file = req.file
-        let file_url = req.body.caption
+        let file_url = req.body.file_url
+        console.log(file_url)
         try {
             console.log("Upload file")
             if (!file && !file_url) {

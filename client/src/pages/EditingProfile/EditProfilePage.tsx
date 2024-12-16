@@ -39,7 +39,11 @@ const EditProfilePage = () => {
     const formData = new FormData();
     formData.append("username", username);
     if (profilePic) {
+      // Via a image file
       formData.append("file", profilePic);
+
+      // Via a public url to a image
+      // formData.append("file_url", file_url);
       const resp2 = await axiosPrivate.post(UPDATE_PFP, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
