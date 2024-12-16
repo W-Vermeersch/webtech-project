@@ -19,11 +19,6 @@ export default function LogIn() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
 
-  interface IUserData {
-    username: string;
-    UserID: string;
-  }
-
   interface FormValues {
     usernameOrEmail: string;
     password: string;
@@ -57,7 +52,6 @@ export default function LogIn() {
       signIn(token, username, userID);
 
       if (resp.data.redirect) {
-        // use data.redirect?
         actions.resetForm();
         navigate(from, { replace: true }); // to the user was going or /home
       }

@@ -1,5 +1,5 @@
 import "./PostImage.css";
-import { getCityCountry } from "../../../infos";
+import { getCityCountry } from "../../../geocoding";
 
 import Image from "react-bootstrap/Image";
 import Badge from "react-bootstrap/Badge";
