@@ -30,7 +30,7 @@ const EditProfilePage = () => {
 
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(
-    profilepicture ? `/src/assets/${profilepicture}` : "/default-profile.png"
+    profilepicture ? {profilepicture} : "/src/assets/default-profile.png"
   );
   const [username, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);

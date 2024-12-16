@@ -124,7 +124,7 @@ export default function FullPost() {
             <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
               <UserSection
                 username={user.username}
-                profile_pic={`/src/assets/${post.profile_picture}`}
+                profile_pic={post.profile_picture}
                 level={level(user.totalexp)}
               />
             </div>
