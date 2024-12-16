@@ -149,7 +149,7 @@ export default function ProfilePage() {
                   variant="success"
                   now={currentLevelExp(user.totalexp)}
                   max={maxExp}
-                  label={currentLevelExp(user.totalexp)}
+                  label={`${currentLevelExp(user.totalexp)} exp`}
                 />
               </div>
               {authUser?.username === username && (
