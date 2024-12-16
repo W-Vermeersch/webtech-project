@@ -2,6 +2,7 @@ import "./Leaderboard.css";
 import axios from "../../api/axios.ts";
 import { FETCH_LEADERBOARD } from "../../api/urls";
 import { useEffect, useState } from "react";
+import { Col } from "react-bootstrap";
 
 // define the type of leaderboard entries, depends on how backend passes it, for now defined as username and points
 interface LeaderboardEntry {
@@ -39,13 +40,27 @@ export default function Leaderboard() {
         <ol className="leaderboard-list">
           {leaderboard.map((user, index) => (
             <li key={index} className="leaderboard-entry">
-              <span className="rank">{index + 1}.</span>
+              <span className="rank">{index + 1}</span>
               <span className="username">{user.username}</span>
               <span className="points">{user.totalexp} XP</span>
             </li>
           ))}
         </ol>
       )}
+      {/* Ghosts at the Bottom */}
+      <div className="animals">
+        <Col>
+          <img
+            src="/src/assets/animals.svg"
+            alt="Animals"
+            className="cropped-image"
+            style={{ width: 600, objectFit: "fill" }}
+          ></img>
+        </Col>
+      </div>
+
+      {/* Press Enter Text */}
+      <div className="catch-more">Catch more animals!</div>
     </div>
   );
 }

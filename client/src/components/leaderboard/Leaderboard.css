@@ -1,27 +1,63 @@
-ol {
-    padding: 0;
-    list-style: none;
+.leaderboard-container {
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-ol li {
-    margin: 5px 0;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+.leaderboard-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
-.medal{
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    display: inline-block;
+.leaderboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: 50%;
+  color: white;
 }
 
-.rank{
-    font-weight: bold;
-    margin-right: 10px;
-    margin-left: 6px;
-    color: #555;
-    display: inline-block;
+.leaderboard-entry {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  background: none;
+}
+
+.rank {
+  margin-right: 20px;
+}
+
+.username {
+  flex: 1;
+  text-align: left;
+}
+
+.points {
+  color: yellow;
+  text-align: right;
+}
+
+.catch-more {
+  margin-top: 20px;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .leaderboard-entry {
+    font-size: 0.9rem;
+    padding: 6px 0;
+  }
+
+  .rank,
+  .points {
+    flex: 0 0 25%;
+  }
+  .username {
+    text-align: left;
+  }
 }
