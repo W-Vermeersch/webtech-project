@@ -45,16 +45,21 @@ export class StorePostInformationController extends BaseDatabaseController {
 
             const filePath = file.path; // Path to the uploaded file
             const caption = req.body.caption;
+            const bodyTags = req.body.tags;
 
             // Optionally extract geo-data
             const geoData = await GPSDataExtractor(filePath);
 
             // Process image via API
             const imageUrl = await this.imageApi.postImage(filePath);
-            const [tags, evaluation] = await Promise.all([
+            let [tags, evaluation] = await Promise.all([
                 this.imageApi.identifyImage(imageUrl),
                 this.imageApi.appraiseImage(imageUrl),
             ]);
+
+            if (tags.length === 0) {
+                tags = [bodyTags];
+            }
 
             // Construct post
             const post: Post = {
