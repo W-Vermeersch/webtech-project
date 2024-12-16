@@ -8,12 +8,13 @@ import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 interface PostFormValues {
   caption: string;
   file: string;
   tags: string[];
+  location: Geolocation | null;
 }
 interface geolocation {
   lat: number,
@@ -27,29 +28,31 @@ const PostForm = () => {
   const navigate = useNavigate();
   const user = useAuthUser();
   const [location, setLocation] = useState<geolocation | null>(null);
-  if (navigator.geolocation) {
-    console.log("Try to find coordinates")
-    navigator.geolocation.getCurrentPosition(success, nop);
-  }
 
   const initialValues: PostFormValues = {
     caption: "",
     file: "",
     tags: [],
+    location: null
   };
 
   function success(position) {
-    console.log("Found location", position)
-    setLocation({
+    const loc: geolocation = {
       lat: position.coords.latitude,
       long : position.coords.longitude
-    })
+    }
+    setLocation(loc)
   }
 
   function nop(){
-    console.log("No coordinates")
-    setLocation(null)
+    setLocation(null);
   }
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, nop);
+    }
+  })
 
   async function onSubmit(
     values: PostFormValues,
@@ -59,15 +62,10 @@ const PostForm = () => {
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
     formData.append("tags", values.tags[0]);
-    if (navigator.geolocation) {
-      console.log("Try to find coordinates")
-      navigator.geolocation.getCurrentPosition(success, nop);
-    }
     if (location?.lat && location?.long) {
       formData.append("latitude", location.lat.toString());
       formData.append("longitude", location.long.toString());
     }
-
     try {
       await axios.post(ADD_POST, formData, {
         headers: {

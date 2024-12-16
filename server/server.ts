@@ -1,12 +1,26 @@
 import * as express from 'express';
 import * as controller from './controllers';
-import * as path from 'path';
 import cors = require("cors");
 import Database from "./database";
-import {UserAuthenticationController} from "./controllers";
 const swaggerUi = require('swagger-ui-express') ;
 const swaggerDocument = require('./swagger.json');
 const cookieParser = require('cookie-parser');
+const https = require('https');
+const fs = require('fs');
+const selfSigned = require('selfsigned');
+
+class FrontEndController extends controller.BaseController {
+    constructor() {
+        super("");
+    }
+
+    initializeRoutes(): void {
+        this.router.get("/", (req, res) => {
+            const header = JSON.stringify(req.headers.host)
+            return res.redirect(`https://${header.split(':')[0].split('"')[1]}:${5173}`)
+        });
+    }
+}
 
 export class App {
     app: express.Application;
@@ -39,6 +53,7 @@ export class App {
 
         this.addController(new controller.UserProfileController());
         this.addController(new controller.CreatePostController());
+        this.addController(new FrontEndController());
 
         // We link the router of each controller to our server
         this.controllers.forEach(controller => {
@@ -61,16 +76,27 @@ export class App {
 
         this.app.use(express.json({ limit: "150mb" }));
         this.app.use(express.urlencoded({ limit: "150mb", extended: true }));
-        this.app.use(express.static(path.join(__dirname, "../static")));
 
         this.database.init()
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 
     public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`App listening on http://localhost:${this.port}`);
+        const attrs = [{ name: 'commonName', value: 'localhost' }];
+        const pems = selfSigned.generate(attrs, { days: 365 });
+
+        const options = {
+            key: pems.private,
+            cert: pems.cert,
+        };
+
+        https.createServer(options, this.app).listen(this.port, () => {
+            console.log(`App listening on https://localhost:${this.port}`);
         });
+
+        // this.app.listen(this.port, () => {
+        //     console.log(`App listening on http://localhost:${this.port}`);
+        // });
     }
 
     private _handleShutdown(): void {
