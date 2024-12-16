@@ -19,15 +19,20 @@ export default function PostImage({
   tags,
   location,
 }: PostImageProps) {
-
-  const [stateCountry, setStateCountry] = useState<{ state: string; country: string }>({
+  const [stateCountry, setStateCountry] = useState<{
+    state: string;
+    country: string;
+  }>({
     state: "",
     country: "",
   });
 
   useEffect(() => {
     async function fetchLocation() {
-      const locationData = await getCityCountry(location.latitude, location.longitude);
+      const locationData = await getCityCountry(
+        location.latitude,
+        location.longitude
+      );
       setStateCountry(locationData);
     }
 
@@ -39,15 +44,19 @@ export default function PostImage({
       <Image id="post-image" src={image_url} alt="post" fluid />
       <div id="image-overlay" className="d-flex flex-column">
         <Stack id="tags" direction="horizontal" className="mb-auto">
-          {tags[0] !== "None" ? tags.map((tag) => (
-            <Badge key={tag} bg="dark" className="badge-tag m-2">
-              {tag}
-            </Badge>
-          )) : null}
+          {tags[0] !== "None"
+            ? tags.map((tag) => (
+                <Badge key={tag} bg="dark" className="badge-tag m-2">
+                  {tag}
+                </Badge>
+              ))
+            : null}
         </Stack>
-        <h3 className="">
+        <h3 className="location">
           <Badge bg="danger" className="m-3">
-            {stateCountry.country === "" ? "🌍" : `${stateCountry.state}, ${stateCountry.country}`}
+            {stateCountry.country === ""
+              ? "🌍"
+              : `${stateCountry.state}, ${stateCountry.country}`}
           </Badge>
         </h3>
         {/* add more things to overlay on the post image */}
