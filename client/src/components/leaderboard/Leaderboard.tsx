@@ -13,7 +13,7 @@ interface LeaderboardProps {
   users: LeaderboardEntry[]; // the list of users for the leaderboard
 }
 
-export default function Leaderboard({ users }: LeaderboardProps) {
+export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]); // State to hold the leaderboard data
   const [isLoading, setIsLoading] = useState<boolean>(true); // State to track loading status
 
@@ -21,8 +21,11 @@ export default function Leaderboard({ users }: LeaderboardProps) {
   useEffect(() => {
     async function fetchLeaderboard() {
       const resp = await axios.get(FETCH_LEADERBOARD);
-      console.log("This is the leaderboard", resp.data.users);
-      setLeaderboard(resp.data.users);
+      const data = resp.data.users;
+      console.log("This is the leaderboard", data);
+      setLeaderboard(data);
+      console.log("This is the leaderboard variable", setLeaderboard);
+      setIsLoading(!isLoading);
     }
     fetchLeaderboard();
   }, []);
