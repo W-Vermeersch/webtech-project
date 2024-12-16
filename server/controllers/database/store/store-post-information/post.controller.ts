@@ -33,7 +33,6 @@ export class StorePostInformationController extends BaseDatabaseController {
         // @ts-ignore
         const file = req.file
         try {
-            // Ensure the file exists
             // @ts-ignore
             const userId = req.user.user_id;
             if (!file || !req.body.caption) {
@@ -47,10 +46,8 @@ export class StorePostInformationController extends BaseDatabaseController {
             const caption = req.body.caption;
             const bodyTags = req.body.tags;
 
-            // Optionally extract geo-data
             const geoData = await GPSDataExtractor(filePath);
 
-            // Process image via API
             const imageUrl = await this.imageApi.postImage(filePath);
             let [tags, evaluation] = await Promise.all([
                 this.imageApi.identifyImage(imageUrl),
@@ -61,7 +58,6 @@ export class StorePostInformationController extends BaseDatabaseController {
                 tags = [bodyTags];
             }
 
-            // Construct post
             const post: Post = {
                 user: "null",
                 post_id: 0,
@@ -74,19 +70,16 @@ export class StorePostInformationController extends BaseDatabaseController {
                 rarity: evaluation[1],
             };
 
-            // Add rewards and store post
             const xp = evaluation[0] * evaluation[1];
             await this.db.addUserExp(userId, xp);
             await this.db.storePost(post);
 
-            // Cleanup uploaded file
             fs.unlinkSync(filePath);
 
             return res.status(200).json(post);
         } catch (error) {
             console.error("Error processing post:", error);
 
-            // Ensure file cleanup
             if (file?.path && fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
             }

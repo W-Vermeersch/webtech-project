@@ -3,8 +3,18 @@ import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
 import {authenticateToken} from "../../user-authentification";
 import {Post} from "../../../interfaces";
+import * as multer from "multer";
+import {CloudinaryApi} from "./store-post-information/cloudinary.api";
+import * as path from "path";
+import * as fs from "fs";
+
+const upload = multer({
+    dest: path.join(__dirname, "uploads"), // Temporary storage
+})
 
 export class StoreUserInformationController extends BaseDatabaseController {
+
+    imageApi = new CloudinaryApi();
 
     constructor(private db: Database) {
         super()
@@ -24,7 +34,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
             return this.updateBio(req, response);
         });
 
-        this.router.post("/store/user/update-profile-picture", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/update-profile-picture", authenticateToken, upload.single("file"), (req: express.Request, response: express.Response) => {
             return this.updatePFP(req, response);
         });
 
@@ -79,20 +89,43 @@ export class StoreUserInformationController extends BaseDatabaseController {
         }
     }
     private async updatePFP(req, res) {
-        const newPFP = req.body.new_profile_picture
-        const username = req.user.username
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/home'
-            });
-        } else {
-            const userObject = users[0]
-            const user_id = userObject.user_id
+        // @ts-ignore
+        const file = req.file
+        let file_url = req.body.file_url
+        console.log(file_url)
+        try {
+            console.log("Upload file")
+            if (!file && !file_url) {
+                return res.status(400).send("Missing required fields: 'file' or 'caption'");
+            }
+            if (!file_url){
+                file_url = await this.imageApi.postImage(file.path);
+            } else {
+                file_url = file_url.toString();
+            }
+            const username = req.user.username
+            const users = await this.db.fetchUserUsingUsername(username.toString())
+            if (users.length === 0) {
+                res.json({
+                    redirect: '/home'
+                });
+            } else {
+                const userObject = users[0]
+                const user_id = userObject.user_id
 
-            await this.db.updateProfilePicture(user_id, newPFP.toString())
-            res.status(200).send("Successfully updated profile picture")
+                await this.db.updateProfilePicture(user_id, file_url)
+                res.status(200).send("Successfully updated profile picture")
+            }
+        } catch (error) {
+            console.error("Error processing post:", error);
+
+            if (file?.path && fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path);
+            }
+
+            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
         }
+
     }
     private async updateDisplayname(req, res) {
         const newName = req.query.new_display_name

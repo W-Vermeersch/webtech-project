@@ -87,7 +87,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
             <NavLink to={`/profile/${post.user}`}>
               <img
                 className="profilepic"
-                src={`/src/assets/${post.profile_picture}`}
+                src={post.profile_picture}
               ></img>
             </NavLink>
           </Col>
