@@ -17,13 +17,13 @@ export default function SearchPage() {
 
 
   useEffect(() => {
-    if (searchType === "#") {
-      setUsers([]);
-      setPosts(mockPosts);
-    } else {
-      setPosts([]);
-      setUsers(mockUsers);
-    }
+    // if (searchType === "#") {
+    //   setUsers([]);
+    //   setPosts();
+    // } else {
+    //   setPosts([]);
+    //   setUsers();
+    // }
   });
 
   return (
