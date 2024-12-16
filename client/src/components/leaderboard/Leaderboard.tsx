@@ -21,9 +21,11 @@ export default function Leaderboard({ users }: LeaderboardProps) {
   useEffect(() => {
     async function fetchLeaderboard() {
       const resp = await axios.get(FETCH_LEADERBOARD);
-      console.log("This is the leaderboard", resp.data);
+      console.log("This is the leaderboard", resp.data.users);
+      setLeaderboard(resp.data.users);
     }
-  });
+    fetchLeaderboard();
+  }, []);
 
   return (
     <div className="leaderboard-container">
