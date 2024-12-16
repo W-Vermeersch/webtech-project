@@ -11,8 +11,6 @@ export class CloudinaryApi {
     });
 
     public async postImage(url: string) {
-        // return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1733591932/kztj6vw6yavvz3u6cmrd.jpg";
-        // return "https://res.cloudinary.com/dtd6mrszo/image/upload/v1734000010/ovhwrjxrcjdakh8zysqg.jpg"
         try {
             const response = await cloudinary.uploader.upload(url, {
                 resource_type: "image",
@@ -83,7 +81,7 @@ export class CloudinaryApi {
         return this.scanImage(imageUrl, prompts).then((res: string[]) => {
             if (res.length === 2) {
                 return [+res[0] ,+res[1]]
-            } else return [0,0]
+            } else return [0,1.0]
         });
     }
 }

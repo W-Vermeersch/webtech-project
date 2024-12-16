@@ -1,4 +1,5 @@
 import * as parser from "exifr";
+const ExifReader = require('exifreader');
 
 interface GeoData {
     longitude: number|null;
@@ -39,15 +40,53 @@ function getRandomLatLonInBelgium() {
     return { latitude, longitude };
 }
 
-export async function GPSDataExtractor(tmpFile: string) {
+export async function GPSDataExtractor(file: string) {
+    let output: GeoData = {longitude: null, latitude: null};
 
-    let output: GeoData = await parser.parse(tmpFile)
+    try {
+        // Attempt to parse GPS data using exifr
+        const exifrData = await parser.parse(file, {gps: true});
+        console.log(exifrData);
 
-    if (output == undefined || !output || !output.latitude || !output.longitude){
-        const randomGeoData: GeoData = getRandomLatLonInBelgium();
-        return randomGeoData;
+        if (exifrData?.latitude && exifrData?.longitude) {
+            output = {
+                latitude: exifrData.latitude,
+                longitude: exifrData.longitude,
+            };
+        } else {
+            // Fallback to ExifReader if exifr fails to find GPS data
+            const tags = await ExifReader.load(file);
+            console.log(tags);
+            const latitudeTag = tags.GPSLatitude;
+            const longitudeTag = tags.GPSLongitude;
+            const latitudeRef = tags.GPSLatitudeRef?.description; // N or S
+            const longitudeRef = tags.GPSLongitudeRef?.description; // E or W
+
+            if (latitudeTag && longitudeTag) {
+                const latitude = ExifReader.GPSToDecimal(
+                    latitudeTag.value,
+                    latitudeRef === "S"
+                );
+                const longitude = ExifReader.GPSToDecimal(
+                    longitudeTag.value,
+                    longitudeRef === "W"
+                );
+
+                output = {
+                    latitude,
+                    longitude,
+                };
+            }
+        }
+    } catch (error) {
+        console.error("Error extracting GPS data:", error);
     }
-    else {
-        return output;
+
+    // If no GPS data is available, generate random coordinates
+    if (!output.latitude || !output.longitude) {
+        console.log("No GPS data found. Generating random coordinates.");
+        output = getRandomLatLonInBelgium();
     }
+
+    return output;
 }
