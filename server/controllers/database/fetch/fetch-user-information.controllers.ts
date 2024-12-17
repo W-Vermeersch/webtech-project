@@ -269,43 +269,44 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
   }
 
   private async getUserFollowerAmount(req, res) {
-    if (!req.query.user_id) {
-        res.json({
-            redirect: '/pageNotFound'
-        });
-        return;
+    if (!req.query.username) {
+        res.status(404).send("username param does not exist.")
     }
-    const user_id = parseInt(req.query.user_id.toString());
-    const user_followers = await this.db.fetchUserFollowers(user_id)
-    
-    res.json({
-        nr_of_followers: user_followers.length
-        });  
-    }
+    const user_id = (await this.db.fetchUserUsingUsername(req.query.username.toString()))[0].user_id;
+    if (user_id != null) {
+      const user_followers = await this.db.fetchUserFollowers(user_id)
+      res.json({
+          nr_of_followers: user_followers.length
+          });  
+      } else {
+        res.status(404).send("Username not found in DB.")
+      }
+
+  }
 
   private async getUserFollowedAmount(req, res) {
-    if (!req.query.user_id) {
-        res.json({
-            redirect: '/pageNotFound'
-        });
-        return;
+    if (!req.query.username) {
+        res.status(404).send("username param does not exist.")
     }
-    const user_id = parseInt(req.query.user_id.toString());
-    const user_followed = await this.db.fetchUserFollowed(user_id)
-    
-    res.json({
-        nr_of_followed: user_followed.length
-        });  
-    }
+    const user_id = (await this.db.fetchUserUsingUsername(req.query.username.toString()))[0].user_id;
+    if (user_id != null) {
+      const user_followed = await this.db.fetchUserFollowed(user_id)
+      res.json({
+          nr_of_followed: user_followed.length
+          });  
+      } else {
+        res.status(404).send("Username not found in DB.")
+      }
+  }
 
   private async isUserFollowed(req: express.Request, res: express.Response){
-    if (!req.query.username_to_check) {
+    if (!req.query.username) {
         res.status(404).send("username_to_check param does not exist")
     } else {
     // @ts-ignore
     const user_id = req.userId;
     if (user_id !== -1) {
-      const user_id_to_check = (await this.db.fetchUserUsingUsername(req.query.username_to_check.toString()))[0].user_id;
+      const user_id_to_check = (await this.db.fetchUserUsingUsername(req.query.username.toString()))[0].user_id;
       const user_to_check_follower_list = (await this.db.fetchUserFollowers(user_id_to_check))
       return res.json({
           following: user_to_check_follower_list.includes(user_id)
