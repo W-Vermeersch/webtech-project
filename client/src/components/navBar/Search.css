@@ -1,9 +1,9 @@
 .form-inline div {
     gap: 0px;
     min-height: 5vh;
+    max-width: 50vw;
+    position: relative;
+    left: 50%;
+    margin-left: -25vw;
 }
 
-.bg-dark .dropdown-menu {
-  background-color: rgb(34, 37, 41) !important;
-  color: white;
-}

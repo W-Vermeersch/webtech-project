@@ -14,12 +14,18 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
-import './../Spinner.css';
+import "./../Spinner.css";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
-import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import {
+  FETCH_IS_FOLLOWING,
+  FETCH_POST,
+  FETCH_USER_PROFILE,
+  FOLLOW,
+  UNFOLLOW,
+} from "../api/urls";
 import { FaEllipsisV } from "react-icons/fa";
 import useSignOut from "../hooks/useSignOut";
 import useAuthUser from "../hooks/useAuthUser";
@@ -29,8 +35,10 @@ import { Button } from "react-bootstrap";
 export default function ProfilePage() {
   const { username } = useParams();
   const [user, setUser] = useState<User | null>(null);
+  const [following, setFollowing] = useState<boolean | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
+  const [isFollowing, setIsFollowing] = useState(false); // for buffering follow/unfollow
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,9 +47,6 @@ export default function ProfilePage() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const signOut = useSignOut();
   const authUser = useAuthUser();
-
-  //console.log("From the hoook", authUser?.username);
-  //console.log("From the fetching profile", username);
 
   // handle editing the profile if it is your own
 
@@ -62,6 +67,22 @@ export default function ProfilePage() {
     // deal with error handling
   }
 
+  async function handleFollow() {
+    setIsFollowing(true);
+    if (!authUser) {
+      return;
+    }
+    if (following) {
+      await axiosPrivate.delete(UNFOLLOW, { params: { username } });
+      setFollowing(false);
+      console.log("unfollowed");
+    } else {
+      await axiosPrivate.post(FOLLOW, { username });
+      setFollowing(true);
+    }
+    setIsFollowing(false);
+  }
+
   useEffect(() => {
     async function fetchUser() {
       setIsLoading(true);
@@ -71,6 +92,7 @@ export default function ProfilePage() {
           params: { username },
           //signal: controller.signal,
         });
+        setFollowing(resp.data.isFollowed);
         if (resp.data.redirect) {
           // user not found
           navigate("/pageNotFound", { replace: true });
@@ -122,8 +144,9 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {isLoading && 
-        <Spinner animation="border" className="spinner" variant="success"/>}
+      {isLoading && (
+        <Spinner animation="border" className="spinner" variant="dark" />
+      )}
 
       <Container
         className=" text-white rounded overflow-hidden border border-light shadow"
@@ -149,13 +172,24 @@ export default function ProfilePage() {
                   variant="success"
                   now={currentLevelExp(user.totalexp)}
                   max={maxExp}
-                  label={currentLevelExp(user.totalexp)}
+                  label={`${currentLevelExp(user.totalexp)} XP`}
                 />
               </div>
-              {authUser?.username === username && (
+              <div className="follower-countd-flex justify-content-around w-100 text-center mt-2">
+                <div>
+                  <h5 className="text-center">{user.follower_amount}</h5>
+                  <p>Followers</p>
+                </div>
+                <div>
+                  <h5 className="text-center">{user.following_amount}</h5>
+                  <p>Following</p>
+                </div>
+              </div>
+              {authUser?.username === username ? (
                 <Button
                   className="edit-button"
                   variant="success"
+                  disabled={isFollowing}
                   onClick={() =>
                     navigate("/profile/edit", {
                       state: {
@@ -167,6 +201,14 @@ export default function ProfilePage() {
                   }
                 >
                   Edit Profile
+                </Button>
+              ) : (
+                <Button
+                  className="follow-button p-2 px-5 mt-2"
+                  variant={following ? "outline-success" : "success"}
+                  onClick={handleFollow}
+                >
+                  {following ? "Unfollow" : "Follow"}
                 </Button>
               )}
               <Container className="p-3 bio-container">

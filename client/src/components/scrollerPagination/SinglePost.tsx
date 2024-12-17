@@ -92,7 +92,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
       if (resp.status === 200) {
         // Safeguard to ensure comments are always an array
         setComments(resp.data.post_comments);
-        console.log(resp.data.post_comments);
       } else {
         console.error("Failed to fetch comments, status:", resp.status);
         setComments([]); // Set empty array on failure
@@ -142,7 +141,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
         </div>
 
         {/* Like and comment */}
-        <div className="post-actions">
+        <div className="post-actions d-flex align-items-center">
           <img
             src={isLiked ? "/src/assets/liked.svg" : "/src/assets/like.svg"}
             alt="Like"
@@ -159,6 +158,9 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
             onClick={() => authCheck(handleOpenCommentModal)}
             style={{ cursor: "pointer", width: "30px", marginLeft: "20px" }}
           />
+          <span className="badge bg-danger ms-auto">{`${
+            post.score * post.rarity
+          } XP`}</span>
         </div>
 
         {/* Caption & Tags Section */}

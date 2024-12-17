@@ -5,20 +5,43 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FeedPage from "../components/scrollerPagination/feedPage.tsx";
 import { Button } from "react-bootstrap";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {useLocation, useNavigate} from "react-router-dom";
 
 export default function Homepage() {
-    useEffect(() => {
-            Cookies.remove("shown_post_ids"); // Verwijdert cookie client-side
-        }, []);
+  const [activeTab, setActiveTab] = useState(0);
 
-    return (
-        <Container>
-            <Row className="feed-container" xs={1} md={2} xl={3} >
-                <FeedPage />
-            </Row>
-        </Container>
-    );
+  useEffect(() => {
+    Cookies.remove("shown_post_ids"); // Verwijdert cookie client-side
+  }, []);
+  return (
+    <Container>
+      <Row className="title-row justify-content-center">
+        <Col xs='auto'>
+          <Button
+            variant="danger"
+            onClick={() => setActiveTab(0)}
+            className={`tab-button ${activeTab === 0 ? "active" : ""}`}
+          >
+            For you
+          </Button>
+        </Col>
+        <Col xs='auto'>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setActiveTab(1);
+              console.log("Active tab set to: ", 1);
+            }}
+            className={`tab-button ${activeTab === 1 ? "active" : ""}`}
+          >
+            Following
+          </Button>
+        </Col>
+      </Row>
+      <Row className="feed-container" xs={1} md={2} xl={3}>
+        <FeedPage activeTab={activeTab} />
+      </Row>
+    </Container>
+  );
 }
