@@ -192,11 +192,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
     
         const postCount = parseInt(req.query.nr_of_posts.toString());
         try {
-            const user_follower_list = await this.db.fetchUserFollowers(user_id);
-                if (user_follower_list.length === 0) {
+            const user_followed_list = await this.db.fetchUserFollowed(user_id);
+                if (user_followed_list.length === 0) {
                 return res.json({ posts: [] });
             }
-            const random_post_ids = await this.db.fetchRandomsPostsOfGivenUsers(postCount, shownIds, user_follower_list);
+            const random_post_ids = await this.db.fetchRandomsPostsOfGivenUsers(postCount, shownIds, user_followed_list);
                 if (random_post_ids.length === 0) {
                 return res.json({ posts: [] });
             }
