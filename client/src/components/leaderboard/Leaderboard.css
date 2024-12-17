@@ -1,20 +1,19 @@
 .leaderboard-container {
   text-align: center;
-  padding: 20px;
-  min-height: 100vh;
   color: white;
 }
 
 .leaderboard-title {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 5px;
 }
 
 .leaderboard-columns {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 0 auto;
+  margin: 0;
   max-width: 800px;
 }
 
@@ -64,14 +63,15 @@
 }
 
 .catch-more {
-  margin-top: 20px;
   font-size: 1rem;
   color: #f1c40f;
 }
 
 .cropped-image {
+  max-height: 20vh;
   width: 100%;
   max-width: 800px;
+  object-fit: cover;
 }
 
 @media (max-width: 768px) {
