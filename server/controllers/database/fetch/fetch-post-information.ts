@@ -143,22 +143,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const postOwner = (await this.db.fetchUserUsingID(postObject.user_id))[0];
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
-        const comments = await this.fetchComments(postId);
-        console.log({
-            idx: postId,
-            user: postOwner.username,
-            profile_picture: postOwnerDecoration.profilePicture,
-            image_url: postObject.image_url,
-            description: postObject.description,
-            tags: postObject.tags,
-            score: postObject.score,
-            rarity: postObject.rarity,
-            location: postObject.location,
-            likes: likes.likes,
-            liked: likes.isLiked,
-            comments: comments
-        })
-        
+        const comments = await this.fetchComments(postId);      
         return {
             idx: postId,
             user: postOwner.username,
