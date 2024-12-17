@@ -221,7 +221,7 @@ export default function ProfilePage() {
                     handleOpenUsersModal();
                   }}
                 >
-                  <h5 className="text-center">{`Followers: ${followerCount}`}</h5>
+                  <h5 className="text-center follow">{`Followers: ${followerCount}`}</h5>
                 </div>
 
                 <div
@@ -230,7 +230,7 @@ export default function ProfilePage() {
                     handleOpenUsersModal();
                   }}
                 >
-                  <h5 className="text-center">{`Following: ${user.following_amount}`}</h5>
+                  <h5 className="text-center follow">{`Following: ${user.following_amount}`}</h5>
                 </div>
                 <hr />
               </div>

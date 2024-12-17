@@ -181,6 +181,11 @@ function Map() {
           url="https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
           attribution="Google Maps"
         />
+        {userLocation && (
+          <Marker position={[userLocation.latitude, userLocation.longitude]}>
+            <Popup keepInView>You are here</Popup>
+          </Marker>
+        )}
         <MarkerClusterGroup
           chunkedLoading
           maxClusterRadius={50}
@@ -195,11 +200,7 @@ function Map() {
               posts &&
               posts.map((post, index) => <MapMarker key={index} post={post} />)}
         </MarkerClusterGroup>
-        {userLocation && (
-          <Marker position={[userLocation.latitude, userLocation.longitude]}>
-            <Popup keepInView>You are here</Popup>
-          </Marker>
-        )}
+        
       </MapContainer>
     </div>
   );
