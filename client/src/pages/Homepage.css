@@ -10,12 +10,6 @@
   padding: 10px 0;
 }
 
-.buttons-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 @media (min-width: 768px) {
   .title-row {
     top: 60px;

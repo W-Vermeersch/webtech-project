@@ -16,8 +16,8 @@ export default function Homepage() {
   }, []);
   return (
     <Container>
-      <Row className="title-row">
-        <Col>
+      <Row className="title-row justify-content-center">
+        <Col xs='auto'>
           <Button
             variant="danger"
             onClick={() => setActiveTab(0)}
@@ -26,7 +26,7 @@ export default function Homepage() {
             For you
           </Button>
         </Col>
-        <Col>
+        <Col xs='auto'>
           <Button
             variant="danger"
             onClick={() => {
