@@ -25,13 +25,6 @@ export class FetchUserInformationController extends BaseDatabaseController {
     );
 
     this.router.get(
-        "/fetch/user/posts",
-        (req: express.Request, response: express.Response) => {
-          return this.getUserPosts(req, response);
-        }
-    );
-
-    this.router.get(
         "/fetch/user/liked-posts",
         (req: express.Request, response: express.Response) => {
           return this.getUserLikedPosts(req, response);
@@ -157,10 +150,12 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
         .status(400)
         .json({ error: "Username or user ID must be provided" });
     }
+    console.log("username: "+ username)
     let user_to_fetch_object = await this.db.fetchUserUsingUsername(username);
     if (user_to_fetch_object.length == 0) {
       return res.status(404).send("Username not found in DB")
     } 
+    console.log("user_to_fetch_object: " + user_to_fetch_object)
     const user_id_to_fetch = user_to_fetch_object[0].user_id;
     const user_id = req.userId;
 
@@ -184,30 +179,6 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
           );
           res.json({
             user_comments: userComments,
-          });
-        } else {
-          res.status(400).json({ error: "User ID is null" });
-        }
-      }
-    } catch (error){
-      res.status(400).send(error)
-    }
-  }
-
-  private async getUserPosts(req: express.Request, res: express.Response) {
-    try {
-      const username = req.query.username ? req.query.username : " ";
-      const users = await this.db.fetchUserUsingUsername(username.toString());
-      if (users.length === 0) {
-        res.json({
-          redirect: "/pageNotFound",
-        });
-      } else {
-        const userObject = users[0];
-        if (userObject.user_id !== null) {
-          const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
-          res.json({
-            posts: userPosts,
           });
         } else {
           res.status(400).json({ error: "User ID is null" });

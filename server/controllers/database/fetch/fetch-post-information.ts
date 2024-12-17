@@ -75,6 +75,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getFollowerAndTagPosts(req, response);
         });
 
+        this.router.get("/fetch/user/posts", (req: express.Request, response: express.Response) => {
+            return this.getUserPosts(req, response);
+        });
+
     }
 
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
@@ -139,7 +143,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         const postOwner = (await this.db.fetchUserUsingID(postObject.user_id))[0];
         const postOwnerDecoration = await this.db.fetchProfileDecoration(postObject.user_id);
         const likes = await this.processLikesOfPost(postId, userId);
-        const comments = await this.fetchComments(postId);
+        const comments = await this.fetchComments(postId);      
         return {
             idx: postId,
             user: postOwner.username,
@@ -155,6 +159,36 @@ export class FetchPostInformationController extends BaseDatabaseController {
             comments: comments
         }
     }
+
+      private async getUserPosts(req: express.Request, res: express.Response) {
+        try {
+          const username = req.query.username ? req.query.username : " ";
+          const users = await this.db.fetchUserUsingUsername(username.toString());
+          if (users.length === 0) {
+            res.json({
+              redirect: "/pageNotFound",
+            });
+          } else {
+            const userObject = users[0];
+            if (userObject.user_id !== null) {
+                const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+                const user_post_list = await Promise.all(userPosts.map(async (post) => {
+                    const post_id = post.post_id;
+                    const user_id = post.user_id;
+                    return await this.fetchPost(post_id, user_id);
+                }));
+
+              res.json({
+                posts: user_post_list,
+              });
+            } else {
+              res.status(400).json({ error: "User ID is null" });
+            }
+          }
+        } catch (error){
+          res.status(400).send(error)
+        }
+      }
 
     private async getRandomPosts(req: express.Request, res: express.Response) {
         try {
