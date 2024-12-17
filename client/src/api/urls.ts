@@ -14,6 +14,8 @@ export const FETCH_HAS_USER_LIKED = "/db/fetch/post/liked"; //geeft als response
 
 export const SEARCH_USER = "/db/fetch/search/user"; // geeft alle users terug die een bepaalde string in hun username hebben. heeft search in de parameters nodig (req.params.username)
 export const SEARCH_TAG = "/db/fetch/search/tag"; // geeft alle posts terug die een bepaalde tag hebben. heeft search in de parameters nodig (req.params.tag, longitude, latitude, radius, filter_enabled)
+export const SEARCH_TAG_FOLLOWING = "db/fetch/search/tag-and-followers" // axios private, params: latitude, longitude, radius, tags, filter_enabled
+
 
 //FetchCommentInformation, heeft comment_id nodig in de parameters (req.params.comment_id)
 export const FETCH_COMMENT = "/db/fetch/comment/information"; // geeft alle values van een comment terug, user, description en post
@@ -36,7 +38,6 @@ export const FETCH_FOLLOWER_AMOUNT = "db/fetch/user/follower-amount"; // params:
 export const FETCH_FOLLOWING_AMOUNT = "db/fetch/user/followed-amount" ; // params: username 
 export const FETCH_IS_FOLLOWING = "db/fetch/user/is-following"; // params: username
 export const FETCH_RANDOM_FOLLOW_POSTS = "db/fetch/post/get-random-follower-posts"; // axios private, params: nr_of_posts
-export const FETCH_POSTS_FOLLOWING = "db/fetch/search/tag-and-followers" // axios private, params: latitude, longitude, radius, tags, filter_enabled
 
 //Storing controllers:
 //StoreUserInformation
