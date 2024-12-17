@@ -25,7 +25,18 @@ export const FETCH_POST_COMMENTS = "db/fetch/post/comments"; // geeft alle comme
 export const FETCH_RANDOM_POSTS = "db/fetch/post/random-posts"; // geeft random posts terug (params: nr_of_posts)
 export const FETCH_POST_NEAREST = "db/fetch/post/nearest"; // heeft latitude, longitude en limit nodig in e params. die geeft limit aantal posts terug die het dischts zijn van de gegeven locatie. hier kan je niet de optie hebben om alle posts te tonen maar dat is van zelfsprekend
 export const FETCH_POST_RADIUS = "db/fetch/post/within-radius"; // deze heeft latitude, longitude, radius en limit nodig in de params. als limit -1 is geeft het alle posts terug binnenin de radius. als het niet -1 is gaat het limit aantal posts terug geven.
-export const FETCH_LEADERBOARD = "db/fetch/leaderboard"
+export const FETCH_LEADERBOARD = "db/fetch/leaderboard";
+
+// follow
+export const FOLLOW = "db/store/user/follow"; // axios private, params: username (to follow)
+export const UNFOLLOW = "db/delete/user/unfollow"; // axios private, params: username (to unfollow)
+export const FETCH_FOLLOWERS = "db/fetch/user/followers"; //optional auth header, params: username
+export const FETCH_FOLLOWING = "db/fetch/user/following"; //optional auth header, params: username
+export const FETCH_FOLLOWER_AMOUNT = "db/fetch/user/follower-amount"; // params: username
+export const FETCH_FOLLOWING_AMOUNT = "db/fetch/user/followed-amount" ; // params: username 
+export const FETCH_IS_FOLLOWING = "db/fetch/user/is-following"; // params: username
+export const FETCH_RANDOM_FOLLOW_POSTS = "db/fetch/post/get-random-follower-posts"; // axios private, params: nr_of_posts
+export const FETCH_POSTS_FOLLOWING = "db/fetch/search/tag-and-followers" // axios private, params: latitude, longitude, radius, tags, filter_enabled
 
 //Storing controllers:
 //StoreUserInformation
