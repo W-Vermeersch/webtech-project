@@ -13,7 +13,7 @@ export default function ProfileTile({ user }: ProfileTileProps) {
     <div className="profile-tile">
       <NavLink to={`/profile/${user.username}`} state={{ user }}>
         <Stack gap={4} className="d-flex flex-column align-items-center">
-          <Image src={`/src/assets/${user.profilepicture}`} height={150} width={150} roundedCircle />
+          <Image src={`${user.profilepicture}`} height={150} width={150} roundedCircle />
           <h3 className="text-dark">{user.username}</h3>
         </Stack>
       </NavLink>

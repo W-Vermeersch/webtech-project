@@ -27,11 +27,19 @@ export class DeleteController extends BaseDatabaseController {
     );
 
     this.router.delete(
-        "/delete/comment/delete",
-        authenticateToken,
-        (req: express.Request, response: express.Response) => {
-          return this.deleteComment(req, response);
-        }
+      "/delete/user/unfollow",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.unfollowUser(req, response);
+      }
+    );
+
+    this.router.delete(
+      "/delete/comment/delete",
+      authenticateToken,
+      (req: express.Request, response: express.Response) => {
+        return this.deleteComment(req, response);
+      }
     );
 
     this.router.delete(
@@ -108,18 +116,39 @@ export class DeleteController extends BaseDatabaseController {
     }
   }
   private async deletePost(req: express.Request, res: express.Response) {
-    try {
-      const post_id = parseInt(req.query.post_id.toString());
-      const posts = await this.db.fetchCommentByIds([post_id]);
-      if (posts.length === 0) {
-        res.json({
-          redirect: "/home",
-        });
-      } else {
-        await this.db.deletePost(post_id);
-      }
-    } catch (error){
-      res.status(400).send(error)
+    const post_id = parseInt(req.query.post_id.toString());
+    const posts = await this.db.fetchCommentByIds([post_id]);
+    if (posts.length === 0) {
+      res.json({
+        redirect: "/home",
+      });
+    } else {
+      await this.db.deletePost(post_id);
     }
   }
+
+  private async unfollowUser(req, res) {
+    const username = req.user.username;
+    const usernameToUnFollow = req.query.username;
+    const userIdToUnFollow = (await this.db.fetchUserUsingUsername(usernameToUnFollow))[0].user_id
+
+    const users = await this.db.fetchUserUsingUsername(username.toString());
+    if (users.length === 0) {
+      res.status(404).send("user not found in database")
+    } else {
+      const userObject = users[0];
+      const user_id = userObject.user_id;
+
+      let userFollowed: number[] = (await this.db.fetchUserFollowed(user_id))
+
+      if (!userFollowed.includes(userIdToUnFollow)) {
+        res.status(404).send("User has not followed this user");
+      } else {
+        await this.db.unfollowUser(user_id, userIdToUnFollow);
+        return res.status(200).send("Succesfully unfollowed this user");
+      }
+    }
+  }
+
+
 }

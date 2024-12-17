@@ -98,7 +98,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array with all the column values of a user given their ID.*/
-    public async fetchUserUsingID(user_id: number): Promise<User> {
+    public async fetchUserUsingID(user_id: number) {
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
@@ -250,6 +250,8 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                 p.image_url,
                 p.description,
                 p.tags,
+                p.score,
+                p.rarity,
                 ST_X(p.location::geometry) AS longitude,
                 ST_Y(p.location::geometry) AS latitude
             FROM likes_table l
@@ -289,7 +291,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     private async executePostQuery(query_specification: string, values: any): Promise<Post[]> {
     const query = {
-        text: `SELECT post_id, user_id, image_url, description, tags, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
+        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
         values: [values],
     }
         return this.executeQuery(query).then((res) => {
@@ -380,7 +382,6 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
     public async fetchRandomPosts(n: Number, shownPosts) {
-        // console.log("fetch in database (random)")
         const query = {
             text: `SELECT 
                     post_id
@@ -392,7 +393,6 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             values: [shownPosts, n]
         }
         const res = await this.executeQuery(query);
-        // console.log("res: "+ res.rows)
         return res.rows.map(post => post.post_id);
     }
 
@@ -586,6 +586,113 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
 
+    public async followUser(follower_id: number, followed_id: number): Promise<void> {
+        const query = {
+            text: 'INSERT INTO follower_table (follower_id, followed_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            values: [follower_id, followed_id],
+        };
+        return await this.executeQuery(query);
+    }
+    
+    public async unfollowUser(follower_id: number, followed_id: number): Promise<void> {
+        const query = {
+            text: 'DELETE FROM follower_table WHERE follower_id = $1 AND followed_id = $2',
+            values: [follower_id, followed_id],
+        };
+        return await this.executeQuery(query);
+    }
+    
+    public async fetchUserFollowers(user_id: number): Promise<number[]> {
+        const query = {
+            text: 'SELECT follower_id FROM follower_table WHERE followed_id = $1',
+            values: [user_id],
+        };
+        const result = await this.executeQuery(query);
+        return result.rows.map(row => row.follower_id);
+    }
+    
+    public async fetchUserFollowed(user_id: number): Promise<number[]> {
+        const query = {
+            text: 'SELECT followed_id FROM follower_table WHERE follower_id = $1',
+            values: [user_id],
+        };
+        const result = await this.executeQuery(query);
+        return result.rows.map(row => row.followed_id);
+    }
+    
+    public async fetchRandomsPostsOfGivenUsers(n: number, shownPosts: number[], userIds: number[]): Promise<number[]> {
+        const query = {
+            text: `
+                SELECT 
+                    post_id
+                FROM post_table
+                WHERE 
+                    post_id NOT IN (SELECT post_id FROM post_table WHERE post_id = ANY($1::int[])) 
+                    AND user_id = ANY($2::int[])
+                ORDER BY RANDOM()
+                LIMIT $3;
+            `,
+            values: [shownPosts, userIds, n]
+        };
+        const res = await this.executeQuery(query);
+        return res.rows.map(post => post.post_id);
+    }
+
+
+    public async fetchPostsByTagOfGivenUsers(tag: string, userIds: number[]): Promise<{ post_id: number, user_id: number }[]> {
+        const query = {
+            text: `
+                SELECT
+                    post_id,
+                    user_id
+                FROM post_table
+                WHERE
+                    EXISTS (
+                        SELECT 1
+                        FROM unnest(tags) AS tag_element
+                        WHERE tag_element ILIKE $1
+                    )
+                    AND user_id = ANY($2::int[]);
+            `,
+            values: [tag, userIds],
+        };
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+
+    public async fetchPostsByTagWithinRadiusGivenUsers(
+        tag: string, 
+        latitude: number, 
+        longitude: number, 
+        radius: number, 
+        user_ids: number[]
+    ): Promise<{ post_id: number, user_id: number }[]> {
+        const query = {
+            text: `
+                SELECT
+                    post_id,
+                    user_id
+                FROM post_table
+                WHERE
+                    EXISTS (
+                        SELECT 1
+                        FROM unnest(tags) AS tag_element
+                        WHERE tag_element ILIKE $1
+                    )
+                    AND user_id = ANY($5::int[])
+                    AND ST_DWithin(
+                        ST_Transform(location::geometry, 3857),
+                        ST_Transform(ST_SetSRID(ST_MakePoint($2, $3), 4326), 3857),
+                        $4
+                    );
+            `,
+            values: [tag, longitude, latitude, radius, user_ids],
+        };
+    
+        const res = await this.executeQuery(query);
+        return res.rows;
+    }
+    
 
     public async init(): Promise<void> {
         // Adding the extensions to the DB
@@ -629,6 +736,11 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         };
         await this.executeQuery(query);
 
+        query = {
+            // if A follows B, A is the follower and B is the followed
+            text: 'CREATE TABLE IF NOT EXISTS follower_table (follower_id INT NOT NULL,followed_id INT NOT NULL,FOREIGN KEY (follower_id) REFERENCES user_table(user_id) ON DELETE CASCADE,FOREIGN KEY (followed_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+        };
+        await this.executeQuery(query);
     }
 
     closePool(): any {

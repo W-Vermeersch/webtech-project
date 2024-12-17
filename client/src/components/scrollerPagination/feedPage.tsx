@@ -5,24 +5,48 @@ import { Button, Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
 import axios from "../../api/axios";
-import { FETCH_RANDOM_POSTS } from "../../api/urls";
+import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import Search from "../navBar/Search";
 import "./feedPage.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useIsAuthenticated from "../../hooks/useIsAuthenticated";
 
-export default function FeedPage() {
-    const axios = useAxiosPrivate()
-    // Fetch posts from the backend
-    const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
-        const response = await axios.get(FETCH_RANDOM_POSTS, {
-            params: { nr_of_posts: 6, page: pageParam },
-        });
-        return response.data.posts || [];
-    };
+interface FeedPageProps {
+  activeTab: number;
+}
+
+export default function FeedPage({ activeTab }: FeedPageProps) {
+  const axiosPrivate = useAxiosPrivate();
+  const isAuthenticated = useIsAuthenticated();
+
+  // Fetch posts from the backend
+  const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
+    let current_posts = [];
+    let response;
+    if (activeTab === 0) {
+      response = await axios.get(FETCH_RANDOM_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
+    } else if (activeTab === 1) {
+      response = await axiosPrivate.get(FETCH_RANDOM_FOLLOW_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
+    } else {
+      // by default do fetch of the ranodm posts
+      response = await axios.get(FETCH_RANDOM_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
+      current_posts = [];
+    }
+
+    current_posts = response.data.posts;
+    console.log("This is whats happening", response.data.posts);
+    return current_posts || [];
+  };
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts"],
+      queryKey: ["posts", activeTab],
       queryFn: fetchPosts,
       getNextPageParam: (lastPage, allPages) => {
         // If the last page contains posts, fetch the next page
@@ -30,8 +54,6 @@ export default function FeedPage() {
       },
       initialPageParam: 1,
     });
-
-
 
   const lastPostRef = useRef<HTMLElement>(null);
   const { ref, entry } = useIntersection({
@@ -49,11 +71,6 @@ export default function FeedPage() {
 
   return (
     <>
-      {/* Search Bar */}
-      <div className="search-bar d-xs-block d-md-none">
-        <Search />
-      </div>
-
       {/* Feed Content */}
 
       {posts.map((post, index) => {
@@ -100,4 +117,4 @@ export default function FeedPage() {
       )}
     </>
   );
-};
+}

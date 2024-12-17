@@ -24,11 +24,6 @@ export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
-  const [modalShow, setModalShow] = useState(false);
-
-  const handleSearchComplete = () => {
-    setModalShow(false);
-  };
 
   async function handleLogOut() {
     if (!authUser) {
@@ -68,26 +63,12 @@ export default function NavBar() {
             </NavItem>
           </Nav>
           <Nav>
-            <div className="d-md-none d-lg-block">
-              <Search />
-            </div>
-            {/* for screen between md and lg */}
-            <div className="d-none d-md-block d-lg-none">
+            <NavItem to="/search" eventKey="Search">
               <FaSearch
                 className="search-icon"
                 size={20}
-                onClick={() => setModalShow(true)}
               />
-              <Modal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                centered
-              >
-                <ModalBody className="search-modal rounded">
-                  <Search onSearchComplete={handleSearchComplete} />
-                </ModalBody>
-              </Modal>
-            </div>
+            </NavItem>
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">

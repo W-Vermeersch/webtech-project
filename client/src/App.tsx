@@ -29,7 +29,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/map" element={<Map />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/search/:type/:search" element={<SearchPage />} />
+          <Route path="/search" element={<SearchPage />} />
 
           <Route element={<RequireAuth />}>
             <Route path="/create-post" element={<CreatePost />} />
