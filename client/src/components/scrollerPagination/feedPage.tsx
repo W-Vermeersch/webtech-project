@@ -40,7 +40,7 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
     }
 
     current_posts = response.data.posts;
-    console.log("This is whats happening", response.data.posts);
+    //console.log("This is whats happening", response.data.posts);
     return current_posts || [];
   };
 
