@@ -39,28 +39,17 @@ function Map() {
   const user = useAuthUser();
   const axiosPrivate = useAxiosPrivate();
 
-  interface Position {
-    coords: Location;
-  }
-
-  function success(position: Position) {
-    const loc: Location = {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    };
-    setUserLocation(loc);
-  }
-
-  function nop() {
-    setUserLocation(null);
-  }
-
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, nop);
+      navigator.geolocation.getCurrentPosition((position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      });
     }
-  });
-
+  }, []);
+  
   function handleRefresh() {
     if (!user && following) {
       navigate("/user/log-in", { state: { from: location } });
