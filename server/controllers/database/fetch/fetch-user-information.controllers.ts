@@ -344,11 +344,8 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
 
       res.json({
         users: topTenUsers
-      });
-    } catch (error){
-      res.status(400).send(error)
-    }
-  }
+      })
+}
 
   private async getUserSearchResults(req, res) {
     const searchQuery = req.query.username; 
