@@ -5,9 +5,11 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import L from "leaflet";
+import isAxiosError from "axios";
 import axios from "../../api/axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useState, useEffect, useRef } from "react";
-import { FETCH_RANDOM_POSTS } from "../../api/urls";
+import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import useAuthUser from "../../hooks/useAuthUser";
 import { Post } from "../posts/PostInterface";
@@ -15,6 +17,7 @@ import { Post } from "../posts/PostInterface";
 import MapMarker from "../profile/MapMarker";
 
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Spinner from "react-bootstrap/Spinner";
 import "../../Spinner.css";
 
@@ -31,8 +34,10 @@ function Map() {
   const mapRef = useRef<L.Map | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [refresh, setRefresh] = useState(false);
+  const [following, setFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useAuthUser();
+  const axiosPrivate = useAxiosPrivate();
 
   function handleRefresh() {
     localStorage.removeItem("posts");
@@ -55,20 +60,29 @@ function Map() {
         setIsLoading(false);
         return;
       }
-
-      try {
-        // if not logged in, send -1 as userId
-        // nr_of_posts is the number of posts to fetch
-        const resp = await axios.get(FETCH_RANDOM_POSTS, {
+      // if not logged in, send -1 as userId
+      // nr_of_posts is the number of posts to fetch
+      let resp;
+      if (!following) {
+        resp = await axios.get(FETCH_RANDOM_POSTS, {
           params: { nr_of_posts: 4, userId: user ? user.userID : -1 },
         });
+      } else {
+        resp = await axiosPrivate.get(FETCH_RANDOM_FOLLOW_POSTS, {
+          params: { nr_of_posts: 4 },
+        });
+      }
+      if (resp.data.redirect) {
+        // not authenticated
+        navigate(resp.data.redirect, {
+          state: { from: location },
+          replace: true,
+        });
+      } else {
         setPosts(resp.data.posts);
         localStorage.setItem("posts", JSON.stringify(resp.data.posts));
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     }
 
     fetchPosts();
@@ -96,9 +110,29 @@ function Map() {
   return (
     <div className="map-container">
       {!state && (
-        <Button id="post-refresh" variant="success" onClick={handleRefresh}>
-          Refresh
-        </Button>
+        <>
+          <Button id="post-refresh" variant="success" onClick={handleRefresh}>
+            Refresh
+          </Button>
+          <ButtonGroup id="post-filter">
+            <Button
+              id="all-posts"
+              variant="success"
+              active={!following}
+              onClick={() => setFollowing(false)}
+            >
+              All
+            </Button>
+            <Button
+              id="following-posts"
+              variant="success"
+              active={following}
+              onClick={() => setFollowing(true)}
+            >
+              Following
+            </Button>
+          </ButtonGroup>
+        </>
       )}
 
       {state && state.posts && (
