@@ -12,12 +12,14 @@ interface PostImageProps {
   image_url: string;
   tags: string[];
   location: Location;
+  XP: number;
 }
 
 export default function PostImage({
   image_url,
   tags,
   location,
+  XP,
 }: PostImageProps) {
   const [stateCountry, setStateCountry] = useState<{
     state: string;
@@ -43,15 +45,22 @@ export default function PostImage({
     <div id="post-image-container">
       <Image id="post-image" src={image_url} alt="post" fluid />
       <div id="image-overlay" className="d-flex flex-column">
-        <Stack id="tags" direction="horizontal" className="mb-auto">
-          {tags[0] !== "None" ? tags.map((tag) => (
-            <Badge key={tag} bg="dark" className="badge-tag m-2">
-              #{tag}
-            </Badge>
-          )) : null}
+        <Stack id="tags" direction="horizontal">
+          {tags[0] !== "None"
+            ? tags.map((tag) => (
+                <Badge key={tag} bg="dark" className="badge-tag m-2">
+                  #{tag}
+                </Badge>
+              ))
+            : null}
         </Stack>
+        <h5 className="mb-auto">
+          <Badge bg="danger" className="m-2">
+            {`${XP} XP`}
+          </Badge>
+        </h5>
         <h3 className="location">
-          <Badge bg="danger" className="m-3">
+          <Badge bg="success" className="m-3">
             {stateCountry.country === ""
               ? "🌍"
               : `${stateCountry.state}, ${stateCountry.country}`}

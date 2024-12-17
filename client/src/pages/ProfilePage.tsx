@@ -123,7 +123,7 @@ export default function ProfilePage() {
       )}
 
       {isLoading && 
-        <Spinner animation="border" className="spinner" variant="success"/>}
+        <Spinner animation="border" className="spinner" variant="dark"/>}
 
       <Container
         className=" text-white rounded overflow-hidden border border-light shadow"
@@ -149,7 +149,7 @@ export default function ProfilePage() {
                   variant="success"
                   now={currentLevelExp(user.totalexp)}
                   max={maxExp}
-                  label={currentLevelExp(user.totalexp)}
+                  label={`${currentLevelExp(user.totalexp)} XP`}
                 />
               </div>
               {authUser?.username === username && (

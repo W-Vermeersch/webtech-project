@@ -49,11 +49,6 @@ export default function FeedPage() {
 
   return (
     <>
-      {/* Search Bar */}
-      <div className="search-bar d-xs-block d-md-none">
-        <Search />
-      </div>
-
       {/* Feed Content */}
 
       {posts.map((post, index) => {

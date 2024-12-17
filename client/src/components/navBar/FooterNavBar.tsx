@@ -6,6 +6,7 @@ import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
 import { LOG_IN } from "../../api/urls";
 import { Button } from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
 
 export default function FooterNavBar() {
   const signOut = useSignOut();
@@ -51,6 +52,10 @@ export default function FooterNavBar() {
         <FaUser size={25} />
         <span>Profile</span>
       </div>
+      <NavLink to="/search" className="footer-nav-item">
+        <FaSearch size={25} />
+        <span>Search</span>
+      </NavLink>
       <NavLink to="/create-post" className="footer-nav-item">
         <div className="create-post-icon">
           <FaPlus size={25} />

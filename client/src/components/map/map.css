@@ -16,3 +16,10 @@
     right: 2vw;
     z-index: 1000;
 }
+
+#post-search {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    z-index: 1000;
+}
