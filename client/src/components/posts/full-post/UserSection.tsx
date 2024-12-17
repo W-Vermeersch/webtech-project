@@ -28,7 +28,7 @@ export default function UserSection({
           />
         </NavLink>
       </Col>
-      <Col className="p-1">
+      <Col className="p-3 align-self-center">
         <Row>
           <NavLink to={`/profile/${username}`}>
             <h2 className="text-light mt-2">{username}</h2>

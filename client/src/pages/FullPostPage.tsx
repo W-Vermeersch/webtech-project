@@ -101,7 +101,7 @@ export default function FullPost() {
         <Spinner className="spinner" animation="border" variant="success" />
       )}
 
-      <div id="full-post">
+      <div id="full-post" className="mt-2">
         <Row
           style={{ height: "80vh" }}
           id="full-post-row"
@@ -115,8 +115,8 @@ export default function FullPost() {
               XP={post.rarity*post.score}
             />
           </Col>
-          <Col xs={12} className="comment-container order-md-5">
-            <div className="comments" onClick={handleViewAllComments}>
+          <Col xs={12} className="comment-container order-md-5 order-4">
+            <div className="comments mt-0 mb-3 mt-md-4 text-light" onClick={handleViewAllComments}>
               Click here to view the comments.
             </div>
           </Col>
@@ -135,7 +135,7 @@ export default function FullPost() {
               <Description description={post.description} />
             </Row>
           </Col>
-          <Col xs={12} md={6} className="order-md-3 order-4">
+          <Col xs={12} md={6} className="order-md-3 order-5">
             <Row>
               <MapContainer
                 location={post.location}
