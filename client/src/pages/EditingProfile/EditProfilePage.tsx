@@ -107,7 +107,7 @@ const EditProfilePage = () => {
           rows={3}
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          className="bg-dark text-white"
+          className="nes-textarea bg-dark text-white is-dark"
         />
       </Form.Group>
     </Container>
