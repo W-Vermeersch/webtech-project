@@ -38,6 +38,7 @@ export const FETCH_FOLLOWER_AMOUNT = "db/fetch/user/follower-amount"; // params:
 export const FETCH_FOLLOWING_AMOUNT = "db/fetch/user/followed-amount" ; // params: username 
 export const FETCH_IS_FOLLOWING = "db/fetch/user/is-following"; // params: username
 export const FETCH_RANDOM_FOLLOW_POSTS = "db/fetch/post/get-random-follower-posts"; // axios private, params: nr_of_posts
+export const FETCH_LEADERBOARD_FOLLOWERS = "db/fetch/leaderboard-followers"
 
 //Storing controllers:
 //StoreUserInformation

@@ -365,6 +365,7 @@ private async getLeaderboardFollowers(req: express.Request, res: express.Respons
     };
     return user;
   }))
+    console.log(users)
     res.json({
       users: topTenUsers
     })

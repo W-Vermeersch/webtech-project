@@ -5,8 +5,6 @@ import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import L from "leaflet";
-import isAxiosError from "axios";
-import axios from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useState, useEffect, useRef } from "react";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
@@ -40,35 +38,28 @@ function Map() {
   const user = useAuthUser();
   const axiosPrivate = useAxiosPrivate();
 
-  interface Position {
-    coords: Location;
-  }
-
-  function success(position: Position) {
-    const loc: Location = {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    };
-    setUserLocation(loc);
-  }
-
-  function nop() {
-    setUserLocation(null);
-  }
-
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, nop);
+      navigator.geolocation.getCurrentPosition((position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      });
     }
-  });
-
+  }, []);
+  
   function handleRefresh() {
-    localStorage.removeItem("posts");
-    if (posts && posts.length === 0) {
-      Cookies.remove("shown_post_ids");
+    if (!user && following) {
+      navigate("/user/log-in", { state: { from: location } });
+    } else {
+      localStorage.removeItem("posts");
+      if (posts && posts.length === 0) {
+        Cookies.remove("shown_post_ids");
+      }
+      setPosts(null);
+      setRefresh((prev) => !prev);
     }
-    setPosts(null);
-    setRefresh((prev) => !prev);
   }
 
   useEffect(() => {
@@ -87,7 +78,7 @@ function Map() {
       // nr_of_posts is the number of posts to fetch
       let resp;
       if (!following) {
-        resp = await axios.get(FETCH_RANDOM_POSTS, {
+        resp = await axiosPrivate.get(FETCH_RANDOM_POSTS, {
           params: { nr_of_posts: 4, userId: user ? user.userID : -1 },
         });
       } else {
@@ -95,6 +86,7 @@ function Map() {
           params: { nr_of_posts: 4 },
         });
       }
+      console.log(resp.data.posts);
       if (resp.data.redirect) {
         // not authenticated
         navigate(resp.data.redirect, {

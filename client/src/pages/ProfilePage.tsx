@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./ProfilePage.css";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import axios from "../api/axios";
 import { maxExp, level, currentLevelExp } from "./../api/xp-system";
 
 import Row from "react-bootstrap/Row";
@@ -15,10 +14,11 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
 import "./../Spinner.css";
+import ViewUsersList from "./ViewUsersList";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
-import { Post, PostComment, User } from "../components/posts/PostInterface";
+import { Post, User } from "../components/posts/PostInterface";
 import {
   FETCH_IS_FOLLOWING,
   FETCH_POST,
@@ -47,8 +47,17 @@ export default function ProfilePage() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const signOut = useSignOut();
   const authUser = useAuthUser();
+  const [ViewUsers, setShowUsers] = useState(false); // modal
+  const [ViewFollowing, setViewFollowing] = useState(false); // 0 for following list and 1 for followers list
+  const [followerCount, setFollowerCount] = useState(NaN);
 
-  // handle editing the profile if it is your own
+  const handleCloseUsersModal = () => {
+    setShowUsers(false);
+  };
+
+  const handleOpenUsersModal = () => {
+    setShowUsers(true);
+  };
 
   const handleToggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Toggle menu visibility
@@ -74,10 +83,11 @@ export default function ProfilePage() {
     }
     if (following) {
       await axiosPrivate.delete(UNFOLLOW, { params: { username } });
+      setFollowerCount((prev) => prev - 1);
       setFollowing(false);
-      console.log("unfollowed");
     } else {
       await axiosPrivate.post(FOLLOW, { username });
+      setFollowerCount((prev) => prev + 1);
       setFollowing(true);
     }
     setIsFollowing(false);
@@ -88,11 +98,13 @@ export default function ProfilePage() {
       setIsLoading(true);
       //console.log("fetching user");
       try {
-        const resp = await axios.get(FETCH_USER_PROFILE, {
+        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
           //signal: controller.signal,
         });
         setFollowing(resp.data.isFollowed);
+        setFollowerCount(resp.data.follower_amount);
+        console.log("following: ", resp.data.isFollowed);
         if (resp.data.redirect) {
           // user not found
           navigate("/pageNotFound", { replace: true });
@@ -111,7 +123,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function fetchPosts() {
-      //console.log("fetching posts");
       const resp = await axiosPrivate.get(FETCH_USER_POSTS, {
         params: { username },
       });
@@ -166,25 +177,6 @@ export default function ProfilePage() {
                 className="profile-circle rounded-circle"
               />
               <h3>{user.username}</h3>
-              <h4>{`Level: ${level(user.totalexp)}`}</h4>
-              <div className="w-100">
-                <ProgressBar
-                  variant="success"
-                  now={currentLevelExp(user.totalexp)}
-                  max={maxExp}
-                  label={`${currentLevelExp(user.totalexp)} XP`}
-                />
-              </div>
-              <div className="follower-countd-flex justify-content-around w-100 text-center mt-2">
-                <div>
-                  <h5 className="text-center">{user.follower_amount}</h5>
-                  <p>Followers</p>
-                </div>
-                <div>
-                  <h5 className="text-center">{user.following_amount}</h5>
-                  <p>Following</p>
-                </div>
-              </div>
               {authUser?.username === username ? (
                 <Button
                   className="edit-button"
@@ -211,7 +203,39 @@ export default function ProfilePage() {
                   {following ? "Unfollow" : "Follow"}
                 </Button>
               )}
-              <Container className="p-3 bio-container">
+
+              <h4 className="mt-4 mb-0">{`Level: ${level(user.totalexp)}`}</h4>
+              <div className="w-100">
+                <ProgressBar
+                  variant="success"
+                  now={currentLevelExp(user.totalexp)}
+                  max={maxExp}
+                  label={`${currentLevelExp(user.totalexp)} XP`}
+                />
+              </div>
+              <div className="follower-count w-100 text-center mt-2">
+                <div
+                  className="mb-3"
+                  onClick={() => {
+                    setViewFollowing(true);
+                    handleOpenUsersModal();
+                  }}
+                >
+                  <h5 className="text-center">{`Followers: ${followerCount}`}</h5>
+                </div>
+
+                <div
+                  onClick={() => {
+                    setViewFollowing(false);
+                    handleOpenUsersModal();
+                  }}
+                >
+                  <h5 className="text-center">{`Following: ${user.following_amount}`}</h5>
+                </div>
+                <hr />
+              </div>
+
+              <Container className="bio-container">
                 <p className="text-center">{user.bio}</p>
               </Container>
             </Stack>
@@ -246,6 +270,14 @@ export default function ProfilePage() {
           </Col>
         </Row>
       </Container>
+      {ViewUsers && (
+        <ViewUsersList
+          show={ViewUsers}
+          onHide={handleCloseUsersModal}
+          username={user.username}
+          list={ViewFollowing}
+        />
+      )}
     </>
   );
 }

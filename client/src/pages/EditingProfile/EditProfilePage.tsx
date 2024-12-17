@@ -67,7 +67,7 @@ const EditProfilePage = () => {
     >
       <div className="title-container text-center mb-4">
         <h2 className="title mb-2">Edit Your Profile!</h2>
-        <p className="username">@{username}</p>
+        <p className="username text-center">@{username}</p>
         <hr className="my-3" />
       </div>
       <div className="d-flex justify-content-between mb-4">

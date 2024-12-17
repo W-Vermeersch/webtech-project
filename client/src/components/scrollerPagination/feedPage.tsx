@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { Button, Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
-import axios from "../../api/axios";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import Search from "../navBar/Search";
 import "./feedPage.css";
@@ -33,14 +32,14 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
       });
     } else {
       // by default do fetch of the ranodm posts
-      response = await axios.get(FETCH_RANDOM_POSTS, {
+      response = await axiosPrivate.get(FETCH_RANDOM_POSTS, {
         params: { nr_of_posts: 6, page: pageParam },
       });
       current_posts = [];
     }
 
     current_posts = response.data.posts;
-    console.log("This is whats happening", response.data.posts);
+    //console.log("This is whats happening", response.data.posts);
     return current_posts || [];
   };
 

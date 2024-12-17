@@ -7,6 +7,7 @@ export interface Post {
     tags: string[],
     score: number,
     rarity: number,
+    public: boolean,
     location: {
         longitude: Number,
         latitude: Number,
