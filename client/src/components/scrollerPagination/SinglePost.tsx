@@ -1,19 +1,25 @@
 import { Row, Col, Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./SinglePost.css";
-import { Post } from "../posts/PostInterface";
+import { Post, PostComment } from "../posts/PostInterface";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axios from "../../api/axios";
-import { DELETE_LIKE, LIKE_POST } from "../../api/urls";
+import { DELETE_LIKE, FETCH_POST_COMMENTS, LIKE_POST } from "../../api/urls";
 import CommentModal from "./Commenting/PlaceComment";
 import ViewCommentsModal from "./Commenting/ViewComments";
 import withAuthCheck from "./withAuthCheck";
-import { FETCH_HAS_USER_LIKED } from "../../api/urls";
 
 interface SinglePostProps {
   post: Post;
   authCheck: (action: () => void) => void;
+}
+
+export interface fetchCommentProps {
+  user_id?: number;
+  user: string;
+  post_id: number;
+  description: string;
 }
 
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
@@ -26,6 +32,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const [isLiked, setIsLiked] = useState(post.liked || false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+  const [comments, setComments] = useState<fetchCommentProps[]>([]);
 
   const handleLiking = async () => {
     // console.log("Handlelike has been called");
@@ -42,7 +49,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
     try {
       const post_id = post.idx;
       // console.log("handleunliking has been called");
-
       // Use DELETE method with params
       const resp = await axiosPrivate.delete(DELETE_LIKE, {
         params: { post_id },
@@ -65,6 +71,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
 
   const handleCloseCommentModal = () => {
     setShowCommentModal(false);
+    fetchComments();
   };
 
   const handleViewAllComments = () => {
@@ -73,11 +80,35 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
 
   const handleCloseViewCommentsModal = () => {
     setShowViewCommentsModal(false);
+    fetchComments();
   };
 
+  const fetchComments = async () => {
+    try {
+      const resp = await axiosPrivate.get(FETCH_POST_COMMENTS, {
+        params: { post_id: post.idx },
+      });
+
+      if (resp.status === 200) {
+        // Safeguard to ensure comments are always an array
+        setComments(resp.data.post_comments);
+        console.log(resp.data.post_comments);
+      } else {
+        console.error("Failed to fetch comments, status:", resp.status);
+        setComments([]); // Set empty array on failure
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      setComments([]); // Set empty array on error
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [post]);
   // For each post, display the first two comments,
   // otherwhise click on more to open up the comments section
-  const commentsToDisplay = post.comments ? post.comments.slice(0, 2) : [];
+  const commentsToDisplay = comments.slice(0, 2);
 
   return (
     <div className="post">
@@ -85,10 +116,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
         <Row className="align-items-center">
           <Col xs="auto">
             <NavLink to={`/profile/${post.user}`}>
-              <img
-                className="profilepic"
-                src={post.profile_picture}
-              ></img>
+              <img className="profilepic" src={post.profile_picture}></img>
             </NavLink>
           </Col>
           <Col>
@@ -157,7 +185,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           <div className="comments-section">
             {commentsToDisplay.map((comment, index) => (
               <div key={index} className="comment">
-                <strong>{comment.user}:</strong> {comment.text}
+                <strong>{comment.user}:</strong> {comment.description}
               </div>
             ))}
 
@@ -187,6 +215,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
           show={showViewCommentsModal}
           onHide={handleCloseViewCommentsModal}
           post={post}
+          authCheck={authCheck}
         />
       )}
     </div>

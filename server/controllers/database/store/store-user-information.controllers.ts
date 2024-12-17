@@ -44,28 +44,32 @@ export class StoreUserInformationController extends BaseDatabaseController {
     }
 
     private async likePost(req, res) {
-        const username = req.user.username
-        const post_id = parseInt(req.query.post_id.toString());
+        try {
+            const username = req.user.username
+            const post_id = parseInt(req.query.post_id.toString());
 
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/home'
-            });
-        } else {
-            const userObject = users[0]
-            const user_id = userObject.user_id
-
-            let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
-                .map((post: Post) => {
-                return post.post_id
-            })
-            if (!likedPostsOfUser.includes(post_id)) {
-                await this.db.storeLike(user_id, post_id)
-                res.status(200).send("Successfully liked post")
+            const users = await this.db.fetchUserUsingUsername(username.toString())
+            if (users.length === 0) {
+                res.json({
+                    redirect: '/home'
+                });
             } else {
-                res.status(404).send("User has already liked this post")
+                const userObject = users[0]
+                const user_id = userObject.user_id
+
+                let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
+                    .map((post: Post) => {
+                        return post.post_id
+                    })
+                if (!likedPostsOfUser.includes(post_id)) {
+                    await this.db.storeLike(user_id, post_id)
+                    res.status(200).send("Successfully liked post")
+                } else {
+                    res.status(404).send("User has already liked this post")
+                }
             }
+        } catch (error){
+            res.status(400).send(error)
         }
     }
     private async followUser(req, res) {
@@ -92,27 +96,29 @@ export class StoreUserInformationController extends BaseDatabaseController {
     }
 
     private async updateBio(req, res) {
-        const newBio = req.body.new_bio
-        const username = req.user.username
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/home'
-            });
-        } else {
-            const userObject = users[0]
-            const user_id = userObject.user_id
+        try {
+            const newBio = req.body.new_bio
+            const username = req.user.username
+            const users = await this.db.fetchUserUsingUsername(username.toString())
+            if (users.length === 0) {
+                res.json({
+                    redirect: '/home'
+                });
+            } else {
+                const userObject = users[0]
+                const user_id = userObject.user_id
 
-            await this.db.updateBio(user_id, newBio.toString())
-            res.status(200).send("Successfully updated bio")
-            
+                await this.db.updateBio(user_id, newBio.toString())
+                res.status(200).send("Successfully updated bio")
+            }
+        } catch (error){
+            res.status(400).send(error)
         }
     }
     private async updatePFP(req, res) {
         // @ts-ignore
         const file = req.file
         let file_url = req.body.file_url
-        console.log(file_url)
         try {
             console.log("Upload file")
             if (!file && !file_url) {
@@ -139,27 +145,31 @@ export class StoreUserInformationController extends BaseDatabaseController {
         } catch (error) {
             console.error("Error processing post:", error);
 
+            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
+        } finally {
             if (file?.path && fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
             }
-
-            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
         }
 
     }
     private async updateDisplayname(req, res) {
-        const newName = req.query.new_display_name
-        const username = req.user.username
-        const users = await this.db.fetchUserUsingUsername(username.toString())
-        if (users.length === 0) {
-            res.json({
-                redirect: '/home'
-            });
-        } else {
-            const userObject = users[0]
-            const user_id = userObject.user_id
+        try {
+            const newName = req.query.new_display_name
+            const username = req.user.username
+            const users = await this.db.fetchUserUsingUsername(username.toString())
+            if (users.length === 0) {
+                res.json({
+                    redirect: '/home'
+                });
+            } else {
+                const userObject = users[0]
+                const user_id = userObject.user_id
 
-            await this.db.updateDisplayName(user_id, newName.toString())
+                await this.db.updateDisplayName(user_id, newName.toString())
+            }
+        } catch (error){
+            res.status(400).send(error)
         }
     }
 

@@ -18,24 +18,24 @@ export class FetchUserInformationController extends BaseDatabaseController {
     );
 
     this.router.get(
-      "/fetch/user/comments",
-      (req: express.Request, response: express.Response) => {
-        return this.getUserComments(req, response);
-      }
+        "/fetch/user/comments",
+        (req: express.Request, response: express.Response) => {
+          return this.getUserComments(req, response);
+        }
     );
 
     this.router.get(
-      "/fetch/user/posts",
-      (req: express.Request, response: express.Response) => {
-        return this.getUserPosts(req, response);
-      }
+        "/fetch/user/posts",
+        (req: express.Request, response: express.Response) => {
+          return this.getUserPosts(req, response);
+        }
     );
 
     this.router.get(
-      "/fetch/user/liked-posts",
-      (req: express.Request, response: express.Response) => {
-        return this.getUserLikedPosts(req, response);
-      }
+        "/fetch/user/liked-posts",
+        (req: express.Request, response: express.Response) => {
+          return this.getUserLikedPosts(req, response);
+        }
     );
 
     this.router.get(
@@ -163,44 +163,52 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
 
 
   private async getUserComments(req: express.Request, res: express.Response) {
-    const username = req.query.username ? req.query.username : " ";
-    const users = await this.db.fetchUserUsingUsername(username.toString());
-    if (users.length === 0) {
-      res.json({
-        redirect: "/pageNotFound",
-      });
-    } else {
-      const userObject = users[0];
-      if (userObject.user_id !== null) {
-        const userComments = await this.db.fetchCommentsOfUser(
-          userObject.user_id
-        );
+    try {
+      const username = req.query.username ? req.query.username : " ";
+      const users = await this.db.fetchUserUsingUsername(username.toString());
+      if (users.length === 0) {
         res.json({
-          user_comments: userComments,
+          redirect: "/pageNotFound",
         });
       } else {
-        res.status(400).json({ error: "User ID is null" });
+        const userObject = users[0];
+        if (userObject.user_id !== null) {
+          const userComments = await this.db.fetchCommentsOfUser(
+              userObject.user_id
+          );
+          res.json({
+            user_comments: userComments,
+          });
+        } else {
+          res.status(400).json({ error: "User ID is null" });
+        }
       }
+    } catch (error){
+      res.status(400).send(error)
     }
   }
 
   private async getUserPosts(req: express.Request, res: express.Response) {
-    const username = req.query.username ? req.query.username : " ";
-    const users = await this.db.fetchUserUsingUsername(username.toString());
-    if (users.length === 0) {
-      res.json({
-        redirect: "/pageNotFound",
-      });
-    } else {
-      const userObject = users[0];
-      if (userObject.user_id !== null) {
-        const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+    try {
+      const username = req.query.username ? req.query.username : " ";
+      const users = await this.db.fetchUserUsingUsername(username.toString());
+      if (users.length === 0) {
         res.json({
-          posts: userPosts,
+          redirect: "/pageNotFound",
         });
       } else {
-        res.status(400).json({ error: "User ID is null" });
+        const userObject = users[0];
+        if (userObject.user_id !== null) {
+          const userPosts = await this.db.fetchPostsOfUser(userObject.user_id);
+          res.json({
+            posts: userPosts,
+          });
+        } else {
+          res.status(400).json({ error: "User ID is null" });
+        }
       }
+    } catch (error){
+      res.status(400).send(error)
     }
   }
 
@@ -334,9 +342,12 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       return user;
     }))
 
-    res.json({
-      users: topTenUsers
-    });
+      res.json({
+        users: topTenUsers
+      });
+    } catch (error){
+      res.status(400).send(error)
+    }
   }
 
   private async getUserSearchResults(req, res) {

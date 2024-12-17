@@ -2,7 +2,6 @@ import * as express from "express";
 import Database from "../../../../database";
 import {CloudinaryApi} from "./cloudinary.api";
 import {Post} from "../../../../interfaces";
-import * as ExifReader from 'exifreader';
 import { authenticateToken } from "../../../user-authentification";
 import * as multer from "multer";
 import * as path from "path";
@@ -79,17 +78,15 @@ export class StorePostInformationController extends BaseDatabaseController {
             await this.db.addUserExp(userId, xp);
             await this.db.storePost(post);
 
-            fs.unlinkSync(filePath);
-
             return res.status(200).json(post);
         } catch (error) {
             console.error("Error processing post:", error);
 
+            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
+        } finally {
             if (file?.path && fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
             }
-
-            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
         }
     }
 }
