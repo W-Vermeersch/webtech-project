@@ -321,14 +321,23 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 }
 
         /* Returns an array of all posts that match with the given list of post IDs. */
-    public async fetchPostsByIds(postIds: number[]): Promise<Post[]> {
+    public async fetchPostsByIds(postIds: number[], requesting_user: number): Promise<Post[]> {
+        if (postIds.length === 0) {
+            return [];
+        }
+        return this.executePostQuery(
+            `FROM post_table WHERE post_id = ANY($1)
+            AND (public OR user_id = $2 OR user_id IN
+            (SELECT followed_id FROM follower_table WHERE follower_id = $2))`,
+            [postIds, requesting_user])
+    }
+
+    public async fetchAnyPostsByIds(postIds: number[]): Promise<Post[]> {
         if (postIds.length === 0) {
             return [];
         }
         return this.executePostQuery(
             `FROM post_table WHERE post_id = ANY($1)`,
-        //     AND (public OR user_id = $2 OR user_id IN
-        // (SELECT followed_id FROM follower_table WHERE follower_id = $2))`,
             [postIds])
     }
 

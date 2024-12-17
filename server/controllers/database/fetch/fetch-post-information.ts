@@ -131,7 +131,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async fetchPost(postId: number, userId: number): Promise<Post> {
-        const posts = await this.db.fetchPostsByIds([postId])
+        const posts = await this.db.fetchPostsByIds([postId], userId)
         if (posts.length === 0) {
             throw new Error("No posts found.");
         }
@@ -241,7 +241,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
         const post_id = parseInt(req.query.post_id.toString());
         // @ts-ignore
-        const posts = await this.db.fetchPostsByIds([post_id])
+        const posts = await this.db.fetchAnyPostsByIds([post_id])
         if (posts.length === 0) {
             res.json({
                 redirect: '/pageNotFound'
