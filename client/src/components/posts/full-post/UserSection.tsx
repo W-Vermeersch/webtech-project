@@ -38,11 +38,6 @@ export default function UserSection({
           <Col>
             <h3 className="text-light">{"Level " + level}</h3>
           </Col>
-          <Col className="d-flex justify-content-end">
-            <Button className="me-3" variant="outline-light">
-              Follow
-            </Button>
-          </Col>
         </Row>
       </Col>
     </Row>
