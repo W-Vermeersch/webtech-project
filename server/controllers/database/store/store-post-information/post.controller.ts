@@ -8,6 +8,7 @@ import * as path from "path";
 import * as fs from "fs";
 import {GPSDataExtractor} from "./gps.data.extractor";
 import {BaseDatabaseController} from "../../base.database.controller";
+import {boolean} from "yup";
 
 const upload = multer({
     dest: path.join(__dirname, "uploads"), // Temporary storage
@@ -44,6 +45,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             const filePath = file.path; // Path to the uploaded file
             const caption = req.body.caption;
             const bodyTags = req.body.tags;
+            const is_public: boolean = (req.body.public === "true");
 
             const location = {
                 latitude: req.body.latitude || null,
@@ -69,6 +71,7 @@ export class StorePostInformationController extends BaseDatabaseController {
                 image_url: [imageUrl],
                 user_id: userId,
                 location: geoData || null,
+                public: is_public || true,
                 tags: tags || [],
                 score: evaluation[0],
                 rarity: evaluation[1],

@@ -197,8 +197,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             query = {
                 text: `
                     INSERT INTO post_table
-                    (user_id, image_url, description, tags, score, rarity, location)
-                    VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8), 4326))
+                    (user_id, image_url, description, tags, score, rarity, public, location)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, ST_SetSRID(ST_MakePoint($8, $9), 4326))
                 `,
                 values: [
                     post.user_id,
@@ -207,6 +207,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     post.tags,
                     post.score,
                     post.rarity,
+                    post.public,
                     post.location.longitude,
                     post.location.latitude,
                 ],
@@ -216,8 +217,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
             query = {
                 text: `
                     INSERT INTO post_table
-                    (user_id, image_url, description, tags, score, rarity)
-                    VALUES ($1, $2, $3, $4, $5, $6)
+                    (user_id, image_url, description, tags, score, rarity, public)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
                 `,
                 values: [
                     post.user_id,
@@ -225,7 +226,8 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
                     post.description,
                     post.tags,
                     post.score,
-                    post.rarity
+                    post.rarity,
+                    post.public
                 ],
             };
         }
@@ -250,6 +252,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                 p.image_url,
                 p.description,
                 p.tags,
+                p.public
                 ST_X(p.location::geometry) AS longitude,
                 ST_Y(p.location::geometry) AS latitude
             FROM likes_table l
@@ -267,6 +270,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             tags: row.tags,
             score: row.score,
             rarity: row.rarity,
+            public: row.public,
             location: {
                 longitude: row.longitude,
                 latitude: row.latitude,
@@ -289,7 +293,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     private async executePostQuery(query_specification: string, values: any): Promise<Post[]> {
     const query = {
-        text: `SELECT post_id, user_id, image_url, description, tags, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
+        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, public ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
         values: [values],
     }
         return this.executeQuery(query).then((res) => {
@@ -301,13 +305,14 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                 tags: row.tags,
                 score: row.score,
                 rarity: row.rarity,
+                public: row.public,
                 location: {
                     longitude: row.longitude,
                     latitude: row.latitude,
                 }
             }));
         }).catch(err => {
-            console.log("Error in q : ",err)
+            console.log("Error in post query : ",err)
             return []
         });
 }
@@ -607,7 +612,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
         // Create Table for Posts
         query = {
-            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[], score INT NOT NULL DEFAULT 0, rarity NUMERIC(2, 1) NOT NULL DEFAULT 0,location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
+            text: 'CREATE TABLE IF NOT EXISTS post_table (post_id SERIAL PRIMARY KEY,user_id INT NOT NULL,image_url TEXT[],description TEXT,tags TEXT[], score INT DEFAULT 0, rarity NUMERIC(2, 1) DEFAULT 0,public BOOLEAN DEFAULT true,location GEOGRAPHY(POINT, 4326),FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE);',
         };
         await this.executeQuery(query);
 

@@ -1,7 +1,7 @@
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import FormLabel from "react-bootstrap/FormLabel";
 import { useNavigate } from "react-router-dom";
-import { FormGroup, Button } from "react-bootstrap";
+import {FormGroup, Button, FormCheck} from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
@@ -15,6 +15,7 @@ interface PostFormValues {
   file: string;
   tags: string[];
   location: Geolocation | null;
+  is_public: boolean;
 }
 interface geolocation {
   lat: number,
@@ -33,7 +34,8 @@ const PostForm = () => {
     caption: "",
     file: "",
     tags: [],
-    location: null
+    location: null,
+    is_public: true
   };
 
   function success(position) {
@@ -61,7 +63,8 @@ const PostForm = () => {
     const formData = new FormData();
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
-    formData.append("tags", values.tags[0]);
+    formData.append("tags", values.tags.toString());
+    formData.append("public", values.is_public.toString());
     if (location?.lat && location?.long) {
       formData.append("latitude", location.lat.toString());
       formData.append("longitude", location.long.toString());
@@ -136,6 +139,37 @@ const PostForm = () => {
             />
           </FormGroup>
 
+          {/* Set post to public or private field */}
+          {/*<FormGroup className="mb-4" controlId="formVisibility">*/}
+          <FormCheck className="mb-4" id="formVisibility">
+            <FormCheck.Label className="me-3">Visibility</FormCheck.Label>
+              <FormCheck inline>
+                <FormCheck.Input
+                    type="radio"
+                    name="visibility"
+                    id="public"
+                    defaultChecked={true}
+                    onChange={() => {
+                      setFieldValue("is_public", true)
+                    }}
+                />
+                <FormCheck.Label htmlFor="public">Public</FormCheck.Label>
+              </FormCheck>
+              <FormCheck inline>
+                <FormCheck.Input
+                    type="radio"
+                    name="visibility"
+                    id="private"
+                    defaultChecked={false}
+                    onChange={() => {
+                      setFieldValue("is_public", false)
+                    }}
+                />
+                <FormCheck.Label htmlFor="private">Private</FormCheck.Label>
+              </FormCheck>
+          </FormCheck>
+
+
           {/* Buttons */}
           <div className="d-flex justify-content-between">
             <Button
@@ -145,7 +179,6 @@ const PostForm = () => {
                 setFieldValue("caption", "");
                 setFieldValue("file", null);
                 setFieldValue("tags", []);
-                setFieldValue("image_type", "");
               }}
             >
               Cancel
