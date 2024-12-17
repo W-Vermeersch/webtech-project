@@ -14,12 +14,18 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
-import './../Spinner.css';
+import "./../Spinner.css";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
-import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import {
+  FETCH_IS_FOLLOWING,
+  FETCH_POST,
+  FETCH_USER_PROFILE,
+  FOLLOW,
+  UNFOLLOW,
+} from "../api/urls";
 import { FaEllipsisV } from "react-icons/fa";
 import useSignOut from "../hooks/useSignOut";
 import useAuthUser from "../hooks/useAuthUser";
@@ -29,6 +35,7 @@ import { Button } from "react-bootstrap";
 export default function ProfilePage() {
   const { username } = useParams();
   const [user, setUser] = useState<User | null>(null);
+  const [following, setFollowing] = useState<boolean | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,9 +46,6 @@ export default function ProfilePage() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const signOut = useSignOut();
   const authUser = useAuthUser();
-
-  //console.log("From the hoook", authUser?.username);
-  //console.log("From the fetching profile", username);
 
   // handle editing the profile if it is your own
 
@@ -62,6 +66,19 @@ export default function ProfilePage() {
     // deal with error handling
   }
 
+  async function handleFollow() {
+    if (!authUser) {
+      return;
+    }
+    if (following) {
+      await axiosPrivate.get(UNFOLLOW, { params: username });
+      setFollowing(false);
+    } else {
+      await axiosPrivate.get(FOLLOW, { params: username });
+      setFollowing(true);
+    }
+  }
+
   useEffect(() => {
     async function fetchUser() {
       setIsLoading(true);
@@ -71,6 +88,10 @@ export default function ProfilePage() {
           params: { username },
           //signal: controller.signal,
         });
+        const following = await axiosPrivate.get(FETCH_IS_FOLLOWING, {
+          params: { username },
+        });
+        setFollowing(following.data.following);
         if (resp.data.redirect) {
           // user not found
           navigate("/pageNotFound", { replace: true });
@@ -122,8 +143,9 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {isLoading && 
-        <Spinner animation="border" className="spinner" variant="dark"/>}
+      {isLoading && (
+        <Spinner animation="border" className="spinner" variant="dark" />
+      )}
 
       <Container
         className=" text-white rounded overflow-hidden border border-light shadow"
@@ -152,7 +174,7 @@ export default function ProfilePage() {
                   label={`${currentLevelExp(user.totalexp)} XP`}
                 />
               </div>
-              {authUser?.username === username && (
+              {authUser?.username === username ? (
                 <Button
                   className="edit-button"
                   variant="success"
@@ -167,6 +189,14 @@ export default function ProfilePage() {
                   }
                 >
                   Edit Profile
+                </Button>
+              ) : (
+                <Button
+                  className="follow-button p-2 px-5 mt-2"
+                  variant={following ? "outline-success" : "success"}
+                  onClick={handleFollow}
+                >
+                  {following ? "Unfollow" : "Follow"}
                 </Button>
               )}
               <Container className="p-3 bio-container">
