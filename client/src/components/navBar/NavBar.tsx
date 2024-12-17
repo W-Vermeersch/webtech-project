@@ -100,7 +100,7 @@ export default function NavBar() {
                     width={35}
                     height={35}
                   />
-                  <span>{authUser ? authUser.username : "Guest"} </span>
+                  <span>{" " + (authUser ? authUser.username : "Guest")} </span>
                 </>
               }
               id="user-dropdown"

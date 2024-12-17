@@ -3,3 +3,19 @@
     background-color: rgb(34, 37, 41);
     padding: 20px;
   }
+
+.login-page {
+  position: relative;
+  top: 10vh;
+}
+
+.signin-page {
+  position: relative;
+  top: 7vh;
+}
+
+.brand {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+}

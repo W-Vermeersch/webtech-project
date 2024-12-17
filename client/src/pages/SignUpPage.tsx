@@ -8,9 +8,9 @@ import NavItem from "../components/navBar/NavItem";
 
 export default function SignUpPage() {
   return (
-    <>
+    <div className="signin-page">
       <h1 className="text-center mb-5">
-        Welcome to Animal Go <br />
+        Welcome to <span className="brand">Animal Go</span> <br />
         <small className="text-muted">Sign Up to start posting</small>
       </h1>
       <Row className="justify-content-center">
@@ -23,6 +23,6 @@ export default function SignUpPage() {
           </Container>
         </Col>
       </Row>
-    </>
+    </div>
   );
 }
