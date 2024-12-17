@@ -24,7 +24,7 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
     let current_posts = [];
     let response;
     if (activeTab === 0) {
-      response = await axios.get(FETCH_RANDOM_POSTS, {
+      response = await axiosPrivate.get(FETCH_RANDOM_POSTS, {
         params: { nr_of_posts: 6, page: pageParam },
       });
     } else if (activeTab === 1) {
@@ -33,7 +33,7 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
       });
     } else {
       // by default do fetch of the ranodm posts
-      response = await axios.get(FETCH_RANDOM_POSTS, {
+      response = await axiosPrivate.get(FETCH_RANDOM_POSTS, {
         params: { nr_of_posts: 6, page: pageParam },
       });
       current_posts = [];

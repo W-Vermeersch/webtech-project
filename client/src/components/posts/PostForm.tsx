@@ -1,7 +1,7 @@
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import FormLabel from "react-bootstrap/FormLabel";
 import { useNavigate } from "react-router-dom";
-import { FormGroup, Button } from "react-bootstrap";
+import {FormGroup, Button, FormCheck} from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
@@ -9,12 +9,14 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
 import {useEffect, useState} from "react";
+import 'reactjs-popup/dist/index.css';
 
 interface PostFormValues {
   caption: string;
   file: string;
   tags: string[];
   location: Geolocation | null;
+  is_public: boolean;
 }
 interface geolocation {
   lat: number,
@@ -28,12 +30,15 @@ const PostForm = () => {
   const navigate = useNavigate();
   const user = useAuthUser();
   const [location, setLocation] = useState<geolocation | null>(null);
+  const [useAlert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const initialValues: PostFormValues = {
     caption: "",
     file: "",
     tags: [],
-    location: null
+    location: null,
+    is_public: true
   };
 
   function success(position: GeolocationPosition): void {
@@ -48,6 +53,14 @@ const PostForm = () => {
     setLocation(null);
   }
 
+  function FlashMessages() {
+    return (
+        <div className="floating-alerts">
+          <div className="alert alert-success text-center floating-alert shadow-sm">{alertMessage}</div>
+        </div>
+    );
+  }
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, nop);
@@ -58,30 +71,39 @@ const PostForm = () => {
     values: PostFormValues,
     actions: FormikHelpers<PostFormValues>
   ) {
+    setAlert(false)
     const formData = new FormData();
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
-    formData.append("tags", values.tags[0]);
+    formData.append("tags", values.tags.toString());
+    formData.append("public", values.is_public.toString());
     if (location?.lat && location?.long) {
       formData.append("latitude", location.lat.toString());
       formData.append("longitude", location.long.toString());
     }
     try {
-      await axios.post(ADD_POST, formData, {
+      setAlert(false)
+      const resp = await axios.post(ADD_POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      // console.log("Response:", resp.data);
-      navigate(`/profile/${user?.username}`);
+      if (resp.status == 200){
+        navigate(`/profile/${user?.username}`);
+      } else {
+        setAlert(true)
+        setAlertMessage(resp.data);
+      }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      setAlert(true)
+      setAlertMessage(error.response.data);
     } finally {
       actions.setSubmitting(false);
     }
   }
 
   return (
+
     <Formik type initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
@@ -91,6 +113,8 @@ const PostForm = () => {
             </FormLabel>
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
+
+          {useAlert? <FlashMessages /> : null}
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
@@ -136,6 +160,37 @@ const PostForm = () => {
             />
           </FormGroup>
 
+          {/* Set post to public or private field */}
+          {/*<FormGroup className="mb-4" controlId="formVisibility">*/}
+          <FormCheck className="mb-4" id="formVisibility">
+            <FormCheck.Label className="me-3">Visibility</FormCheck.Label>
+              <FormCheck inline>
+                <FormCheck.Input
+                    type="radio"
+                    name="visibility"
+                    id="public"
+                    defaultChecked={true}
+                    onChange={() => {
+                      setFieldValue("is_public", true)
+                    }}
+                />
+                <FormCheck.Label htmlFor="public">Public</FormCheck.Label>
+              </FormCheck>
+              <FormCheck inline>
+                <FormCheck.Input
+                    type="radio"
+                    name="visibility"
+                    id="private"
+                    defaultChecked={false}
+                    onChange={() => {
+                      setFieldValue("is_public", false)
+                    }}
+                />
+                <FormCheck.Label htmlFor="private">Private</FormCheck.Label>
+              </FormCheck>
+          </FormCheck>
+
+
           {/* Buttons */}
           <div className="d-flex justify-content-between">
             <Button
@@ -145,7 +200,6 @@ const PostForm = () => {
                 setFieldValue("caption", "");
                 setFieldValue("file", null);
                 setFieldValue("tags", []);
-                setFieldValue("image_type", "");
               }}
             >
               Cancel
