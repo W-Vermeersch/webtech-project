@@ -1,6 +1,5 @@
 import "./NavBar.css";
 import NavItem from "./NavItem";
-import Search from "./Search";
 
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -11,15 +10,12 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import { FaSearch } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
 import { FETCH_USER_PROFILE, LOG_IN } from "../../api/urls";
-import { FaS } from "react-icons/fa6";
-import { ModalBody } from "react-bootstrap";
 
 export default function NavBar() {
   const signOut = useSignOut();
