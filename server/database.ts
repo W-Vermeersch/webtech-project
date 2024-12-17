@@ -400,16 +400,18 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
-    public async fetchRandomPosts(n: Number, shownPosts, user_requesting) {
+    public async fetchRandomPosts(n: Number, shownPosts, user_requesting: number) {
         const query = {
             text: `SELECT 
                     post_id
                     FROM post_table
-                    WHERE post_id NOT IN (SELECT post_id FROM post_table WHERE post_id = ANY($1::int[])) 
+                    WHERE post_id NOT IN (SELECT post_id FROM post_table WHERE post_id = ANY($1::int[]))
+                    AND (public OR user_id = $3 OR user_id IN
+                    (SELECT followed_id FROM follower_table WHERE follower_id = $3)) 
                     ORDER BY RANDOM()
                     LIMIT $2;
                     `,
-            values: [shownPosts, n]
+            values: [shownPosts, n, user_requesting]
         }
         const res = await this.executeQuery(query);
         return res.rows.map(post => post.post_id);

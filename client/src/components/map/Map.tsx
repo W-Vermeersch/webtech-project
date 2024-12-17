@@ -79,7 +79,7 @@ function Map() {
       // nr_of_posts is the number of posts to fetch
       let resp;
       if (!following) {
-        resp = await axios.get(FETCH_RANDOM_POSTS, {
+        resp = await axiosPrivate.get(FETCH_RANDOM_POSTS, {
           params: { nr_of_posts: 4, userId: user ? user.userID : -1 },
         });
       } else {
