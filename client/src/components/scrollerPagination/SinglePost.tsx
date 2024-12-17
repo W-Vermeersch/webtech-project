@@ -92,7 +92,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
       if (resp.status === 200) {
         // Safeguard to ensure comments are always an array
         setComments(resp.data.post_comments);
-        console.log(resp.data.post_comments);
       } else {
         console.error("Failed to fetch comments, status:", resp.status);
         setComments([]); // Set empty array on failure
