@@ -1,5 +1,18 @@
 .feed-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 5vw;
+  display: flex;
+  flex-wrap: wrap;
 }
+
+.title-row {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 10px 0;
+}
+
+@media (min-width: 768px) {
+  .title-row {
+    top: 60px;
+  }
+}
+

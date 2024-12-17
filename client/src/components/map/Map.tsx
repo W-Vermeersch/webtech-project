@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import L from "leaflet";
@@ -12,7 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import useAuthUser from "../../hooks/useAuthUser";
-import { Post } from "../posts/PostInterface";
+import { Post, Location } from "../posts/PostInterface";
 
 import MapMarker from "../profile/MapMarker";
 
@@ -32,12 +32,35 @@ function Map() {
   const location = useLocation();
   const state = location.state as State | undefined;
   const mapRef = useRef<L.Map | null>(null);
+  const [userLocation, setUserLocation] = useState<Location | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [refresh, setRefresh] = useState(false);
   const [following, setFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useAuthUser();
   const axiosPrivate = useAxiosPrivate();
+
+  interface Position {
+    coords: Location;
+  }
+
+  function success(position: Position) {
+    const loc: Location = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+    setUserLocation(loc);
+  }
+
+  function nop() {
+    setUserLocation(null);
+  }
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, nop);
+    }
+  });
 
   function handleRefresh() {
     localStorage.removeItem("posts");
@@ -180,6 +203,11 @@ function Map() {
               posts &&
               posts.map((post, index) => <MapMarker key={index} post={post} />)}
         </MarkerClusterGroup>
+        {userLocation && (
+          <Marker position={[userLocation.latitude, userLocation.longitude]}>
+            <Popup keepInView>You are here</Popup>
+          </Marker>
+        )}
       </MapContainer>
     </div>
   );

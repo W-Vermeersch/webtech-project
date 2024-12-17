@@ -23,9 +23,9 @@ export default function Leaderboard() {
     async function fetchLeaderboard() {
       const resp = await axios.get(FETCH_LEADERBOARD_EXP);
       const data = resp.data.users;
-      console.log("This is the leaderboard", data);
+      //console.log("This is the leaderboard", data);
       setLeaderboard(data);
-      console.log("This is the leaderboard variable", setLeaderboard);
+      //console.log("This is the leaderboard variable", setLeaderboard);
       setIsLoading(!isLoading);
     }
     fetchLeaderboard();
