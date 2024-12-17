@@ -30,6 +30,8 @@ export class App {
 
     database: Database =  new Database();
 
+    useHTTPS = false;
+
 
     constructor() {
         this.app = express();
@@ -82,21 +84,25 @@ export class App {
     }
 
     public listen() {
-        // const attrs = [{ name: 'commonName', value: 'localhost' }];
-        // const pems = selfSigned.generate(attrs, { days: 365 });
+        if (this.useHTTPS){
+            const attrs = [{ name: 'commonName', value: 'localhost' }];
+            const pems = selfSigned.generate(attrs, { days: 365 });
 
-        // const options = {
-        //     key: pems.private,
-        //     cert: pems.cert,
-        // };
+            const options = {
+                key: pems.private,
+                cert: pems.cert,
+            };
 
-        // https.createServer(options, this.app).listen(this.port, () => {
-        //     console.log(`App listening on https://localhost:${this.port}`);
-        // });
+            https.createServer(options, this.app).listen(this.port, () => {
+                console.log(`App listening on https://localhost:${this.port}`);
+            });
+        } else {
+            this.app.listen(this.port, () => {
+                console.log(`App listening on http://localhost:${this.port}`);
+            });
+        }
 
-        this.app.listen(this.port, () => {
-            console.log(`App listening on http://localhost:${this.port}`);
-        });
+
     }
 
     private _handleShutdown(): void {
