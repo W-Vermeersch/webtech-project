@@ -43,7 +43,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return this.getRandomPosts(req, response);
         });
 
-        this.router.get("/fetch/post/comments", (req: express.Request, response: express.Response) => {
+        this.router.get("/fetch/post/comments", ifAuthenticatedToken, (req: express.Request, response: express.Response) => {
             return this.getPostComments(req, response);
         });
 
@@ -107,7 +107,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
                 });
             })
         } catch (error){
-            res.status(400).send(error)
+            return res.json({
+                redirect: '/pageNotFound'
+            });
         }
     }
 
@@ -155,15 +157,17 @@ export class FetchPostInformationController extends BaseDatabaseController {
     }
 
     private async getRandomPosts(req: express.Request, res: express.Response) {
-        let shownIds: number[] = req.cookies.shown_post_ids
-        if (!req.cookies.shown_post_ids) {
-            shownIds = []
-        }
-        if (!req.query.nr_of_posts){
-            res.json({error: "No amount of posts have been specified"})
-        }
-        const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
-        const postIds = await this.db.fetchRandomPosts(post_count, shownIds)
+        try {
+            let shownIds: number[] = req.cookies.shown_post_ids
+            if (!req.cookies.shown_post_ids) {
+                shownIds = []
+            }
+            if (!req.query.nr_of_posts){
+                res.json({error: "No amount of posts have been specified"})
+            }
+            const post_count = req.query.nr_of_posts ? parseInt(req.query.nr_of_posts.toString()) : 0;
+            // @ts-ignore
+            const postIds = await this.db.fetchRandomPosts(post_count, shownIds, req.userId)
 
         const processedPosts: (Post | undefined)[] = await Promise.all(postIds.map(async (id: number) => {
             // @ts-ignore
@@ -171,7 +175,6 @@ export class FetchPostInformationController extends BaseDatabaseController {
                 shownIds.push(id)
                 return val
             }).catch((err: string) => {
-                console.log(err)
                 return undefined
             })
         }))
@@ -180,16 +183,20 @@ export class FetchPostInformationController extends BaseDatabaseController {
         res.json({
             posts: processedPosts.filter((val: Post | undefined) => val !== undefined),
         });
+    } catch (err) {
+            res.json({posts: []})
+            console.error(err);
+        }
     }
 
     private async getRandomFollowerPosts(req, res) {
         let shownIds: number[] = req.cookies.shown_post_ids || [];
         const user_id = req.user.user_id;
-    
+
         if (!req.query.nr_of_posts) {
             return res.json({ error: "No amount of posts have been specified" });
         }
-    
+
         const postCount = parseInt(req.query.nr_of_posts.toString());
         try {
             const user_followed_list = await this.db.fetchUserFollowed(user_id);
@@ -213,9 +220,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
                         });
                 })
             );
-    
+
             res.cookie("shown_post_ids", shownIds);
-    
+
             res.json({
                 posts: processedPosts.filter((val: Post | undefined) => val !== undefined),
             });
@@ -224,7 +231,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             res.status(500).json({ error: "Internal server error" });
         }
     }
-    
+
     private async getPostComments(req: express.Request, res: express.Response) {
         if (!req.query.post_id) {
             res.json({
@@ -233,7 +240,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             return;
         }
         const post_id = parseInt(req.query.post_id.toString());
-
+        // @ts-ignore
         const posts = await this.db.fetchPostsByIds([post_id])
         if (posts.length === 0) {
             res.json({
@@ -247,7 +254,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
                 const comments = await this.db.fetchCommentByIds([comment_id])
                 const commentObject = comments[0]
                 const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
-                const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
+                // const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);
                     return {
                     user_id: commentObject.user_id,
                     user: commentOwner[0].username,
@@ -329,32 +336,32 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
-    
+
     private async getFollowerAndTagPosts(req, res) {
-        if (!req.query.tags || !req.query.longitude || !req.query.latitude 
+        if (!req.query.tags || !req.query.longitude || !req.query.latitude
             || !req.query.radius || !req.query.filter_enabled) {
             return res.status(404).send("One or more parameters missing.");
         }
-    
+
         const tags: string[] = (req.query.tags as string[]).map(tag => tag.toString());
         const long = parseFloat(req.query.longitude.toString());
         const lat = parseFloat(req.query.latitude.toString());
         const radius = parseInt(req.query.radius.toString());
         const filterEnabled = req.query.filter_enabled;
         const userId = req.user.user_id;
-    
+
         let post_list: Post[] = [];
-    
+
         try {
             const followedList = await this.db.fetchUserFollowed(userId);
-    
+
             if (followedList.length === 0) {
                 return res.json({ posts: [] });
             }
-    
+
             if (filterEnabled === 'true') {
                 const posts = await Promise.all(
-                    tags.map(tag => 
+                    tags.map(tag =>
                         this.db.fetchPostsByTagWithinRadiusGivenUsers(tag, lat, long, radius, followedList)
                     )
                 );
@@ -377,7 +384,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             } else {
                 return res.status(404).send("filter_enabled was neither true nor false.");
             }
-    
+
             post_list = this.shuffleArray(post_list);
             res.json({
                 posts: post_list
@@ -389,7 +396,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             });
         }
     }
-    
+
     private removeDuplicates(posts: any[]): any[] {
         const seen = new Set();
         return posts.filter(post => {

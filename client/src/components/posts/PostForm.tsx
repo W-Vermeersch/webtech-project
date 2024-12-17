@@ -9,6 +9,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
 import {useEffect, useState} from "react";
+import 'reactjs-popup/dist/index.css';
 
 interface PostFormValues {
   caption: string;
@@ -29,6 +30,8 @@ const PostForm = () => {
   const navigate = useNavigate();
   const user = useAuthUser();
   const [location, setLocation] = useState<geolocation | null>(null);
+  const [useAlert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const initialValues: PostFormValues = {
     caption: "",
@@ -50,6 +53,14 @@ const PostForm = () => {
     setLocation(null);
   }
 
+  function FlashMessages() {
+    return (
+        <div className="floating-alerts">
+          <div className="alert alert-success text-center floating-alert shadow-sm">{alertMessage}</div>
+        </div>
+    );
+  }
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, nop);
@@ -60,6 +71,7 @@ const PostForm = () => {
     values: PostFormValues,
     actions: FormikHelpers<PostFormValues>
   ) {
+    setAlert(false)
     const formData = new FormData();
     formData.append("file", values.file); // Attach the file
     formData.append("caption", values.caption);
@@ -70,21 +82,28 @@ const PostForm = () => {
       formData.append("longitude", location.long.toString());
     }
     try {
-      await axios.post(ADD_POST, formData, {
+      setAlert(false)
+      const resp = await axios.post(ADD_POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      // console.log("Response:", resp.data);
-      navigate(`/profile/${user?.username}`);
+      if (resp.status == 200){
+        navigate(`/profile/${user?.username}`);
+      } else {
+        setAlert(true)
+        setAlertMessage(resp.data);
+      }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      setAlert(true)
+      setAlertMessage(error.response.data);
     } finally {
       actions.setSubmitting(false);
     }
   }
 
   return (
+
     <Formik type initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
@@ -94,6 +113,8 @@ const PostForm = () => {
             </FormLabel>
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
+
+          {useAlert? <FlashMessages /> : null}
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">

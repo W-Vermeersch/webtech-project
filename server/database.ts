@@ -98,7 +98,7 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
     }
 
     /* Returns an array with all the column values of a user given their ID.*/
-    public async fetchUserUsingID(user_id: number): Promise<User> {
+    public async fetchUserUsingID(user_id: number) {
         const query = {
             text: 'SELECT * FROM user_table WHERE user_id = $1',
             values: [user_id],
@@ -293,12 +293,13 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         });
     }
 
-    private async executePostQuery(query_specification: string, values: any): Promise<Post[]> {
-    const query = {
-        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, public, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
-        values: [values],
+    private async executePostQuery(query_specification: string, values: any[]): Promise<Post[]> {
+    const query_ver = {
+        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, public, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude
+        ${query_specification}`,
+        values: values,
     }
-        return this.executeQuery(query).then((res) => {
+        return this.executeQuery(query_ver).then((res) => {
             return res.rows.map((row) => ({
                 post_id: row.post_id,
                 user_id: row.user_id,
@@ -324,12 +325,16 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         if (postIds.length === 0) {
             return [];
         }
-        return this.executePostQuery(` FROM post_table WHERE post_id = ANY($1)`, postIds)
+        return this.executePostQuery(
+            `FROM post_table WHERE post_id = ANY($1)`,
+        //     AND (public OR user_id = $2 OR user_id IN
+        // (SELECT followed_id FROM follower_table WHERE follower_id = $2))`,
+            [postIds])
     }
 
     /* Returns an array with all the posts made by a user given their ID. */
     public async fetchPostsOfUser(user_id: number): Promise<Post[]> {
-        return this.executePostQuery(`FROM post_table WHERE user_id = $1`, user_id)
+        return this.executePostQuery(`FROM post_table WHERE user_id = $1`, [user_id])
     }
 
     /* Fetch posts within a radius */
@@ -386,7 +391,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
     //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
-    public async fetchRandomPosts(n: Number, shownPosts) {
+    public async fetchRandomPosts(n: Number, shownPosts, user_requesting) {
         const query = {
             text: `SELECT 
                     post_id

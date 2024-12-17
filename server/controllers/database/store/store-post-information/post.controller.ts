@@ -8,15 +8,18 @@ import * as path from "path";
 import * as fs from "fs";
 import {GPSDataExtractor} from "./gps.data.extractor";
 import {BaseDatabaseController} from "../../base.database.controller";
-import {boolean} from "yup";
+import {randomInt} from "node:crypto";
 
 const upload = multer({
-    dest: path.join(__dirname, "uploads"), // Temporary storage
+    dest: path.join(__dirname, "uploads"),
 })
+
+const TEN_MB = 10 * 1024 * 1024;
 
 export class StorePostInformationController extends BaseDatabaseController {
 
     imageApi = new CloudinaryApi();
+    useAiDetection = false;
 
     constructor(private db: Database) {
         super();
@@ -35,33 +38,48 @@ export class StorePostInformationController extends BaseDatabaseController {
         try {
             // @ts-ignore
             const userId = req.user.user_id;
-            if (!file || !req.body.caption) {
-                return res.status(400).send("Missing required fields: 'file' or 'caption'");
+            if (!file){
+                return res.status(400).send("Missing required fields: 'file'");
             }
+            if (!file || !req.body.caption) {
+                return res.status(400).send("Missing required fields: 'caption'");
+            }
+            const filePath = file.path;
+            fs.stat(filePath, (err, stats) => {
+                if (err) {
+                    console.error('Error reading file stats:', err);
+                }
+                console.log(stats.size);
+                if (stats.size > TEN_MB){
+
+                    return res.status(400).send("The given picture is to big");
+                }
+            });
             if (!userId){
                 return res.status(400).send("Not authenticated");
             }
 
-            const filePath = file.path; // Path to the uploaded file
             const caption = req.body.caption;
-            const bodyTags = req.body.tags;
+            let tags = req.body.tags;
             const is_public: boolean = (req.body.public === "true");
 
             const location = {
                 latitude: req.body.latitude || null,
                 longitude: req.body.longitude || null,
             };
-            console.log(location)
             const geoData = await GPSDataExtractor(filePath, location);
-
             const imageUrl = await this.imageApi.postImage(filePath);
-            let [tags, evaluation] = await Promise.all([
-                this.imageApi.identifyImage(imageUrl),
-                this.imageApi.appraiseImage(imageUrl),
-            ]);
+            let rating = {
+                score: randomInt(100),
+                rarity: 1.0
+            }
 
-            if (tags.length === 0) {
-                tags = [bodyTags];
+            if (this.useAiDetection){
+                tags = await this.imageApi.identifyImage(imageUrl)
+                if (tags.length === 0) {
+                    return res.status(405).send("Unable to identify the animal in the picture!");
+                }
+                rating = await this.imageApi.appraiseImage(imageUrl)
             }
 
             const post: Post = {
@@ -73,19 +91,20 @@ export class StorePostInformationController extends BaseDatabaseController {
                 location: geoData || null,
                 public: is_public || true,
                 tags: tags || [],
-                score: evaluation[0],
-                rarity: evaluation[1],
+                score: rating.score,
+                rarity: rating.rarity,
             };
 
-            const xp = evaluation[0] * evaluation[1];
+            const xp = rating.score * rating.rarity;
             await this.db.addUserExp(userId, xp);
             await this.db.storePost(post);
 
             return res.status(200).json(post);
         } catch (error) {
             console.error("Error processing post:", error);
+            return res.status(500).send(error);
 
-            return res.status(500).json({ error: "Something went wrong", details: error.message || error });
+            // return res.status(500).json({ error: "Something went wrong", details: error.message || error });
         } finally {
             if (file?.path && fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
