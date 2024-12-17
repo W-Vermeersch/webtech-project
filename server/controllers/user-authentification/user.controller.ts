@@ -338,6 +338,7 @@ export function ifAuthenticatedToken(req, res, next){
                     } else {
                     const userPayload = user as JwtPayloadCustom;
                     req.userId = userPayload.user_id;
+                    req.username = userPayload.username
                     }
                 });
             }

@@ -254,7 +254,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                 p.tags,
                 p.score,
                 p.rarity,
-                p.public
+                p.public,
                 ST_X(p.location::geometry) AS longitude,
                 ST_Y(p.location::geometry) AS latitude
             FROM likes_table l

@@ -159,7 +159,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
     }
     let user_to_fetch_object = await this.db.fetchUserUsingUsername(username);
     if (user_to_fetch_object.length == 0) {
-      res.status(404).send("Username not found in DB")
+      return res.status(404).send("Username not found in DB")
     } 
     const user_id_to_fetch = user_to_fetch_object[0].user_id;
     const user_id = req.userId;
