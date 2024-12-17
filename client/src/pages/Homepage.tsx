@@ -13,7 +13,8 @@ export default function Homepage() {
 
   useEffect(() => {
     Cookies.remove("shown_post_ids"); // Verwijdert cookie client-side
-  }, []);
+  }, [activeTab]);
+
   return (
     <Container>
       <Row className="title-row justify-content-center">
