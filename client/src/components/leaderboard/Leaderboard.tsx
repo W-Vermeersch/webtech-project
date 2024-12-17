@@ -1,6 +1,6 @@
 import "./Leaderboard.css";
 import axios from "../../api/axios.ts";
-import { FETCH_LEADERBOARD } from "../../api/urls";
+import { FETCH_LEADERBOARD_EXP } from "../../api/urls";
 import { useEffect, useState } from "react";
 import { Col } from "react-bootstrap";
 
@@ -21,7 +21,7 @@ export default function Leaderboard() {
   //fetch the leaderboard
   useEffect(() => {
     async function fetchLeaderboard() {
-      const resp = await axios.get(FETCH_LEADERBOARD);
+      const resp = await axios.get(FETCH_LEADERBOARD_EXP);
       const data = resp.data.users;
       //console.log("This is the leaderboard", data);
       setLeaderboard(data);

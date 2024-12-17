@@ -563,7 +563,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
 
-    public async fetchTopTen() {
+    public async fetchTopTenExp() {
         const query = {
             text: ` WITH RankedUsers AS (
                         SELECT 
@@ -584,6 +584,26 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         const res =  await this.executeQuery(query)
         return res.rows
     }
+
+    public async fetchTopTenFollowers(): Promise<any[]> {
+        const query = {
+            text: `
+                SELECT 
+                    followed_id AS user_id,
+                    COUNT(follower_id) AS follower_count
+                FROM follower_table
+                GROUP BY followed_id
+                ORDER BY follower_count DESC
+                LIMIT 10;
+            `,
+        };
+        const res = await this.executeQuery(query);
+        return res.rows.map(row => ({
+            user_id: row.user_id,
+            follower_count: row.follower_count,
+        }));
+    }
+    
 
 
     public async followUser(follower_id: number, followed_id: number): Promise<void> {
