@@ -36,12 +36,12 @@ const PostForm = () => {
     location: null
   };
 
-  function success(position) {
+  function success(position: GeolocationPosition): void {
     const loc: geolocation = {
       lat: position.coords.latitude,
-      long : position.coords.longitude
-    }
-    setLocation(loc)
+      long: position.coords.longitude
+    };
+    setLocation(loc);
   }
 
   function nop(){

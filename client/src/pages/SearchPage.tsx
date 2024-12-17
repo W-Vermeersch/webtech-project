@@ -51,7 +51,14 @@ export default function SearchPage() {
     }
   }, [state]);
 
-  function success(position) {
+  interface Position {
+    coords: {
+      latitude: number;
+      longitude: number;
+    };
+  }
+
+  function success(position: Position) {
     const loc: Location = {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
