@@ -25,7 +25,7 @@ export const FETCH_POST_COMMENTS = "db/fetch/post/comments"; // geeft alle comme
 export const FETCH_RANDOM_POSTS = "db/fetch/post/random-posts"; // geeft random posts terug (params: nr_of_posts)
 export const FETCH_POST_NEAREST = "db/fetch/post/nearest"; // heeft latitude, longitude en limit nodig in e params. die geeft limit aantal posts terug die het dischts zijn van de gegeven locatie. hier kan je niet de optie hebben om alle posts te tonen maar dat is van zelfsprekend
 export const FETCH_POST_RADIUS = "db/fetch/post/within-radius"; // deze heeft latitude, longitude, radius en limit nodig in de params. als limit -1 is geeft het alle posts terug binnenin de radius. als het niet -1 is gaat het limit aantal posts terug geven.
-export const FETCH_LEADERBOARD = "db/fetch/leaderboard";
+export const FETCH_LEADERBOARD_EXP = "db/fetch/leaderboard-exp";
 
 // follow
 export const FOLLOW = "db/store/user/follow"; // axios private, params: username (to follow)
