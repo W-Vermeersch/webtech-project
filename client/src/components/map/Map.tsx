@@ -5,7 +5,6 @@ import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import L from "leaflet";
-import axios from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useState, useEffect, useRef } from "react";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";

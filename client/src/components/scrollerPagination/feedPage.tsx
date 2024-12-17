@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { Button, Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
-import axios from "../../api/axios";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import Search from "../navBar/Search";
 import "./feedPage.css";

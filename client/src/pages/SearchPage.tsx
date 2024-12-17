@@ -81,7 +81,7 @@ export default function SearchPage() {
     setIsLoading(true);
     if (searchType === "@" && search.length > 2) {
       // Fetch users
-      const resp = await axios.get(SEARCH_USER, {
+      const resp = await axiosPrivate.get(SEARCH_USER, {
         params: { username: search },
       });
       setPosts([]);
@@ -91,7 +91,7 @@ export default function SearchPage() {
       // fetch posts
       const tags = search.split(" ");
       try {
-        const resp = await (following ? axiosPrivate : axios).get(
+        const resp = await axiosPrivate.get(
           following ? SEARCH_TAG_FOLLOWING : SEARCH_TAG,
           {
             params: {
@@ -127,7 +127,7 @@ export default function SearchPage() {
     }
     try {
       const tags = search.split(" ");
-      const resp = await (following ? axiosPrivate : axios).get(
+      const resp = await axiosPrivate.get(
         following ? SEARCH_TAG_FOLLOWING : SEARCH_TAG,
         {
           params: {
