@@ -15,6 +15,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Spinner from "react-bootstrap/Spinner";
 import "./../Spinner.css";
+import ViewUsersList from "./ViewUsersList";
 
 import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
@@ -47,8 +48,16 @@ export default function ProfilePage() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const signOut = useSignOut();
   const authUser = useAuthUser();
+  const [ViewUsers, setShowUsers] = useState(false); // modal
+  const [ViewFollowing, setViewFollowing] = useState(false); // 0 for following list and 1 for followers list
 
-  // handle editing the profile if it is your own
+  const handleCloseUsersModal = () => {
+    setShowUsers(false);
+  };
+
+  const handleOpenUsersModal = () => {
+    setShowUsers(true);
+  };
 
   const handleToggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Toggle menu visibility
@@ -176,11 +185,21 @@ export default function ProfilePage() {
                 />
               </div>
               <div className="follower-countd-flex justify-content-around w-100 text-center mt-2">
-                <div>
+                <div
+                  onClick={() => {
+                    setViewFollowing(true);
+                    handleOpenUsersModal();
+                  }}
+                >
                   <h5 className="text-center">{user.follower_amount}</h5>
                   <p>Followers</p>
                 </div>
-                <div>
+                <div
+                  onClick={() => {
+                    setViewFollowing(false);
+                    handleOpenUsersModal();
+                  }}
+                >
                   <h5 className="text-center">{user.following_amount}</h5>
                   <p>Following</p>
                 </div>
@@ -246,6 +265,14 @@ export default function ProfilePage() {
           </Col>
         </Row>
       </Container>
+      {ViewUsers && (
+        <ViewUsersList
+          show={ViewUsers}
+          onHide={handleCloseUsersModal}
+          username={user.username}
+          list={ViewFollowing}
+        />
+      )}
     </>
   );
 }
