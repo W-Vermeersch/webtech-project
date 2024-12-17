@@ -1,7 +1,8 @@
-import { Modal, Spinner } from "react-bootstrap";
+import { Modal, Nav, Spinner } from "react-bootstrap";
 import { User } from "../components/posts/PostInterface";
 import "../components/scrollerPagination/Commenting/ViewComments.css";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { NavLink } from "react-router-dom";
 import {
   FETCH_FOLLOWER_AMOUNT,
   FETCH_FOLLOWERS,
@@ -30,6 +31,7 @@ const ViewUsersList = ({
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(show);
 
   useEffect(() => {
     if (show) {
@@ -52,7 +54,7 @@ const ViewUsersList = ({
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={showModal} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>{list ? "Followers" : "Following"}</Modal.Title>
       </Modal.Header>
@@ -67,7 +69,9 @@ const ViewUsersList = ({
                   key={user.user_id}
                   className="d-flex align-items-center mb-2"
                 >
-                  <p className="m-0">{user.username}</p>
+                  <NavLink to={`/profile/${user.username}`} replace>
+                    <p className="m-0" onClick={onHide}>{user.username}</p>
+                  </NavLink>
                 </div>
               ))
             ) : (
