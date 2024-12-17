@@ -110,7 +110,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const commentsToDisplay = comments.slice(0, 2);
 
   return (
-    <div className="post">
+    <div className="post nes-container">
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
