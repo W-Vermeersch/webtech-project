@@ -24,6 +24,7 @@ export default function Leaderboard() {
   const [activeTab, setActiveTab] = useState(0);
 
   async function fetchLeaderboard() {
+    setIsLoading(true);
     const url = activeTab ? FETCH_LEADERBOARD_FOLLOWERS : FETCH_LEADERBOARD_EXP;
     const resp = await axios.get(url);
     const data = resp.data.users;

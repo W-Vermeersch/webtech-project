@@ -40,3 +40,8 @@
   object-fit: contain;
   border-radius: 10px;
 }
+
+.popup .nes-container {
+  //color: white !important;
+  background-color: #19875482 !important;
+}

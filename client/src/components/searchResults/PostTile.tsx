@@ -14,10 +14,10 @@ interface PostTileProps {
 
 export default function ProfileTile({ post, onTagClicked }: PostTileProps) {
   return (
-    <div className="post-tile">
+    <div className="post-tile nes-container is-centered">
       <Stack gap={4} className="d-flex flex-column align-items-center">
         <NavLink to={`/post/${post.idx}`} state={{ post }}>
-          <div>
+          <div className="nes-container is-rounded p-0">
             <Image src={post.image_url} rounded/>
           </div>
         </NavLink>
