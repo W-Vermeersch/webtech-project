@@ -19,3 +19,7 @@
   max-height: 150px;
   object-fit: cover;
 }
+
+.badge-tag:hover {
+  cursor: pointer;
+}

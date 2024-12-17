@@ -92,10 +92,7 @@ export default function ProfilePage() {
           params: { username },
           //signal: controller.signal,
         });
-        const following = await axiosPrivate.get(FETCH_IS_FOLLOWING, {
-          params: { username },
-        });
-        setFollowing(following.data.following);
+        setFollowing(resp.data.isFollowed);
         if (resp.data.redirect) {
           // user not found
           navigate("/pageNotFound", { replace: true });

@@ -9,9 +9,10 @@ import Col from "react-bootstrap/Col";
 
 interface PostTileProps {
   post: Post;
+  onTagClicked: (tag: string) => void;
 }
 
-export default function ProfileTile({ post }: PostTileProps) {
+export default function ProfileTile({ post, onTagClicked }: PostTileProps) {
   return (
     <div className="post-tile">
       <Stack gap={4} className="d-flex flex-column align-items-center">
@@ -24,7 +25,7 @@ export default function ProfileTile({ post }: PostTileProps) {
           {post.tags[0] !== "None"
             ? post.tags.map((tag) => (
                 <Col key={post.idx} xs="auto"> 
-                  <Badge key={post.idx} bg="dark" className="badge-tag m-2">
+                  <Badge key={post.idx} bg="dark" className="badge-tag m-2" onClick={() => onTagClicked(tag)}>
                     #{tag}
                   </Badge>
                 </Col>

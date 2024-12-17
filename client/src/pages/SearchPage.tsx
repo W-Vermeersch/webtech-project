@@ -186,7 +186,7 @@ export default function SearchPage() {
               ) : (
                 posts.map((post: Post) => (
                   <Col xs="auto" key={post.idx}>
-                    <PostTile post={post} />
+                    <PostTile post={post} onTagClicked={fetchSearchResults} />
                   </Col>
                 ))
               )
