@@ -18,21 +18,24 @@ export default function Homepage() {
   return (
     <Container>
       <Row className="title-row justify-content-center">
-        <Col xs='auto'>
+        <Col xs="auto">
           <Button
             variant="danger"
-            onClick={() => setActiveTab(0)}
+            onClick={() => {
+              setActiveTab(0);
+              Cookies.remove("shown_post_ids");
+            }}
             className={`tab-button ${activeTab === 0 ? "active" : ""}`}
           >
             For you
           </Button>
         </Col>
-        <Col xs='auto'>
+        <Col xs="auto">
           <Button
             variant="danger"
             onClick={() => {
               setActiveTab(1);
-              console.log("Active tab set to: ", 1);
+              Cookies.remove("shown_post_ids");
             }}
             className={`tab-button ${activeTab === 1 ? "active" : ""}`}
           >

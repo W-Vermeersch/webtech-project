@@ -192,7 +192,6 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
             {post.comments && (
               <div
                 className="load-more-comments"
-                style={{ cursor: "pointer" }}
                 onClick={handleViewAllComments}
               >
                 View all comments

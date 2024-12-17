@@ -1,4 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Ensure elements with onClick handlers use the NES cursor style */
+button, a, svg, .action-icon, .load-more-comments, .custom-icon, .leaflet-marker-icon, .comments, .follow, .badge-tag {
+  cursor: url(https://unpkg.com/nes.css@latest/assets/cursor-click.png), pointer !important;
+}
+
+body a, body Link, body NavLink, body .nav-link, input {
+  cursor: url(https://unpkg.com/nes.css@latest/assets/cursor-click.png), pointer !important;
+  text-decoration: none !important;
+}
 
 html, body {
   font-family: 'Press Start 2P' !important;
@@ -13,6 +22,9 @@ body {
   background: rgb(64, 133, 88) !important;
   padding-top: 60px;
 }
+
+
+
 
 @media (max-width: 768px) {
   body {

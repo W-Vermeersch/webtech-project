@@ -82,7 +82,7 @@ export default function NavBar() {
           </Nav>
           <Nav>
             <NavItem to="/create-post" eventKey="Create Post">
-              <Button variant="success">Create Post</Button>
+              <button type="button" className="nes-btn is-success">Create Post</button>
             </NavItem>
           </Nav>
           <Nav>

@@ -6,6 +6,7 @@ import {
 } from "../../api/urls";
 import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 interface LeaderboardpageProps {
   activeTab: number;
@@ -73,7 +74,13 @@ export default function Leaderboard() {
             {leftColumn.map((user, index) => (
               <li key={index} className="leaderboard-entry">
                 <span className="rank">{index + 1}</span>
-                <span className="username">{user.username}</span>
+
+                <span className="username">
+                  <NavLink to={`/profile/${user.username}`}>
+                    {user.username}{" "}
+                  </NavLink>
+                </span>
+
                 <span className="points">
                   {activeTab === 0
                     ? `${user.totalexp} XP`
@@ -86,7 +93,11 @@ export default function Leaderboard() {
             {rightColumn.map((user, index) => (
               <li key={index + 5} className="leaderboard-entry">
                 <span className="rank">{index + 6}</span>
-                <span className="username">{user.username}</span>
+                <span className="username">
+                  <NavLink to={`/profile/${user.username}`}>
+                    {user.username}
+                  </NavLink>
+                </span>
                 <span className="points">
                   {activeTab === 0
                     ? `${user.totalexp} XP`

@@ -45,6 +45,14 @@
   margin-left: 10px;
 }
 
+.leaderboard-container a {
+ color: #ffffff !important;
+}
+
+.leaderboard-container a:hover {
+  color: #f9ca24 !important;
+ }
+
 .points {
   color: #f9ca24;
   font-weight: bold;
