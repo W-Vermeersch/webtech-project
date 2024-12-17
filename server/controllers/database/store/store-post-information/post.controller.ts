@@ -60,7 +60,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             }
 
             const caption = req.body.caption;
-            let tags = req.body.tags;
+            let tags = [req.body.tags];
             const is_public: boolean = (req.body.public === "true");
 
             const location = {
