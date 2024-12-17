@@ -80,7 +80,7 @@ export default function ProfilePage() {
       await axiosPrivate.post(FOLLOW, { username });
       setFollowing(true);
     }
-    setIsFollowing(false)
+    setIsFollowing(false);
   }
 
   useEffect(() => {
@@ -174,6 +174,16 @@ export default function ProfilePage() {
                   max={maxExp}
                   label={`${currentLevelExp(user.totalexp)} XP`}
                 />
+              </div>
+              <div className="follower-countd-flex justify-content-around w-100 text-center mt-2">
+                <div>
+                  <h5 className="text-center">{user.follower_amount}</h5>
+                  <p>Followers</p>
+                </div>
+                <div>
+                  <h5 className="text-center">{user.following_amount}</h5>
+                  <p>Following</p>
+                </div>
               </div>
               {authUser?.username === username ? (
                 <Button

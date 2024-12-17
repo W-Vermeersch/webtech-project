@@ -16,30 +16,31 @@ interface FeedPageProps {
 }
 
 export default function FeedPage({ activeTab }: FeedPageProps) {
-  const axios = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const isAuthenticated = useIsAuthenticated();
 
   // Fetch posts from the backend
   const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
-    let url;
-
-    // Check activeTab value to determine which endpoint to use
+    let current_posts = [];
+    let response;
     if (activeTab === 0) {
-      url = FETCH_RANDOM_POSTS;
+      response = await axios.get(FETCH_RANDOM_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
     } else if (activeTab === 1) {
-      url = FETCH_RANDOM_FOLLOW_POSTS;
+      response = await axiosPrivate.get(FETCH_RANDOM_FOLLOW_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
     } else {
-      url = "not working";
-    }
-
-    const response = await axios.get(url, {
-      params: { nr_of_posts: 6, page: pageParam },
-    });
-    let current_posts = response.data.posts;
-    console.log("This is whats happening", response.data.posts);
-    if (url == FETCH_RANDOM_FOLLOW_POSTS && !isAuthenticated) {
+      // by default do fetch of the ranodm posts
+      response = await axios.get(FETCH_RANDOM_POSTS, {
+        params: { nr_of_posts: 6, page: pageParam },
+      });
       current_posts = [];
     }
+
+    current_posts = response.data.posts;
+    console.log("This is whats happening", response.data.posts);
     return current_posts || [];
   };
 
