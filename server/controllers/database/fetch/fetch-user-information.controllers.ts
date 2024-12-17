@@ -71,10 +71,16 @@ export class FetchUserInformationController extends BaseDatabaseController {
     });
 
     this.router.get(
-      "/fetch/leaderboard",
+      "/fetch/leaderboard-exp",
       (req: express.Request, response: express.Response) => {
-        return this.getLeaderboard(req, response);
+        return this.getLeaderboardExp(req, response);
       });
+
+      this.router.get(
+        "/fetch/leaderboard-followers",
+        (req: express.Request, response: express.Response) => {
+          return this.getLeaderboardFollowers(req, response);
+        });
 
     this.router.get(
       "/fetch/search/user", 
@@ -328,8 +334,8 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
   }
   
 
-  private async getLeaderboard(req: express.Request, res: express.Response) {
-    const users = await this.db.fetchTopTen();
+  private async getLeaderboardExp(req: express.Request, res: express.Response) {
+    const users = await this.db.fetchTopTenExp();
     const topTenUsers = await Promise.all(users.map(async (user) => {
       const user_id = user.user_id;
       const totalexp = user.totalexp;
@@ -345,6 +351,24 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       res.json({
         users: topTenUsers
       })
+}
+
+private async getLeaderboardFollowers(req: express.Request, res: express.Response) {
+  const users = await this.db.fetchTopTenFollowers();
+  const topTenUsers = await Promise.all(users.map(async (user) => {
+    const user_id = user.user_id;
+    const userObject = await this.db.fetchUserUsingID(user_id);
+    const username = userObject[0].username;
+    user = {
+      username: username,
+      follower_count: user.follower_count,
+    };
+    return user;
+  }))
+    console.log(users)
+    res.json({
+      users: topTenUsers
+    })
 }
 
   private async getUserSearchResults(req, res) {

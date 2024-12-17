@@ -2,7 +2,8 @@ import "./NavBar.css";
 import NavItem from "./NavItem";
 import Search from "./Search";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -16,7 +17,7 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
 import useSignOut from "../../hooks/useSignOut";
-import { LOG_IN } from "../../api/urls";
+import { FETCH_USER_PROFILE, LOG_IN } from "../../api/urls";
 import { FaS } from "react-icons/fa6";
 import { ModalBody } from "react-bootstrap";
 
@@ -24,6 +25,21 @@ export default function NavBar() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+  const [profilepic, setProfilePic] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (authUser) {
+      axiosPrivate
+        .get(FETCH_USER_PROFILE, { params: { username: authUser.username } })
+        .then((res) => {
+          setProfilePic(res.data.profilepicture);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [authUser]);
 
   async function handleLogOut() {
     if (!authUser) {
@@ -31,6 +47,7 @@ export default function NavBar() {
     }
     await signOut();
     localStorage.removeItem("posts");
+    setProfilePic(null);
     navigate(LOG_IN);
     // deal with error handling
   }
@@ -64,10 +81,7 @@ export default function NavBar() {
           </Nav>
           <Nav>
             <NavItem to="/search" eventKey="Search">
-              <FaSearch
-                className="search-icon"
-                size={20}
-              />
+              <FaSearch className="search-icon" size={20} />
             </NavItem>
           </Nav>
           <Nav>
@@ -81,8 +95,14 @@ export default function NavBar() {
                 <>
                   <Image
                     className="me-2"
-                    src="https://dummyimage.com/35"
+                    src={
+                      profilepic
+                        ? profilepic
+                        : "/src/assets/default-profile-picture.jpg"
+                    }
                     roundedCircle
+                    width={35}
+                    height={35}
                   />
                   <span>{authUser ? authUser.username : "Guest"} </span>
                 </>

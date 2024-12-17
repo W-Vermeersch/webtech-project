@@ -1,7 +1,5 @@
-
-
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Remove default styling */
+  -webkit-appearance: none; 
   appearance: none;
   background: #a72828; /* Thumb color */
   cursor: pointer;
@@ -12,4 +10,9 @@ input[type="range"]::-moz-range-thumb {
   appearance: none;
   background: #a72828; /* Thumb color */
   cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #a72828 !important;
+  border-color: #a72828 !important;
 }
