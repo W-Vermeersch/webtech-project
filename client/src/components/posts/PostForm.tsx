@@ -9,7 +9,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
 import {useEffect, useState} from "react";
-import 'reactjs-popup/dist/index.css';
 
 interface PostFormValues {
   caption: string;
