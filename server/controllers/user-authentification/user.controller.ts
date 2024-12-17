@@ -303,7 +303,9 @@ export function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
     //check if we have a valid token
     if (token == null)
-        return res.status(401).send("Unauthorized, no authentication header found");
+        return res.json({
+            redirect: '/user/log-in'
+        })
     //verify the token
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
     if (!accessTokenSecret) {
