@@ -293,7 +293,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
     private async executePostQuery(query_specification: string, values: any): Promise<Post[]> {
     const query = {
-        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, public ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
+        text: `SELECT post_id, user_id, image_url, description, tags, score, rarity, public, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude ${query_specification}`,
         values: [values],
     }
         return this.executeQuery(query).then((res) => {
