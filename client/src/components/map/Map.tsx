@@ -16,8 +16,25 @@ import MapMarker from "../profile/MapMarker";
 
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 import "../../Spinner.css";
+
+interface NoPostsModalProps {
+  show: boolean;
+  handleClose: () => void;
+}
+
+const NoPostsModal: React.FC<NoPostsModalProps> = ({ show, handleClose }) => {
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>No More Posts</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You have gone through all the posts. Refresh to see previous posts {":)"} </Modal.Body>
+    </Modal>
+  );
+};
 
 interface State {
   posts: Post[];
@@ -35,6 +52,7 @@ function Map() {
   const [refresh, setRefresh] = useState(false);
   const [following, setFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const user = useAuthUser();
   const axiosPrivate = useAxiosPrivate();
 
@@ -94,6 +112,9 @@ function Map() {
           replace: true,
         });
       } else {
+        if (resp.data.posts.length === 0) {
+          setShowModal(true);
+        }
         setPosts(resp.data.posts);
         localStorage.setItem("posts", JSON.stringify(resp.data.posts));
       }
@@ -200,7 +221,7 @@ function Map() {
               posts &&
               posts.map((post, index) => <MapMarker key={index} post={post} />)}
         </MarkerClusterGroup>
-        
+        <NoPostsModal show={showModal} handleClose={() => setShowModal(false)} />
       </MapContainer>
     </div>
   );
