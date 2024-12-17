@@ -1,7 +1,7 @@
 import * as express from "express";
 import {BaseDatabaseController} from "../base.database.controller";
 import Database from "../../../database";
-import {authenticateToken} from "../../user-authentification";
+import {authenticateToken, ifAuthenticatedToken} from "../../user-authentification";
 import {Post} from "../../../interfaces";
 import * as multer from "multer";
 import {CloudinaryApi} from "./store-post-information/cloudinary.api";
@@ -22,7 +22,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.get("/store/user/like-post", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.post("/store/user/like-post", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.likePost(req, response);
         });
 
@@ -46,9 +46,17 @@ export class StoreUserInformationController extends BaseDatabaseController {
     private async likePost(req, res) {
         try {
             const username = req.user.username
+            if (!username) {
+                return res.status(404).send("User not Found")
+            }
             const post_id = parseInt(req.query.post_id.toString());
 
-            const users = await this.db.fetchUserUsingUsername(username.toString())
+
+                const users = await this.db.fetchUserUsingUsername(username.toString()).then((val) => {return val}).catch((err) => {
+                    console.log("error with username", err)
+                    return []
+                })
+
             if (users.length === 0) {
                 res.json({
                     redirect: '/home'
@@ -57,7 +65,11 @@ export class StoreUserInformationController extends BaseDatabaseController {
                 const userObject = users[0]
                 const user_id = userObject.user_id
 
-                let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id))
+                try {
+                let likedPostsOfUser: number[] = (await this.db.fetchLikedPostsOfUser(user_id).then((val) => {return val}).catch((err) => {
+                    console.log("error with user_id", err)
+                    return []
+                }))
                     .map((post: Post) => {
                         return post.post_id
                     })
@@ -66,6 +78,8 @@ export class StoreUserInformationController extends BaseDatabaseController {
                     res.status(200).send("Successfully liked post")
                 } else {
                     res.status(404).send("User has already liked this post")
+                }} catch {
+                    console.log("error with user_id")
                 }
             }
         } catch (error){

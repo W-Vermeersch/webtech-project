@@ -4,6 +4,7 @@ import "./SinglePost.css";
 import { Post, PostComment } from "../posts/PostInterface";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from "../../api/axios";
 import { DELETE_LIKE, FETCH_POST_COMMENTS, LIKE_POST } from "../../api/urls";
 import CommentModal from "./Commenting/PlaceComment";
 import ViewCommentsModal from "./Commenting/ViewComments";
@@ -36,7 +37,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const handleLiking = async () => {
     // console.log("Handlelike has been called");
     const post_id = post.idx;
-    const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
+    const resp = await axiosPrivate.post(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);

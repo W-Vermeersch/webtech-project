@@ -35,7 +35,7 @@ export default function Search({
   }
 
   return (
-    <Form className={`form-inline ${className}`} onSubmit={handleSubmit}>
+    <Form className={`form-inline ${className}`} onChange={handleSubmit}>
       <InputGroup>
         <InputGroup.Text className="search-type bg-dark text-light">
           <Button
