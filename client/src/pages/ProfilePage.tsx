@@ -38,6 +38,7 @@ export default function ProfilePage() {
   const [following, setFollowing] = useState<boolean | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [activeTab, setActiveTab] = useState("gallery");
+  const [isFollowing, setIsFollowing] = useState(false); // for buffering follow/unfollow
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,16 +68,19 @@ export default function ProfilePage() {
   }
 
   async function handleFollow() {
+    setIsFollowing(true);
     if (!authUser) {
       return;
     }
     if (following) {
-      const resp = await axiosPrivate.post(UNFOLLOW, { username });
+      await axiosPrivate.delete(UNFOLLOW, { params: { username } });
       setFollowing(false);
+      console.log("unfollowed");
     } else {
-      const resp = await axiosPrivate.post(FOLLOW, { username });
+      await axiosPrivate.post(FOLLOW, { username });
       setFollowing(true);
     }
+    setIsFollowing(false)
   }
 
   useEffect(() => {
@@ -178,6 +182,7 @@ export default function ProfilePage() {
                 <Button
                   className="edit-button"
                   variant="success"
+                  disabled={isFollowing}
                   onClick={() =>
                     navigate("/profile/edit", {
                       state: {
