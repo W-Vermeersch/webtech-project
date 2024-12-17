@@ -30,7 +30,7 @@ export class App {
 
     database: Database =  new Database();
 
-    useHTTPS = false;
+    useHTTPS = true;
 
 
     constructor() {
