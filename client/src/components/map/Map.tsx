@@ -62,12 +62,16 @@ function Map() {
   });
 
   function handleRefresh() {
-    localStorage.removeItem("posts");
-    if (posts && posts.length === 0) {
-      Cookies.remove("shown_post_ids");
+    if (!user && following) {
+      navigate("/user/log-in", { state: { from: location } });
+    } else {
+      localStorage.removeItem("posts");
+      if (posts && posts.length === 0) {
+        Cookies.remove("shown_post_ids");
+      }
+      setPosts(null);
+      setRefresh((prev) => !prev);
     }
-    setPosts(null);
-    setRefresh((prev) => !prev);
   }
 
   useEffect(() => {
@@ -94,6 +98,7 @@ function Map() {
           params: { nr_of_posts: 4 },
         });
       }
+      console.log(resp.data.posts);
       if (resp.data.redirect) {
         // not authenticated
         navigate(resp.data.redirect, {
