@@ -71,10 +71,10 @@ export default function ProfilePage() {
       return;
     }
     if (following) {
-      await axiosPrivate.get(UNFOLLOW, { params: username });
+      const resp = await axiosPrivate.post(UNFOLLOW, { username });
       setFollowing(false);
     } else {
-      await axiosPrivate.get(FOLLOW, { params: username });
+      const resp = await axiosPrivate.post(FOLLOW, { username });
       setFollowing(true);
     }
   }

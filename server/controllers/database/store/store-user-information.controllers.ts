@@ -74,7 +74,8 @@ export class StoreUserInformationController extends BaseDatabaseController {
     }
     private async followUser(req, res) {
         const username = req.user.username
-        const usernameToFollow = req.query.username;
+        const usernameToFollow = req.body.username;
+        console.log(usernameToFollow);
         const userIdToFollow = (await this.db.fetchUserUsingUsername(usernameToFollow))[0].user_id
 
         const users = await this.db.fetchUserUsingUsername(username.toString())
