@@ -22,7 +22,7 @@ export class StoreUserInformationController extends BaseDatabaseController {
 
     initializeRoutes(): void {
 
-        this.router.post("/store/user/like-post", authenticateToken, (req: express.Request, response: express.Response) => {
+        this.router.get("/store/user/like-post", authenticateToken, (req: express.Request, response: express.Response) => {
             return this.likePost(req, response);
         });
 

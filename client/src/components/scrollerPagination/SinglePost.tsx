@@ -37,7 +37,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const handleLiking = async () => {
     // console.log("Handlelike has been called");
     const post_id = post.idx;
-    const resp = await axiosPrivate.post(LIKE_POST, { params: { post_id } });
+    const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
