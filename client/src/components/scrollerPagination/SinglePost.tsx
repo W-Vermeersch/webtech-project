@@ -26,6 +26,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  console.log("amount of likes", post.liked);
 
   // initialise the likes and track if the post is liked
   const [likes, setLikes] = useState(post.likes || 0);
