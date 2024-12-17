@@ -158,7 +158,9 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
             onClick={() => authCheck(handleOpenCommentModal)}
             style={{ cursor: "pointer", width: "30px", marginLeft: "20px" }}
           />
-          <span className="badge bg-danger ms-auto">{`${post.score*post.rarity} XP`}</span>
+          <span className="badge bg-danger ms-auto">{`${
+            post.score * post.rarity
+          } XP`}</span>
         </div>
 
         {/* Caption & Tags Section */}

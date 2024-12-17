@@ -5,24 +5,47 @@ import { Button, Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
 import axios from "../../api/axios";
-import { FETCH_RANDOM_POSTS } from "../../api/urls";
+import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
 import Search from "../navBar/Search";
 import "./feedPage.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useIsAuthenticated from "../../hooks/useIsAuthenticated";
 
-export default function FeedPage() {
-    const axios = useAxiosPrivate()
-    // Fetch posts from the backend
-    const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
-        const response = await axios.get(FETCH_RANDOM_POSTS, {
-            params: { nr_of_posts: 6, page: pageParam },
-        });
-        return response.data.posts || [];
-    };
+interface FeedPageProps {
+  activeTab: number;
+}
+
+export default function FeedPage({ activeTab }: FeedPageProps) {
+  const axios = useAxiosPrivate();
+  const isAuthenticated = useIsAuthenticated();
+
+  // Fetch posts from the backend
+  const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
+    let url;
+
+    // Check activeTab value to determine which endpoint to use
+    if (activeTab === 0) {
+      url = FETCH_RANDOM_POSTS;
+    } else if (activeTab === 1) {
+      url = FETCH_RANDOM_FOLLOW_POSTS;
+    } else {
+      url = "not working";
+    }
+
+    const response = await axios.get(url, {
+      params: { nr_of_posts: 6, page: pageParam },
+    });
+    let current_posts = response.data.posts;
+    console.log("This is whats happening", response.data.posts);
+    if (url == FETCH_RANDOM_FOLLOW_POSTS && !isAuthenticated) {
+      current_posts = [];
+    }
+    return current_posts || [];
+  };
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["posts"],
+      queryKey: ["posts", activeTab],
       queryFn: fetchPosts,
       getNextPageParam: (lastPage, allPages) => {
         // If the last page contains posts, fetch the next page
@@ -30,8 +53,6 @@ export default function FeedPage() {
       },
       initialPageParam: 1,
     });
-
-
 
   const lastPostRef = useRef<HTMLElement>(null);
   const { ref, entry } = useIntersection({
@@ -95,4 +116,4 @@ export default function FeedPage() {
       )}
     </>
   );
-};
+}
