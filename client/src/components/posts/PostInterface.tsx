@@ -24,6 +24,12 @@ export interface User {
   bio: string;
   totalexp: number;
   badges?: string[];
+
+  followers: string[]; //usernames
+  following: string[]; //usernames
+  follower_amount: number;
+  following_amount: number;
+  isFollowed: boolean;
 }
 
 export interface Location {
