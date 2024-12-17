@@ -112,6 +112,7 @@ export default function FullPost() {
               image_url={post.image_url}
               tags={post.tags}
               location={post.location}
+              XP={post.rarity*post.score}
             />
           </Col>
           <Col xs={12} className="comment-container order-md-5">
@@ -124,7 +125,7 @@ export default function FullPost() {
             <div id="user" className="p-2 px-4 mb-3 mb-md-1 mt-md-3 rounded">
               <UserSection
                 username={user.username}
-                profile_pic={post.profile_picture}
+                profile_pic={user.profilepicture}
                 level={level(user.totalexp)}
               />
             </div>
