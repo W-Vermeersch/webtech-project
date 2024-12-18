@@ -24,6 +24,7 @@ export default function Leaderboard() {
   const [activeTab, setActiveTab] = useState(0);
 
   async function fetchLeaderboard() {
+    setIsLoading(true);
     const url = activeTab ? FETCH_LEADERBOARD_FOLLOWERS : FETCH_LEADERBOARD_EXP;
     const resp = await axios.get(url);
     const data = resp.data.users;
@@ -43,6 +44,7 @@ export default function Leaderboard() {
 
   return (
     <div className="leaderboard-container">
+      <h1 className="leaderboard-title">LEADERBOARD</h1>
       <Row className="title-row justify-content-center">
         <Col xs="auto">
           <Button
@@ -65,12 +67,11 @@ export default function Leaderboard() {
           </Button>
         </Col>
       </Row>
-      <h1 className="leaderboard-title">LEADERBOARD</h1>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="leaderboard-columns">
-          <ul className="leaderboard-list left">
+        <div className="leaderboard-columns mt-2 mb-0 mb-md-4">
+          <ul className="leaderboard-list left mb-0 mb-md-3">
             {leftColumn.map((user, index) => (
               <li key={index} className="leaderboard-entry">
                 <span className="rank">{index + 1}</span>
@@ -117,7 +118,7 @@ export default function Leaderboard() {
           />
         </Col>
       </div>
-      <div className="catch-more">Catch more animals!</div>
+      <div className="catch-more mt-lg-5">Catch more animals!</div>
     </div>
   );
 }

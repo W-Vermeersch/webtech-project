@@ -3,7 +3,7 @@ import * as yup from "yup";
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 export const signUpSchema = yup.object().shape({
-  username: yup.string().required("Username is required"),
+  username: yup.string().required("Username is required").min(3, "Too short!"),
   email: yup
     .string()
     .email("Please enter a valid email")

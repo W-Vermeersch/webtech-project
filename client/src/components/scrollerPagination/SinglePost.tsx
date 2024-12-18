@@ -42,7 +42,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
     }
-    // console.log("amount of likes", isLiked);
+    //console.log("liked", isLiked);
   };
 
   const handleUnliking = async () => {
@@ -110,7 +110,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const commentsToDisplay = comments.slice(0, 2);
 
   return (
-    <div className="post">
+    <div className="post nes-container">
       <div className="post-header">
         <Row className="align-items-center">
           <Col xs="auto">
@@ -131,7 +131,10 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
 
       <div className="post-content">
         <div className="post-image-wrapper">
-          <NavLink to={`/post/${post.idx}`} state={{ post }}>
+          <NavLink
+            to={`/post/${post.idx}`}
+            state={{ post: { ...post, liked: isLiked, likes: likes } }}
+          >
             <img
               src={post.image_url}
               alt="Post content"
@@ -146,7 +149,10 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
             src={isLiked ? "/src/assets/liked.svg" : "/src/assets/like.svg"}
             alt="Like"
             className="action-icon"
-            onClick={() => authCheck(isLiked ? handleUnliking : handleLiking)}
+            onClick={() => {
+              authCheck(isLiked ? handleUnliking : handleLiking);
+              //console.log('from single post -> likes: ', likes, 'liked : ', isLiked)
+            }}
             style={{ cursor: "pointer", width: "24px", marginRight: "10px" }}
           />
           <span>{likes}</span>

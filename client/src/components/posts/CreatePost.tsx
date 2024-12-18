@@ -20,7 +20,7 @@ const CreatePost = () => {
   return (
     <Container>
       <Row className="w-75 mx-auto mt-2 mb-3">
-        <h2 className="fw-bold mb-0">Create Post</h2>
+        <h2 className="fw-bold mb-0 text-center">Create Post</h2>
       </Row>
       <PostForm />
     </Container>

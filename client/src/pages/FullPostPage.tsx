@@ -14,21 +14,60 @@ import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
 import { Post, PostComment, User } from "../components/posts/PostInterface";
-import { FETCH_POST, FETCH_USER_PROFILE } from "../api/urls";
+import {
+  FETCH_POST,
+  FETCH_USER_PROFILE,
+  LIKE_POST,
+  DELETE_LIKE,
+} from "../api/urls";
 import { level } from "../api/xp-system";
 import ViewCommentsModal from "../components/scrollerPagination/Commenting/ViewComments.tsx";
 
 // later make modules of components
 
 export default function FullPost() {
-  const axios = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { post_id } = useParams();
   const [post, setPost] = useState<Post | null>(null);
+  const [likes, setLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+
+  const handleLiking = async () => {
+    //console.log("Handlelike has been called");
+    const post_id = post?.idx;
+    const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
+    if (resp.status === 200) {
+      setLikes((prev) => prev + 1);
+      setIsLiked(!isLiked);
+    }
+    // console.log("amount of likes", isLiked);
+  };
+
+  const handleUnliking = async () => {
+    //console.log("handleunliking has been called");
+    try {
+      const post_id = post?.idx;
+      // console.log("handleunliking has been called");
+      // Use DELETE method with params
+      const resp = await axiosPrivate.delete(DELETE_LIKE, {
+        params: { post_id },
+      });
+
+      if (resp.status === 200) {
+        setLikes((prev) => prev - 1);
+        setIsLiked(false);
+      } else {
+        console.error("Error unliking post");
+      }
+    } catch (err) {
+      console.error("Error during unliking:", err);
+    }
+  };
 
   const handleViewAllComments = () => {
     setShowViewCommentsModal(true);
@@ -45,9 +84,13 @@ export default function FullPost() {
       try {
         if (state && state.post) {
           setPost(state.post);
+          setLikes(state.post.likes);
+          setIsLiked(state.post.liked);
           // console.log("state post: ", state.post);
         } else {
-          const resp = await axios.get(FETCH_POST, { params: { post_id } });
+          const resp = await axiosPrivate.get(FETCH_POST, {
+            params: { post_id },
+          });
           if (resp.data.redirect) {
             navigate(resp.data.redirect, { replace: true });
           } else {
@@ -66,7 +109,7 @@ export default function FullPost() {
   useEffect(() => {
     async function fetchUser(username: string | number) {
       try {
-        const resp = await axios.get(FETCH_USER_PROFILE, {
+        const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
         });
         // console.log("user: ", resp.data);
@@ -101,7 +144,7 @@ export default function FullPost() {
         <Spinner className="spinner" animation="border" variant="success" />
       )}
 
-      <div id="full-post">
+      <div id="full-post" className="mt-2">
         <Row
           style={{ height: "80vh" }}
           id="full-post-row"
@@ -112,11 +155,18 @@ export default function FullPost() {
               image_url={post.image_url}
               tags={post.tags}
               location={post.location}
-              XP={post.rarity*post.score}
+              XP={post.rarity * post.score}
+              likes={likes}
+              isLiked={isLiked}
+              handleLiking={handleLiking}
+              handleUnliking={handleUnliking}
             />
           </Col>
-          <Col xs={12} className="comment-container order-md-5">
-            <div className="comments" onClick={handleViewAllComments}>
+          <Col xs={12} className="comment-container order-md-5 order-4">
+            <div
+              className="comments mt-0 mb-3 mt-md-4 text-light"
+              onClick={handleViewAllComments}
+            >
               Click here to view the comments.
             </div>
           </Col>
@@ -135,7 +185,7 @@ export default function FullPost() {
               <Description description={post.description} />
             </Row>
           </Col>
-          <Col xs={12} md={6} className="order-md-3 order-4">
+          <Col xs={12} md={6} className="order-md-3 order-5">
             <Row>
               <MapContainer
                 location={post.location}
