@@ -36,13 +36,20 @@ export class StorePostInformationController extends BaseDatabaseController {
         // @ts-ignore
         const file = req.file
         try {
+            const errors = []
             // @ts-ignore
             const userId = req.user.user_id;
             if (!file){
-                return res.status(400).send("Missing required fields: 'file'");
+                errors.push('file')
             }
             if (!file || !req.body.caption) {
-                return res.status(400).send("Missing required fields: 'caption'");
+                errors.push('caption')
+            }
+            if (!req.body.tags || req.body.tags === ''){
+                errors.push('tags')
+            }
+            if (errors.length > 0){
+                return res.status(400).send(`Missing required fields: ${errors.toString()}`);
             }
             const filePath = file.path;
             fs.stat(filePath, (err, stats) => {
@@ -60,7 +67,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             }
 
             const caption = req.body.caption;
-            let tags = [req.body.tags];
+            let tags = req.body.tags.split(',');
             const is_public: boolean = (req.body.public === "true");
 
             const location = {
