@@ -13,6 +13,10 @@ interface PostImageProps {
   tags: string[];
   location: Location;
   XP: number;
+  likes: number;
+  isLiked: boolean;
+  handleLiking: () => void;
+  handleUnliking: () => void;
 }
 
 export default function PostImage({
@@ -20,6 +24,10 @@ export default function PostImage({
   tags,
   location,
   XP,
+  likes,
+  isLiked,
+  handleLiking,
+  handleUnliking,
 }: PostImageProps) {
   const [stateCountry, setStateCountry] = useState<{
     state: string;
@@ -59,6 +67,19 @@ export default function PostImage({
             {`${XP} XP`}
           </Badge>
         </h5>
+        <div className="like-container ms-3 bg-light p-2 rounded">
+          <img
+            src={isLiked ? "/src/assets/liked.svg" : "/src/assets/like.svg"}
+            alt="Like"
+            className="action-icon"
+            onClick={() => {
+              isLiked ? handleUnliking() : handleLiking();
+              //console.log("from full post -> state likes: ", likes, "state isLiked: ", isLiked);
+            }}
+            style={{ width: "24px", marginRight: "10px" }}
+          />
+          <span>{likes}</span>
+        </div>
         <h3 className="location">
           <Badge bg="success" className="m-3">
             {stateCountry.country === ""

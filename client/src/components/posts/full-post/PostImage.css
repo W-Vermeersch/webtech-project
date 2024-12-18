@@ -25,3 +25,8 @@
   font-size: 1.2rem !important; /* Increase font size */
   padding: 1em; /* Adjust padding */
 }
+
+.like-container {
+  width: 60px;
+  height: 35px;
+}
