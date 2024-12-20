@@ -73,7 +73,6 @@ export default function ProfilePage() {
     }
     await signOut();
     navigate(LOG_IN);
-    // deal with error handling
   }
 
   async function handleFollow() {
@@ -96,20 +95,16 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchUser() {
       setIsLoading(true);
-      //console.log("fetching user");
       try {
         const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
-          //signal: controller.signal,
         });
         setFollowing(resp.data.isFollowed);
         setFollowerCount(resp.data.follower_amount);
-        console.log("following: ", resp.data.isFollowed);
         if (resp.data.redirect) {
           // user not found
           navigate("/pageNotFound", { replace: true });
         } else {
-          //isMounted &&
           setUser(resp.data);
         }
       } catch (error) {
@@ -141,6 +136,7 @@ export default function ProfilePage() {
 
   return (
     <>
+    {/* 3 dots at top of profile page on small screen to log out */}
       <div
         className="three-dots d-xs-block d-md-none"
         onClick={handleToggleMenu}

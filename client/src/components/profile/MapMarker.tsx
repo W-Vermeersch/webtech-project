@@ -11,6 +11,8 @@ interface MapMarkerProps {
 }
 
 export default function MapMarker({ post }: MapMarkerProps) {
+
+  // This component is used to display a custom marker on the map with post image as the icon and a popup with the post image
   const myIcon = L.divIcon({
     html: `<div class="custom-icon" style="background-image: url(${post.image_url});"></div>`,
     className: "custom-icon-wrapper",

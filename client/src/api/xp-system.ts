@@ -1,3 +1,5 @@
+// Leveling system
+
 export const maxExp = 1000;
 
 export function level(exp: number) {

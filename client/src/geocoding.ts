@@ -1,17 +1,13 @@
 import {
   setKey,
   setLanguage,
-  setRegion,
-  fromAddress,
-  fromLatLng,
-  fromPlaceId,
-  setLocationType,
   geocode,
   RequestType,
 } from "react-geocode";
 
 export const mapsAPIKey = "AIzaSyAxcoTGl9eGJr427kNv1YwOObWbkXPE1no";
 
+// reverse geocoding function
 export async function getCityCountry(
   latitude: number,
   longitude: number
@@ -50,6 +46,7 @@ export async function getCityCountry(
   }
 }
 
+// geocoding function
 export async function getLatLng(address: string): Promise<{ latitude: number; longitude: number }> {
   try {
     const { results } = await geocode(RequestType.ADDRESS, address);

@@ -29,7 +29,7 @@ export default function MapContainer({ posts, center, activeTab }: MapContainerP
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    // Set the map bounds to fit all the markers
+    // Set the map bounds to fit all the post markers
     if (posts.length > 0) {
       const bounds = L.latLngBounds(
         posts.map((post) => [post.location.latitude, post.location.longitude])

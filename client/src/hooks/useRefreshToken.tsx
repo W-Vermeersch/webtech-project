@@ -3,6 +3,9 @@ import axios from "../api/axios";
 import useSignOut from "./useSignOut";
 import { REFRESH_TOKEN } from "../api/urls";
 
+// Implemented with the help of this tutorial: https://www.youtube.com/watch?v=nI8PYZNFtac&list=PL0Zuz27SZ-6PRCpm9clX0WiBEMB70FWwd&index=4
+// refreshes the token if it's expired
+
 const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
   const signOut = useSignOut();

@@ -37,6 +37,7 @@ export default function PostImage({
     country: "",
   });
 
+  // use reverse geocoding to get the country and state of the location of the post
   useEffect(() => {
     async function fetchLocation() {
       const locationData = await getCityCountry(
@@ -74,7 +75,6 @@ export default function PostImage({
             className="action-icon"
             onClick={() => {
               isLiked ? handleUnliking() : handleLiking();
-              //console.log("from full post -> state likes: ", likes, "state isLiked: ", isLiked);
             }}
             style={{ width: "24px", marginRight: "10px" }}
           />
@@ -87,7 +87,6 @@ export default function PostImage({
               : `${stateCountry.state}, ${stateCountry.country}`}
           </Badge>
         </h3>
-        {/* add more things to overlay on the post image */}
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+// Backend URLS
+
 // delete controller:
 export const DELETE_USER = "/db/delete/user/delete-user"; // een user deleten. heeft username in de request parameters nodig. (req.param.username)
 export const DELETE_LIKE = "/db/delete/user/delete-like"; // delete een like tussen een user en post. heeft username en post_id nodig in de parameters (req.param.username en .post_id)

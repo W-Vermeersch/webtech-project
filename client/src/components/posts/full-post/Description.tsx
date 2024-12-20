@@ -36,6 +36,7 @@ export default function Description({ description }: DescriptionProps) {
   const [modalShow, setModalShow] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
   
+  // trigger modal if description is truncated
   useEffect(() => {
     const element = descriptionRef.current;
     if (element) {

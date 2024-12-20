@@ -38,22 +38,17 @@ export default function FullPost() {
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
 
   const handleLiking = async () => {
-    //console.log("Handlelike has been called");
     const post_id = post?.idx;
     const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
     }
-    // console.log("amount of likes", isLiked);
   };
 
   const handleUnliking = async () => {
-    //console.log("handleunliking has been called");
     try {
       const post_id = post?.idx;
-      // console.log("handleunliking has been called");
-      // Use DELETE method with params
       const resp = await axiosPrivate.delete(DELETE_LIKE, {
         params: { post_id },
       });
@@ -80,13 +75,13 @@ export default function FullPost() {
   useEffect(() => {
     setIsLoading(true);
 
+    // Fetch post data: if post data is already in state, use that, otherwise fetch from server
     async function fetchPost() {
       try {
         if (state && state.post) {
           setPost(state.post);
           setLikes(state.post.likes);
           setIsLiked(state.post.liked);
-          // console.log("state post: ", state.post);
         } else {
           const resp = await axiosPrivate.get(FETCH_POST, {
             params: { post_id },
@@ -112,7 +107,6 @@ export default function FullPost() {
         const resp = await axiosPrivate.get(FETCH_USER_PROFILE, {
           params: { username },
         });
-        // console.log("user: ", resp.data);
         if (resp.data.redirect) {
           navigate(resp.data.redirect, { replace: true });
         } else {

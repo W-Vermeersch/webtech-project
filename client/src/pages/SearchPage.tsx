@@ -39,6 +39,7 @@ export default function SearchPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
+  // Set search type to hashtag if state is present (coming from map page)
   useEffect(() => {
     if (state) {
       setSearchType("#");
@@ -70,12 +71,14 @@ export default function SearchPage() {
     setUserLocation(null);
   }
 
+  // Get user location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, nop);
     }
   });
 
+  // Fetch posts or users based on search type
   async function fetchSearchResults(search: string) {
     setSearch(search);
     setIsLoading(true);
@@ -88,7 +91,7 @@ export default function SearchPage() {
       setUsers(resp.data.users);
       setIsLoading(false);
     } else {
-      // fetch posts
+      // fetch posts (disregard filters with filter_enabled = false), allow for multiple tags
       const tags = search.split(" ");
       try {
         const resp = await axiosPrivate.get(
@@ -116,6 +119,7 @@ export default function SearchPage() {
     }
   }
 
+  // Fetch posts based on filters
   async function fetchFiltered() {
     setIsLoading(true);
     const locationValue = location_input.current?.value;

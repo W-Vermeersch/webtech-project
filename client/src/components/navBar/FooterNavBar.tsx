@@ -9,7 +9,6 @@ import { Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
 export default function FooterNavBar() {
-  const signOut = useSignOut();
   const authUser = useAuthUser();
   const navigate = useNavigate();
 
@@ -21,18 +20,6 @@ export default function FooterNavBar() {
     }
   }
 
-  async function handleLogIn() {
-    navigate(LOG_IN);
-  }
-
-  async function handleLogOut() {
-    if (!authUser) {
-      return;
-    }
-    await signOut();
-    navigate(LOG_IN);
-    // deal with error handling
-  }
   return (
     <div className="footer-navbar">
       <NavLink to="/home" className="footer-nav-item">

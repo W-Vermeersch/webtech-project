@@ -56,6 +56,7 @@ function Map() {
   const user = useAuthUser();
   const axiosPrivate = useAxiosPrivate();
 
+  // get user's location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -67,6 +68,7 @@ function Map() {
     }
   }, []);
   
+  // refresh the posts
   function handleRefresh() {
     if (!user && following) {
       navigate("/user/log-in", { state: { from: location } });
@@ -124,6 +126,7 @@ function Map() {
     fetchPosts();
   }, [refresh]);
 
+  // if navigating from search page, fit the map to the search results, otherwise fit the map to the random posts
   useEffect(() => {
     if (mapRef.current) {
       if (state && state.posts && state.posts.length > 0) {

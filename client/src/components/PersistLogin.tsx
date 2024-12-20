@@ -5,6 +5,10 @@ import useAuth from "../hooks/useAuth";
 import useSignOut from "../hooks/useSignOut";
 import Spinner from 'react-bootstrap/Spinner';
 
+
+// Implemented with the help of the following tutorial: https://www.youtube.com/watch?v=27KeYk-5vJw&list=PL0Zuz27SZ-6PRCpm9clX0WiBEMB70FWwd&index=5
+// This component is used to check if the user has a valid token and refresh it if necessary for the user to stay logged in
+
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();

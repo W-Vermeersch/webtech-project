@@ -1,3 +1,5 @@
+// clientside interface for posts, users, location and comments
+
 export interface Post {
   user: string;
   username: string;

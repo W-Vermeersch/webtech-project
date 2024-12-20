@@ -14,11 +14,11 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import EditProfilePage from "./pages/EditingProfile/EditProfilePage.tsx";
 import LeaderboardPage from "./pages/LeaderboardPage.tsx";
 import SearchPage from "./pages/SearchPage.tsx";
-
+import FullPost from "./pages/FullPostPage.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 
-import FullPost from "./pages/FullPostPage.tsx";
 
+// define all the routes for the app
 function App() {
   return (
     <>
