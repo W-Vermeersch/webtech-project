@@ -194,7 +194,7 @@ export class UserAuthenticationController extends BaseController {
             });
             this.refreshTokens.push({ username, refreshToken }); // adding username to array
             res.cookie("refreshToken", refreshToken, {
-                // httpOnly: true,
+                httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 7,
             }); // 7 days
             res.json({
