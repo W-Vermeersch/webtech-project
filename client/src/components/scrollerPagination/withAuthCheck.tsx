@@ -3,6 +3,9 @@ import { Toast } from "react-bootstrap";
 import useIsAuthenticated from "../../hooks/useIsAuthenticated";
 import "./withAuthCheck.css"
 
+//This HOC wraps a component to add an authentication check. If the user is not authenticated,
+//it prevents specific actions (such as liking or commenting) and displays a notification toast.
+
 const withAuthCheck = <P extends object>(
   WrappedComponent: React.ComponentType<P>
 ) => {

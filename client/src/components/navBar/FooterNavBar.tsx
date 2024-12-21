@@ -8,10 +8,13 @@ import { LOG_IN } from "../../api/urls";
 import { Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
+// icons found from website https://react-icons.github.io/react-icons/ (fa = font awesome)
+
 export default function FooterNavBar() {
   const authUser = useAuthUser();
   const navigate = useNavigate();
 
+  // implement sign in en log out for mobile nav
   function handleProfileClick() {
     if (!authUser) {
       navigate(LOG_IN);

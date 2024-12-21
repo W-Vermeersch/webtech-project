@@ -20,6 +20,8 @@ interface LeaderboardEntry {
 
 export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]); // State to hold the leaderboard data
+  // I work with 0 and 1 for activetab, because i do so in other files.
+  // whereas loading here is defined as a boolean (but also could be defined as 0 and 1)
   const [isLoading, setIsLoading] = useState<boolean>(true); // State to track loading status
   const [activeTab, setActiveTab] = useState(0);
 

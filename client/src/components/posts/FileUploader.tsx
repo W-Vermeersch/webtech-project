@@ -1,6 +1,12 @@
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import "./FileUploader.css";
+
+// Fileuploader component is built using the react-dropzone package
+// package documentation: https://www.npmjs.com/package/react-dropzone
+// Idea for the implementation inspired by a youtube tutorial video: https://www.youtube.com/watch?v=_W3R2VwRyF4&t=14210s
+
+// Adjusted implementation to also show a preview of the image. Integrated with a form to pass the values with setFieldValue.
 
 interface FileUploaderProps {
   setFieldValue: (field: string, value: any) => void;
@@ -9,19 +15,21 @@ interface FileUploaderProps {
 const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-   const onDrop = useCallback(
+  const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
         const file: File = acceptedFiles[0];
 
-      // Generate preview URL using Object URL
-      const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);
+        // Generate preview URL using Object URL
+        const preview = URL.createObjectURL(file);
+        setPreviewUrl(preview);
 
-      // Pass the File object directly (to use with FormData)
-      setFieldValue('file', file);
-    }
-  }, [setFieldValue]);
+        // Pass the File object directly (to use with FormData)
+        setFieldValue("file", file);
+      }
+    },
+    [setFieldValue]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -51,7 +59,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({ setFieldValue }) => {
             alt="file upload"
             className="file-uploader-icon"
           />
-
           <h3 className="dropzone-text">Click or drag</h3>
           JPEG, PNG, JPG, HEIC
         </div>

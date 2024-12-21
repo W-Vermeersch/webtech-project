@@ -10,6 +10,11 @@ import "./feedPage.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useIsAuthenticated from "../../hooks/useIsAuthenticated";
 
+// Infinite scrolling functionality is adapted from the tutorial:
+// https://www.youtube.com/watch?v=R1FG54FY-18
+// Adjusted to our implementation of fetching posts: FETCH_RANDOM_POSTS and FETCH_RANDOM_FOLLOW_POSTS.
+// Customized to render posts using the `SinglePost` component with props (for authentication)
+
 interface FeedPageProps {
   activeTab: number;
 }
