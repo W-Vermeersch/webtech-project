@@ -10,7 +10,6 @@ export default function LeaderboardPage() {
   return (
     <Container>
       <Stack className="justify-content-center col-md-7 mx-auto">
-        {/* for future components like map and postfeed */}
         <Leaderboard />
       </Stack>
     </Container>

@@ -11,15 +11,13 @@ import {
 } from "../api/urls";
 import { useEffect, useState } from "react";
 
+// Create a modal to view the list of followers or users you follow, works similarly to
+// the modal for viewing comments, squeezed into 1 modal instead of having two seperate ones.
 interface ViewUsersModalProps {
   show: boolean;
   onHide: () => void;
   username: string;
   list: boolean; // false for following list and true for followers list
-}
-
-interface returnProp {
-  username: string;
 }
 
 const ViewUsersList = ({
@@ -70,7 +68,9 @@ const ViewUsersList = ({
                   className="d-flex align-items-center mb-2"
                 >
                   <NavLink to={`/profile/${user.username}`} replace>
-                    <p className="m-0" onClick={onHide}>{user.username}</p>
+                    <p className="m-0" onClick={onHide}>
+                      {user.username}
+                    </p>
                   </NavLink>
                 </div>
               ))
