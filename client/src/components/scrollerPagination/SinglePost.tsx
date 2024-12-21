@@ -24,33 +24,34 @@ export interface fetchCommentProps {
 
 // Render a single post.
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
-  //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
-  // initialise the likes and track if the post is liked
+  // Initialise the likes of the post, keep track if the current user has liked the post.
   const [likes, setLikes] = useState(post.likes || 0);
   const [isLiked, setIsLiked] = useState(post.liked || false);
+  // State needed to know when to open which modal.
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showViewCommentsModal, setShowViewCommentsModal] = useState(false);
+  // State to fetch comments so we don't have to refresh the page to update it.
   const [comments, setComments] = useState<fetchCommentProps[]>([]);
 
+  // Function to handle liking a post.
   const handleLiking = async () => {
-    // console.log("Handlelike has been called");
     const post_id = post.idx;
     const resp = await axiosPrivate.get(LIKE_POST, { params: { post_id } });
     if (resp.status === 200) {
       setLikes((prev) => prev + 1);
       setIsLiked(!isLiked);
+    } else {
+      console.error("Error liking post");
     }
-    //console.log("liked", isLiked);
   };
 
+  // Function to handle unliking a post.
   const handleUnliking = async () => {
     try {
       const post_id = post.idx;
-      // console.log("handleunliking has been called");
-      // Use DELETE method with params
       const resp = await axiosPrivate.delete(DELETE_LIKE, {
         params: { post_id },
       });
@@ -66,6 +67,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
     }
   };
 
+  // Functions to handle opening and closing modals. Fetch comments to update the comment section display when closing modals.
   const handleOpenCommentModal = () => {
     setShowCommentModal(true);
   };
@@ -84,6 +86,7 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
     fetchComments();
   };
 
+  // Function to fetch the comments on the current post from the backend.
   const fetchComments = async () => {
     try {
       const resp = await axiosPrivate.get(FETCH_POST_COMMENTS, {
@@ -91,21 +94,21 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
       });
 
       if (resp.status === 200) {
-        // Safeguard to ensure comments are always an array
         setComments(resp.data.post_comments);
       } else {
         console.error("Failed to fetch comments, status:", resp.status);
-        setComments([]); // Set empty array on failure
+        setComments([]);
       }
     } catch (error) {
       console.error("Error fetching comments:", error);
-      setComments([]); // Set empty array on error
+      setComments([]);
     }
   };
 
   useEffect(() => {
     fetchComments();
   }, [post]);
+
   // For each post, display the first two comments,
   // otherwhise click on more to open up the comments section
   const commentsToDisplay = comments.slice(0, 2);
@@ -229,4 +232,5 @@ const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   );
 };
 
+// Wrap it with the HOC (see withAuthCheck.tsx)
 export default withAuthCheck(SinglePost);

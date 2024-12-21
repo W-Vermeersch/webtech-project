@@ -7,6 +7,7 @@ import useAuthUser from "../../../hooks/useAuthUser";
 import { fetchCommentProps } from "../SinglePost";
 import "./ViewComments.css";
 
+// Use the authcheck considering you can view all comments when not logged in, but you should not be able to place any comments.
 interface ViewCommentsModalProps {
   show: boolean;
   onHide: () => void;
@@ -26,6 +27,7 @@ const ViewCommentsModal = ({
   const [comments, setComments] = useState<fetchCommentProps[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
+  // Works the same as in feedPage.tsx
   const fetchComments = async () => {
     try {
       const resp = await axiosPrivate.get(FETCH_POST_COMMENTS, {
@@ -33,16 +35,15 @@ const ViewCommentsModal = ({
       });
 
       if (resp.status === 200) {
-        // Safeguard to ensure comments are always an array
         setComments(resp.data.post_comments);
         console.log(resp.data.post_comments);
       } else {
         console.error("Failed to fetch comments, status:", resp.status);
-        setComments([]); // Set empty array on failure
+        setComments([]);
       }
     } catch (error) {
       console.error("Error fetching comments:", error);
-      setComments([]); // Set empty array on error
+      setComments([]);
     }
   };
 
@@ -63,7 +64,7 @@ const ViewCommentsModal = ({
         const resp = await axiosPrivate.post(ADD_COMMENT, commentData);
 
         if (resp.status === 200) {
-          // Append the new comment to the local comments array
+          // Append the new comment to the local comments array to display when posting it.
           setComments((prevComments) => [
             ...prevComments,
             {
