@@ -1,15 +1,19 @@
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import FormLabel from "react-bootstrap/FormLabel";
 import { useNavigate } from "react-router-dom";
-import {FormGroup, Button, FormCheck} from "react-bootstrap";
+import { FormGroup, Button, FormCheck } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import FileUploader from "./FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ADD_POST } from "../../api/urls";
 import useAuthUser from "../../hooks/useAuthUser";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
+// This component allows users to create a new post by uploading an image, adding a caption, selecting tags, and setting visibility (public/private).
+// The tag selection input is implemented using the `Typeahead` component from `react-bootstrap-typeahead` (https://github.com/ericgio/react-bootstrap-typeahead).
+
+// Store all information when creating a post to pass onto the backend.
 interface PostFormValues {
   caption: string;
   file: string;
@@ -18,10 +22,12 @@ interface PostFormValues {
   is_public: boolean;
 }
 interface geolocation {
-  lat: number,
-  long: number
+  lat: number;
+  long: number;
 }
 
+// Originally we were going to use AI detection to detect the type of animal. This did not end up working out.
+// These are predefined animal tags for the Typeahead input. Users can select from these or add new tags.
 const animalTags: string[] = ["Cat", "Dog", "Lion"];
 
 const PostForm = () => {
@@ -37,26 +43,28 @@ const PostForm = () => {
     file: "",
     tags: [],
     location: null,
-    is_public: true
+    is_public: true,
   };
 
   function success(position: GeolocationPosition): void {
     const loc: geolocation = {
       lat: position.coords.latitude,
-      long: position.coords.longitude
+      long: position.coords.longitude,
     };
     setLocation(loc);
   }
 
-  function nop(){
+  function nop() {
     setLocation(null);
   }
 
   function FlashMessages() {
     return (
-        <div className="floating-alerts">
-          <div className="alert alert-success text-center floating-alert shadow-sm">{alertMessage}</div>
+      <div className="floating-alerts">
+        <div className="alert alert-success text-center floating-alert shadow-sm">
+          {alertMessage}
         </div>
+      </div>
     );
   }
 
@@ -64,15 +72,16 @@ const PostForm = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, nop);
     }
-  })
+  });
 
+  // Function to pass on all data to the backend when creating a post. If succesfull, get redirected to the profile page.
   async function onSubmit(
     values: PostFormValues,
     actions: FormikHelpers<PostFormValues>
   ) {
-    setAlert(false)
+    setAlert(false);
     const formData = new FormData();
-    formData.append("file", values.file); // Attach the file
+    formData.append("file", values.file);
     formData.append("caption", values.caption);
     formData.append("tags", values.tags.toString());
     formData.append("public", values.is_public.toString());
@@ -81,20 +90,20 @@ const PostForm = () => {
       formData.append("longitude", location.long.toString());
     }
     try {
-      setAlert(false)
+      setAlert(false);
       const resp = await axios.post(ADD_POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      if (resp.status == 200){
+      if (resp.status == 200) {
         navigate(`/profile/${user?.username}`);
       } else {
-        setAlert(true)
+        setAlert(true);
         setAlertMessage(resp.data);
       }
     } catch (error) {
-      setAlert(true)
+      setAlert(true);
       setAlertMessage(error.response.data);
     } finally {
       actions.setSubmitting(false);
@@ -102,7 +111,6 @@ const PostForm = () => {
   }
 
   return (
-
     <Formik type initialValues={initialValues} onSubmit={onSubmit}>
       {({ setFieldValue, values, isSubmitting }) => (
         <Form className="p-4 shadow rounded bg-light w-75 mx-auto">
@@ -113,7 +121,7 @@ const PostForm = () => {
             <FileUploader setFieldValue={setFieldValue} />
           </FormGroup>
 
-          {useAlert? <FlashMessages /> : null}
+          {useAlert ? <FlashMessages /> : null}
 
           {/* Caption field */}
           <FormGroup className="mb-4" controlId="formCaption">
@@ -163,32 +171,31 @@ const PostForm = () => {
           {/*<FormGroup className="mb-4" controlId="formVisibility">*/}
           <FormCheck className="mb-4" id="formVisibility">
             <FormCheck.Label className="me-3">Visibility</FormCheck.Label>
-              <FormCheck inline>
-                <FormCheck.Input
-                    type="radio"
-                    name="visibility"
-                    id="public"
-                    defaultChecked={true}
-                    onChange={() => {
-                      setFieldValue("is_public", true)
-                    }}
-                />
-                <FormCheck.Label htmlFor="public">Public</FormCheck.Label>
-              </FormCheck>
-              <FormCheck inline>
-                <FormCheck.Input
-                    type="radio"
-                    name="visibility"
-                    id="private"
-                    defaultChecked={false}
-                    onChange={() => {
-                      setFieldValue("is_public", false)
-                    }}
-                />
-                <FormCheck.Label htmlFor="private">Private</FormCheck.Label>
-              </FormCheck>
+            <FormCheck inline>
+              <FormCheck.Input
+                type="radio"
+                name="visibility"
+                id="public"
+                defaultChecked={true}
+                onChange={() => {
+                  setFieldValue("is_public", true);
+                }}
+              />
+              <FormCheck.Label htmlFor="public">Public</FormCheck.Label>
+            </FormCheck>
+            <FormCheck inline>
+              <FormCheck.Input
+                type="radio"
+                name="visibility"
+                id="private"
+                defaultChecked={false}
+                onChange={() => {
+                  setFieldValue("is_public", false);
+                }}
+              />
+              <FormCheck.Label htmlFor="private">Private</FormCheck.Label>
+            </FormCheck>
           </FormCheck>
-
 
           {/* Buttons */}
           <div className="d-flex justify-content-between">

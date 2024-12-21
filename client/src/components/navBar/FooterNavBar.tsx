@@ -8,13 +8,13 @@ import { LOG_IN } from "../../api/urls";
 import { Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
-// icons found from website https://react-icons.github.io/react-icons/ (fa = font awesome)
-
+// Icons found from website https://react-icons.github.io/react-icons/ (fa = font awesome)
+// This component is the navigation bar for mobile dimensions.
 export default function FooterNavBar() {
   const authUser = useAuthUser();
   const navigate = useNavigate();
 
-  // implement sign in en log out for mobile nav
+  // Navigate the user to the login page if they click on the profile button and are not logged in.
   function handleProfileClick() {
     if (!authUser) {
       navigate(LOG_IN);
@@ -24,6 +24,7 @@ export default function FooterNavBar() {
   }
 
   return (
+    // Navigate to the correct paged based on the button that is pressed in the navbar.
     <div className="footer-navbar">
       <NavLink to="/home" className="footer-nav-item">
         <FaHome size={25} />

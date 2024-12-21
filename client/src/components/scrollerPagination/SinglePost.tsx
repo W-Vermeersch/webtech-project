@@ -22,6 +22,7 @@ export interface fetchCommentProps {
   description: string;
 }
 
+// Render a single post.
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   //console.log("this is the post that is passed", post);
   const axiosPrivate = useAxiosPrivate();

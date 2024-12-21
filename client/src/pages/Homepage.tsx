@@ -8,34 +8,6 @@ import { Button, ButtonGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
-{
-  /* <Row className="title-row justify-content-center">
-<Col xs='auto'>
-  <Button
-    variant="danger"
-    onClick={() => {setActiveTab(0)
-      Cookies.remove("shown_post_ids");
-    }}
-    className={`tab-button ${activeTab === 0 ? "active" : ""}`}
-  >
-    For you
-  </Button>
-</Col>
-<Col xs='auto'>
-  <Button
-    variant="danger"
-    onClick={() => {
-      setActiveTab(1);
-      Cookies.remove("shown_post_ids");
-    }}
-    className={`tab-button ${activeTab === 1 ? "active" : ""}`}
-  >
-    Following
-  </Button>
-</Col>
-</Row> */
-}
-
 export default function Homepage() {
   const [activeTab, setActiveTab] = useState(0);
 

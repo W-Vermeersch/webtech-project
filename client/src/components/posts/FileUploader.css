@@ -1,6 +1,6 @@
-/* 1 rem is dependant on the font size which is standard 16 px
-    makes it easier to be consistent with the paddint of each element rather
-    than having to calculate it; also if root font size changes, it adapts so*/
+/* 1 rem is dependant on the font size which is standardly defined as 16 px.
+    This makes it easier to be consistent with the padding of each element rather
+    than having to calculate it; also if root font size changes, it adapts. */
 
 .file-uploader-container {
   display: flex;

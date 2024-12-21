@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import PostForm from "./PostForm";
 import "./CreatePost.css";
 
+// This component loads in the form to display the create-post form.
 const CreatePost = () => {
   return (
     <Container>
