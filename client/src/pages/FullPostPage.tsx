@@ -156,7 +156,7 @@ export default function FullPost() {
               handleUnliking={handleUnliking}
             />
           </Col>
-          <Col xs={12} className="comment-container order-md-5 order-4">
+          <Col xs={12} md={6} className="comment-container order-md-5 order-4">
             <div
               className="comments mt-0 mb-3 mt-md-4 text-light"
               onClick={handleViewAllComments}

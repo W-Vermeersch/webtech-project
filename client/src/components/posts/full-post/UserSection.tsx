@@ -16,15 +16,15 @@ export default function UserSection({
   level,
 }: UserSectionProps) {
   return (
-    <Row>
+    <Row xs={2}>
       <Col xs="auto">
         <NavLink to={`/profile/${username}`}>
           <Image
             src={profile_pic}
             alt="profile pic"
             roundedCircle
-            width={150}
-            height={150}
+            width={140}
+            height={140}
           />
         </NavLink>
       </Col>
@@ -36,7 +36,7 @@ export default function UserSection({
         </Row>
         <Row>
           <Col>
-            <h3 className="text-light">{"Level " + level}</h3>
+            <h3 className="text-light">{"Level: " + level}</h3>
           </Col>
         </Row>
       </Col>
