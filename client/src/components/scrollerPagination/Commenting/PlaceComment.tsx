@@ -16,6 +16,7 @@ interface CommentValues {
   description: string;
 }
 
+// This modal allows users to add a comment to a specific post. Displays the post's description and image.
 const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
   const axiosPrivate = useAxiosPrivate();
   const [comment, setComment] = React.useState("");
@@ -27,9 +28,6 @@ const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
       description: comment,
     };
     const resp = await axiosPrivate.post(ADD_COMMENT, values);
-    // console.log("Comment Submitted: ", values);
-    // console.log("Response", resp.status);
-    // console.log("Response", resp.data);
     onHide(); // close the modal after submission
   };
 

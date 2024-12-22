@@ -9,6 +9,7 @@
   margin-bottom: 5px;
 }
 
+/* Layout for the leaderboard columns to display horizontally next to each other on pc. */
 .leaderboard-columns {
   display: flex;
   justify-content: center;
@@ -74,6 +75,7 @@
   object-fit: cover;
 }
 
+/* Layout for the leaderboard columns on mobile, they are displayed as seemingly one column.*/
 @media (max-width: 768px) {
   .cropped-image {
     max-width: 80%;

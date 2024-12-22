@@ -4,6 +4,9 @@ import Database from "../../../database";
 import { authenticateToken } from "../../user-authentification";
 import {Post} from "../../../interfaces";
 
+/*This class handles all the routers that handle deleting elements from the database.
+Any of these routers require the user to be logged in.
+*/ 
 export class DeleteController extends BaseDatabaseController {
   constructor(private db: Database) {
     super();
@@ -51,6 +54,9 @@ export class DeleteController extends BaseDatabaseController {
     );
   }
 
+  /*These functions will fetch the user who is performing the operation from the access tokens. And the user they are doing the operation to from the request parameters.*/ 
+
+  /*Deletes a user from the database*/ 
   private async deleteUser(req, res) {
     try {
       const username = req.user.username; //get username from the access token
@@ -71,6 +77,7 @@ export class DeleteController extends BaseDatabaseController {
     }
   }
 
+  /*Unlike a post*/ 
   private async deleteLike(req, res) {
     try {
       const username = req.user.username;
@@ -100,6 +107,7 @@ export class DeleteController extends BaseDatabaseController {
       res.status(400).send(error)
     }
   }
+  /*Delete a comment*/ 
   private async deleteComment(req: express.Request, res: express.Response) {
     try {
       const comment_id = parseInt(req.query.comment_id.toString());
@@ -115,6 +123,7 @@ export class DeleteController extends BaseDatabaseController {
       res.status(400).send(error)
     }
   }
+  /*Delete a post*/ 
   private async deletePost(req: express.Request, res: express.Response) {
     const post_id = parseInt(req.query.post_id.toString());
     const posts = await this.db.fetchCommentByIds([post_id]);
@@ -127,6 +136,7 @@ export class DeleteController extends BaseDatabaseController {
     }
   }
 
+  /*Unfollow a user*/ 
   private async unfollowUser(req, res) {
     const username = req.user.username;
     const usernameToUnFollow = req.query.username;

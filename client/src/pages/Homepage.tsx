@@ -1,46 +1,17 @@
-import Leaderboard from "../components/leaderboard/Leaderboard.tsx";
 import "./Homepage.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import FeedPage from "../components/scrollerPagination/feedPage.tsx";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
-{
-  /* <Row className="title-row justify-content-center">
-<Col xs='auto'>
-  <Button
-    variant="danger"
-    onClick={() => {setActiveTab(0)
-      Cookies.remove("shown_post_ids");
-    }}
-    className={`tab-button ${activeTab === 0 ? "active" : ""}`}
-  >
-    For you
-  </Button>
-</Col>
-<Col xs='auto'>
-  <Button
-    variant="danger"
-    onClick={() => {
-      setActiveTab(1);
-      Cookies.remove("shown_post_ids");
-    }}
-    className={`tab-button ${activeTab === 1 ? "active" : ""}`}
-  >
-    Following
-  </Button>
-</Col>
-</Row> */
-}
-
 export default function Homepage() {
+  // Used to pass onto feedpage to fetch the correct posts.
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
-    Cookies.remove("shown_post_ids"); // Verwijdert cookie client-side
+    Cookies.remove("shown_post_ids"); // Deletes cookie client-side. This is done because otherwhise no posts will be loaded/fetched because all posts are already considered as seen.
   }, [activeTab]);
 
   return (

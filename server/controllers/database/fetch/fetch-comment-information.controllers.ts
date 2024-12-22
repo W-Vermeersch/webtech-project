@@ -10,11 +10,12 @@ export class FetchCommentInformationController extends BaseDatabaseController {
     }
 
     initializeRoutes(): void {
+        //No authentication required.
         this.router.get("/fetch/comment/information", (req: express.Request, response: express.Response) => {
             return this.getCommentInformation(req, response);
         });
     }
-
+    /*Fetches a comment given its ID in the request parameters*/ 
     private async getCommentInformation(req: express.Request, res: express.Response) {
         try {
             const comment_id = req.query.comment_id ? parseInt(req.query.comment_id.toString()) : null;
@@ -28,6 +29,7 @@ export class FetchCommentInformationController extends BaseDatabaseController {
                     redirect: '/home'
                 });
             } else {
+                //if the ID is valid, create a object with all values needed and return it in the response.
                 const commentObject = comments[0]
                 const commentOwner = await this.db.fetchUserUsingID(commentObject.user_id);
                 const commentOwnerDecoration = await this.db.fetchProfileDecoration(commentObject.user_id);

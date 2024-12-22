@@ -22,6 +22,7 @@ const EditProfilePage = () => {
   } = location.state || {};
 
   // Redirect to PageNotFound if state is missing
+  // (this means that the user is trying to acces this page by changing the url instead being redirected from the profile page.)
   useEffect(() => {
     if (!profilepicture && !initName && !initBio) {
       navigate("/PageNotFound", { replace: true });
@@ -35,6 +36,7 @@ const EditProfilePage = () => {
   const [username, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);
 
+  // Handle the changes made to the profile.
   const handleSave = async () => {
     const formData = new FormData();
     formData.append("username", username);

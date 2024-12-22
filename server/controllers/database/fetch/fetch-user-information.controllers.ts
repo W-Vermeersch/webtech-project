@@ -85,7 +85,10 @@ export class FetchUserInformationController extends BaseDatabaseController {
   
   }
 
-
+/*
+Helper function that returns all the user information needed for the front-end.
+IsFollowed will result in false if the user is not authenticated, and will result if the user follows the specified user if they are authenticated.
+*/
   private async fetchUser(user_id_to_fetch: number, user_id: number) {
     const userToFetch = await this.db.fetchUserUsingID(user_id_to_fetch);
     if (userToFetch.length === 0) {
@@ -111,7 +114,7 @@ export class FetchUserInformationController extends BaseDatabaseController {
       isFollowed: followHandler.isFollowed
     }
 }
-
+/*Helper function that handles the follower values. If the useris not authenticate, IsFollowed will defqult to false.*/
 private async processFollow(user_id_to_fetch: number, user_id: number) {
   const followers_id_list = await this.db.fetchUserFollowers(user_id_to_fetch);
   const followed_id_list = await this.db.fetchUserFollowed(user_id_to_fetch);
@@ -142,7 +145,10 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
   }
 }
 
-
+  /*
+  Returns a user's profile information given their username. 
+  User does not need to be authenticated but will check if the user is following the specified user if they are authenticated.
+  */
   private async getProfileInformation(req, res) {
     const username = req.query.username;
     if (!username) {
@@ -162,7 +168,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
     res.json(await this.fetchUser(user_id_to_fetch, user_id));
   }
 
-
+/*Returns all comments a user has made*/
   private async getUserComments(req: express.Request, res: express.Response) {
     try {
       const username = req.query.username ? req.query.username : " ";
@@ -188,7 +194,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       res.status(400).send(error)
     }
   }
-
+  /*Returns all posts a user has liked.*/
   private async getUserLikedPosts(req: express.Request, res: express.Response) {
     const username = req.query.username ? req.query.username : " ";
     const users = await this.db.fetchUserUsingUsername(username.toString());
@@ -210,7 +216,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       }
     }
   }
-
+  /*Returns a list of the user's followers.*/
   private async getUserFollowers(req, res) {
     if (!req.query.username) {
         res.status(404).send("Parameter 'username' was not found/does nit exist");
@@ -231,7 +237,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
     }
   }
   }
-  
+  /*Returns a list of the user's following users*/
   private async getUserFollowed(req, res) {
     if (!req.query.username) {
         res.status(404).send("Parameter 'username' was not found/does nit exist");
@@ -252,7 +258,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
     }
   }
   }
-
+  /*Returns a user's follower-count*/
   private async getUserFollowerAmount(req, res) {
     if (!req.query.username) {
         res.status(404).send("username param does not exist.")
@@ -268,7 +274,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       }
 
   }
-
+  /*Returns a user's following-count*/
   private async getUserFollowedAmount(req, res) {
     if (!req.query.username) {
         res.status(404).send("username param does not exist.")
@@ -284,6 +290,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
       }
   }
 
+  /*Returns if the user follows a given user.*/
   private async isUserFollowed(req: express.Request, res: express.Response){
     if (!req.query.username) {
         res.status(404).send("username_to_check param does not exist")
@@ -304,7 +311,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
   }
   }
   
-
+  /*Returns a list of the top 10 users based of off total exp count*/
   private async getLeaderboardExp(req: express.Request, res: express.Response) {
     const users = await this.db.fetchTopTenExp();
     const topTenUsers = await Promise.all(users.map(async (user) => {
@@ -323,7 +330,7 @@ private async processFollow(user_id_to_fetch: number, user_id: number) {
         users: topTenUsers
       })
 }
-
+/*Returns a list of the top 10 users based of off follower-count*/
 private async getLeaderboardFollowers(req: express.Request, res: express.Response) {
   const users = await this.db.fetchTopTenFollowers();
   const topTenUsers = await Promise.all(users.map(async (user) => {
@@ -341,7 +348,7 @@ private async getLeaderboardFollowers(req: express.Request, res: express.Respons
       users: topTenUsers
     })
 }
-
+/*Function that handles searching for users. Returns a list of all users matching the specified string.*/
   private async getUserSearchResults(req, res) {
     const searchQuery = req.query.username; 
     const matchingUsers = await this.db.fetchUsersMatchingSearch(searchQuery);

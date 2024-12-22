@@ -31,8 +31,12 @@ export class StorePostInformationController extends BaseDatabaseController {
             return this.addPost(req, response);
         });
     }
-
+    /*
+    Function for handling publishing a post.
+    User needs to be authenticated.
+    */
     private async addPost(req: express.Request, res: express.Response) {
+        //Checks for unexisting fields.
         // @ts-ignore
         const file = req.file
         try {
@@ -51,6 +55,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             if (errors.length > 0){
                 return res.status(400).send(`Missing required fields: ${errors.toString()}`);
             }
+            //Handling files
             const filePath = file.path;
             fs.stat(filePath, (err, stats) => {
                 if (err) {
@@ -70,6 +75,7 @@ export class StorePostInformationController extends BaseDatabaseController {
             let tags = req.body.tags.split(',');
             const is_public: boolean = (req.body.public === "true");
 
+            //Handle geolocation extraction and Cloudinary posting.
             const location = {
                 latitude: req.body.latitude || null,
                 longitude: req.body.longitude || null,
@@ -81,6 +87,7 @@ export class StorePostInformationController extends BaseDatabaseController {
                 rarity: 1.0
             }
 
+            //Handle image recognition AI
             if (this.useAiDetection){
                 tags = await this.imageApi.identifyImage(imageUrl)
                 if (tags.length === 0) {
@@ -102,6 +109,7 @@ export class StorePostInformationController extends BaseDatabaseController {
                 rarity: rating.rarity,
             };
 
+            //Handle storing user and updating XP
             const xp = rating.score * rating.rarity;
             await this.db.addUserExp(userId, xp);
             await this.db.storePost(post);

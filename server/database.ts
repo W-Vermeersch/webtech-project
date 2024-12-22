@@ -12,6 +12,9 @@ interface QueryWithValues extends QueryWithoutValues {
 }
 
 class Database {
+    /*
+    Database is stored on a free cloud service called Aiven.
+    */
     pool = new Pool({
         host: "pg-14b692ff-webtech.b.aivencloud.com",  //location of the database, here localhost because we don't have any servers
         user: "avnadmin",
@@ -50,6 +53,9 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         },
     });
 
+    /*
+    Helper function that takes a query object and sends it to the database for execution.
+    */
     private executeQuery(query: QueryWithoutValues | QueryWithValues): Promise<any> {
         try {
             return this.pool.query(query);  // Automatically acquires and releases client
@@ -77,9 +83,9 @@ RkwtpUvpWigegy483OMPpbmlNj2F0r5l7w/f5ZwJCNcAtbd3bw==
         return this.executeQuery(query).then((res) => {return res.rows});
         // resulting array contains a lot of query metadata.
         // ".rows" will make it return only the values of each attribute (username, first_name, etc.)
-        // if you need that metadata you can remove .rows and extract what you need.
     };
 
+    /*Returns all users that match a specified search query string*/
     public async fetchUsersMatchingSearch(searchQuery: string) {
         const query = {
             text: `
@@ -282,7 +288,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
 
     }
-
+    /*Returns a list of user that a has liked a specified post*/
     public async fetchLikedUsersOfPost(post_id: Number): Promise<number[]> {
         const query = {
             text: 'SELECT user_id FROM likes_table where post_id = $1',
@@ -331,7 +337,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             (SELECT followed_id FROM follower_table WHERE follower_id = $2))`,
             [postIds, requesting_user])
     }
-
+    /*Returns all posts given their IDs in a given ID list*/
     public async fetchAnyPostsByIds(postIds: number[]): Promise<Post[]> {
         if (postIds.length === 0) {
             return [];
@@ -362,6 +368,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows
     }
 
+    /*Returns a limited list of posts that are within a given radius.*/
     public async fetchPostsWithinRadiusWithLimit(latitude: number, longitude: number, radius: number, limit: number): Promise<Post[]> {
         const query = {
             text: `
@@ -382,7 +389,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
                 })})
     }
 
-    /* Fetch nearest posts */
+    /* Fetch nearest posts.*/
     public async fetchNearestPosts(latitude: number, longitude: number, limit: number): Promise<any[]> {
         const query = {
             text: `
@@ -399,7 +406,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows;
     }
 
-    //post id 16 is giving bugs because it is linked to someone without a decoration, remove this later
+    /*Fetches a specified number of random posts that are not included in the given shownposts list.*/
     public async fetchRandomPosts(n: Number, shownPosts, user_requesting: number) {
         const query = {
             text: `SELECT 
@@ -417,6 +424,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows.map(post => post.post_id);
     }
 
+    /*Returns all posts that match a given tag.*/
     public async fetchPostsByTag(tag: string): Promise<{ post_id: number, user_id: number }[]> {
         const query = {
             text: `
@@ -437,6 +445,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows;
     }
 
+    /*Returns all posts that match a given tag and that are within a given radius of a given location.*/
     public async fetchPostsByTagWithinRadius(tag: string, latitude: number, longitude: number, radius: number): Promise<any[]> {
         const query = {
             text: `
@@ -476,7 +485,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
 
 
     //profile decoration operations
-
+    /*Stores a new user's profile infomation.*/
     public async storeProfileDecoration(
         user: User,
         bio: string,
@@ -488,6 +497,8 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return await this.executeQuery(query);
     }
 
+
+    //Functions that update the user's profile decoration:
     /*Update a user's profile picture given their ID*/
     public async updateProfilePicture(user_id: number, newImageUrl: string): Promise<void> {
         const query = {
@@ -528,6 +539,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         };
         return await this.executeQuery(query);
     }
+    /*Updates a user's bio displayname*/
     public async updateDisplayName(user_id: number, newName: string): Promise<void> {
         const query = {
             text: 'UPDATE user_profile_decoration_table SET display_name = $1 WHERE user_id = $2',
@@ -535,7 +547,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         };
         return await this.executeQuery(query);
     }
-
+     /*returns a user's profile information values. Given their ID*/
     public async fetchProfileDecoration(user_id: number): Promise<UserDecoration> {
         const query = {
             text: 'SELECT * FROM user_profile_decoration_table WHERE user_id = $1',
@@ -553,7 +565,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
             }
         });
     }
-
+    /*Deletes a user's profile decorartion*/
     public async deleteUserDecoration(user_id: number) {
         const query = {
             text: 'DELETE FROM user_profile_decoration_table WHERE user_id = $1',
@@ -562,7 +574,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return await this.executeQuery(query);
     }
 
-
+    /*Stores a like in the database*/
     public async storeLike(
         user_id: number,
         post_id: number,
@@ -573,7 +585,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         };
         return await this.executeQuery(query);
     }
-
+    /*Deletes a like from the database*/
     public async deleteLike(user_id: number,
                             post_id: number): Promise<void> {
         const query = {
@@ -583,7 +595,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return await this.executeQuery(query);
     }
 
-
+    /*Returns the top 10 user ids based off of total EXP count*/
     public async fetchTopTenExp() {
         const query = {
             text: ` WITH RankedUsers AS (
@@ -605,7 +617,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         const res =  await this.executeQuery(query)
         return res.rows
     }
-
+    /*Returns the top 10 user ids based off of follower count*/
     public async fetchTopTenFollowers(): Promise<any[]> {
         const query = {
             text: `
@@ -626,7 +638,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
     
 
-
+    /*Store a follow in the database*/
     public async followUser(follower_id: number, followed_id: number): Promise<void> {
         const query = {
             text: 'INSERT INTO follower_table (follower_id, followed_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
@@ -635,6 +647,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return await this.executeQuery(query);
     }
 
+    /*deletes a follow from the database*/
     public async unfollowUser(follower_id: number, followed_id: number): Promise<void> {
         const query = {
             text: 'DELETE FROM follower_table WHERE follower_id = $1 AND followed_id = $2',
@@ -643,6 +656,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return await this.executeQuery(query);
     }
 
+    /*Returns a list of a user's followers*/
     public async fetchUserFollowers(user_id: number): Promise<number[]> {
         const query = {
             text: 'SELECT follower_id FROM follower_table WHERE followed_id = $1',
@@ -651,7 +665,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         const result = await this.executeQuery(query);
         return result.rows.map(row => row.follower_id);
     }
-
+    /*Returns a list of a user's following*/
     public async fetchUserFollowed(user_id: number): Promise<number[]> {
         const query = {
             text: 'SELECT followed_id FROM follower_table WHERE follower_id = $1',
@@ -660,7 +674,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         const result = await this.executeQuery(query);
         return result.rows.map(row => row.followed_id);
     }
-
+    /*Returns a list of a random posts of given users that dont already exist in the shownPost list.*/
     public async fetchRandomsPostsOfGivenUsers(n: number, shownPosts: number[], userIds: number[]): Promise<number[]> {
         const query = {
             text: `
@@ -679,7 +693,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows.map(post => post.post_id);
     }
 
-
+    /*Returns a list of posts that match a given tag and that were made by given users.*/
     public async fetchPostsByTagOfGivenUsers(tag: string, userIds: number[]): Promise<{ post_id: number, user_id: number }[]> {
         const query = {
             text: `
@@ -701,6 +715,7 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         return res.rows;
     }
 
+    /*Returns a list of  posts that match a given tag, that were made by given users, and that are within a given radius of a specified location.*/
     public async fetchPostsByTagWithinRadiusGivenUsers(
         tag: string,
         latitude: number,
@@ -735,6 +750,10 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
     }
 
 
+    /*
+    Function that initializes the database if tables or extensions are missing.
+    This function will be called every time the server starts up.
+    */
     public async init(): Promise<void> {
         // Adding the extensions to the DB
         let query = {
@@ -784,6 +803,10 @@ public async fetchLikedPostsOfUser(user_id: number): Promise<Post[]> {
         await this.executeQuery(query);
     }
 
+    /*
+    This function will safely close the connection with the database.
+    This function is called when the server closes, intentionally or due to crashes.
+    */
     closePool(): any {
         this.pool.end();
         console.log("Database pool has been closed.");
