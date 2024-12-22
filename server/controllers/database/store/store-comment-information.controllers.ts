@@ -19,11 +19,15 @@ export class StoreCommentInformationController extends BaseDatabaseController {
         });
     }
 
-
+    /*
+    Function that stores comments.
+    User must be authenticated, user information is fetched using the access token.
+    Perfoms form validation before letting the user post a comment.
+    */
     private async storeComment(req, res): Promise<void> {
         try {
             const inputs: CommentForms = new CommentForms();
-            inputs.user_id = req.user.user_id;  //extract from token
+            inputs.user_id = req.user.user_id; 
             inputs.description = req.body.description
             inputs.post_id = req.body.post_id
 

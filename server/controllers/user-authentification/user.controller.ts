@@ -16,6 +16,8 @@ interface JwtPayloadCustom {
     exp: number;
 }
 
+//The code used to handle tokens, refresh tokens, secret keys, etc. was inspired by this tutorial: https://www.youtube.com/watch?v=mbsmsi7l3r4&ab_channel=WebDevSimplified
+
 export class UserAuthenticationController extends BaseController {
     constructor(private db: Database) {
         super("/user");
@@ -35,13 +37,11 @@ export class UserAuthenticationController extends BaseController {
             const cookies = req.cookies;
             if (!cookies?.refreshToken) return res.sendStatus(204);
             const refresh_token = cookies.refreshToken;
-            //console.log("logging out, list before: " + this.refreshTokens);
             this.refreshTokens = this.refreshTokens.filter(
                 ({ username, refreshToken }) => refreshToken !== refresh_token
             );
             res.clearCookie("refreshToken", { httpOnly: true });
             res.clearCookie("shown_post_ids") // temporary to clear the shown_post_ids cookie -> remove when app done
-            //console.log("logging out, new list: " + this.refreshTokens);
             return res.status(204).send("Succesfully deleted refresh token");
         });
 
@@ -50,6 +50,7 @@ export class UserAuthenticationController extends BaseController {
         });
     }
 
+    /*This function will generate a new access token*/ 
     private generateAccessToken(user) {
         if (!process.env.ACCESS_TOKEN_SECRET) {
             throw new Error("ACCESS_TOKEN_SECRET is not defined");
@@ -60,8 +61,9 @@ export class UserAuthenticationController extends BaseController {
     }
 
     // need to save the refreshtoken - user relationship in the backend !
-    refreshTokens: { username: string; refreshToken: string }[] = []; //needs to be replaced with the DB later
+    refreshTokens: { username: string; refreshToken: string }[] = []; //can to be replaced with the DB later
 
+    /*This function, called when the front end notices that the given access token expired, will generate a new access token for the user if their refresh token is still valid. */ 
     private handleRefreshToken(req, res) {
         const user: string = req.body.user;
         const cookies = req.cookies;
@@ -125,10 +127,9 @@ export class UserAuthenticationController extends BaseController {
         });
     }
 
-
+    /*This function handles logging a user in. It first does a input validation process, and if passed, will grant the user access to a refresh token and access tokens to use when browsing the web app.  */ 
     async logIn(req: express.Request, res: express.Response): Promise<void> {
         const inputs: LogInForm = new LogInForm();
-        //console.log(req.body);
         inputs.fill(req.body);
         const errors: ErrorInLogInForm = new ErrorInLogInForm();
         const usernameOrEmail = inputs.usernameOrEmail;
@@ -144,20 +145,16 @@ export class UserAuthenticationController extends BaseController {
             inputs.password = "";
         }
 
-        //authenticate user (we might want to add hashed passwords in the future)
         const user: any = await this.db.fetchUserUsingEmailOrUsername(
             usernameOrEmail
         );
-        //console.log("user[0].username: "+ user[0].username)
         if (user.length === 0) {
-            //console.log("username or email not found")
             errors.usernameOrEmail = "Username or e-mail not found.";
             inputs.usernameOrEmail = "";
         }
         if (user.length != 0) {
             const userPassword = user[0].password;
             const userEmail = user[0].email;
-            //console.log("user password: " + user[0].password + "Given password: " + password)
             if (!validPassword(password, userEmail, userPassword)){
                 errors.password = "Password incorrect!";
                 inputs.password = "";
@@ -166,13 +163,11 @@ export class UserAuthenticationController extends BaseController {
 
         if (errors.hasErrors()) {
             res.status(206).json({
-                //moet verandert worden waarschijnlijk
                 errors: errors.toObject(),
                 inputs: inputs.toObject(),
             });
         } else {
-            // handle sessions
-            // console.log("handling tokens")
+            // handle session tokens
             const user_id = user[0].user_id;
             const username = user[0].username;
             interface DecodedUser {
@@ -192,11 +187,11 @@ export class UserAuthenticationController extends BaseController {
             const refreshToken = jwt.sign({ userObject }, refreshTokenSecret, {
                 expiresIn: "7d",
             });
-            this.refreshTokens.push({ username, refreshToken }); // adding username to array
+            this.refreshTokens.push({ username, refreshToken });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-            }); // 7 days
+                maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days expiry date
+            }); 
             res.json({
                 accessToken: accessToken,
                 username: username,
@@ -205,7 +200,7 @@ export class UserAuthenticationController extends BaseController {
             });
         }
     }
-
+    /* Handles signing in of users. Goes through input validation and, if passed, will create a new user and store them into the database */ 
     async signIn(req: express.Request, res: express.Response): Promise<void> {
         const inputs: SignInForm = new SignInForm();
         inputs.fill(req.body);
@@ -256,6 +251,7 @@ export class UserAuthenticationController extends BaseController {
                 email: inputs.email,
                 password: hashPassword(inputs.password, inputs.email)
             }
+            // Store the user and redirect them to log in
             await this.db.storeUser(user);
             user.user_id = await this.db.getUserID(inputs.username);
             await this.db.storeProfileDecoration(user, "");
@@ -296,6 +292,8 @@ export class UserAuthenticationController extends BaseController {
     }
 }
 
+ /*This function is for authenticating a user, the authentication header must be given and valid for it to pass, else it will redirect to log in*/ 
+ //this function is used as middleware when routing to pages that need the user to be authenticated. Like for example the create-post page.
 export function authenticateToken(req, res, next) {
     const authHeader: string = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1]; // = if a auth header exists give the token else return null for errors
@@ -318,11 +316,12 @@ export function authenticateToken(req, res, next) {
                 .send("Unauthorized, provided token is no longer valid");
         //we now know the user is validated
         req.user = user;
-        //console.log(user.user.user_id)
         next();
     });
 }
 
+/*This function is for authenticating a user, the authentication header does not need to be given. If the user is not logged in, it will still pass but return a user_id of -1.*/ 
+//this function is used as middleware to access pages that do not need the user to be logged in, but that being logged in will have different effects. Like for example the homepage.
 export function ifAuthenticatedToken(req, res, next){
     try {
         const authHeader: string = req.headers["authorization"];
@@ -343,8 +342,9 @@ export function ifAuthenticatedToken(req, res, next){
                 });
             }
         }
+    // No user found
     } catch {
-            req.userId = -1; // No user found
+            req.userId = -1; 
     } finally {
         if (!req.userId){
             req.userId = -1

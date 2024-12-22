@@ -81,6 +81,9 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     }
 
+    /*This function will handle the isLiked and Likes values when returning a post.
+    If the user is not authenticated, user_id will be -1 which doesnt exist so it will always return false.
+    */
     private async processLikesOfPost(post_id: number, user_id: number): Promise<{ isLiked: boolean, likes: number }> {
         return await this.db.fetchLikedUsersOfPost(post_id).then((res) => {
             const resp = {isLiked: false, likes: 0}
@@ -92,6 +95,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         })
     }
 
+    /*Returns a post's information based on its ID.*/
     private async getPostInformation(req: express.Request, res: express.Response) {
         try {
             if (!req.query.post_id) {
@@ -117,6 +121,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Returns a comment's information based on its ID.*/
     private async fetchComments(postId: number): Promise<comment[]> {
         return this.db.fetchCommentsOfPost(postId)
             .then(async val => {
@@ -134,6 +139,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
             })
     }
 
+    /*
+    This is a helper function that is used when information of a post is needed. It will, for each post, return all information the front end will need.
+    If ths user is not authenticated, IsLiked will always result to false. If the user is authenticated it will return if that user has liked the post or not.
+    */
     private async fetchPost(postId: number, userId: number): Promise<Post> {
         const posts = await this.db.fetchPostsByIds([postId], userId)
         if (posts.length === 0) {
@@ -160,6 +169,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Returns a user's posts based on their username.*/
       private async getUserPosts(req: express.Request, res: express.Response) {
         try {
           const username = req.query.username ? req.query.username : " ";
@@ -189,7 +199,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
           res.status(400).send(error)
         }
       }
-
+    /*
+    This function handles showing posts on the home page. It will randomly select a given number of posts.
+    It also keeps track of what posts have already been seen by the user, so that each time more posts are loaded, no duplicate posts will return.
+    This is achived by passing a list of post IDs in the cookies, and update/send it back to the user.
+    */
     private async getRandomPosts(req: express.Request, res: express.Response) {
         try {
             let shownIds: number[] = req.cookies.shown_post_ids
@@ -223,6 +237,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Same principle as the other random posts function but will only return posts of users that the current user follows.*/
     private async getRandomFollowerPosts(req, res) {
         let shownIds: number[] = req.cookies.shown_post_ids || [];
         const user_id = req.user.user_id;
@@ -266,6 +281,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Returns a post's comment information based on its ID*/
     private async getPostComments(req: express.Request, res: express.Response) {
         if (!req.query.post_id) {
             res.json({
@@ -302,6 +318,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Returns a post's like-count based on its ID*/
     private async getPostLikesAmount(req: express.Request, res: express.Response) {
         try {
             if (!req.query.post_id) {
@@ -321,6 +338,11 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*
+    Returns a tag's posts based on its tag name
+    This function also handles the radius filtering. If enabled, will call a different function that applies the filter.
+    It takes all it parameters from the request parameters.
+    */
     private async getTagPosts(req: express.Request, res: express.Response) {
         if (!req.query.tags || !req.query.longitude || !req.query.latitude
             || !req.query.radius || !req.query.filter_enabled) {
@@ -370,7 +392,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
-
+    /*Same principle as the one above, but will only return posts of users that the current user follows.*/
     private async getFollowerAndTagPosts(req, res) {
         if (!req.query.tags || !req.query.longitude || !req.query.latitude
             || !req.query.radius || !req.query.filter_enabled) {
@@ -431,6 +453,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Helper function that removes duplicate posts that could emmerge when searching for multiple tags*/
     private removeDuplicates(posts: any[]): any[] {
         const seen = new Set();
         return posts.filter(post => {
@@ -442,6 +465,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
             }
         });
     }
+    /*Helper function that shuffles the list of posts so that they are not ordered by users the user is folowing*/
     private shuffleArray(array: any[]): any[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -450,7 +474,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         return array;
     }
 
-
+    /*Function that returns a given amount of posts that is nearest to a specified location.*/
     private async getNearestPosts(req: express.Request, res: express.Response) {
         try {
             if (!req.query.longitude || !req.query.latitude  || !req.query.limit) {
@@ -476,6 +500,7 @@ export class FetchPostInformationController extends BaseDatabaseController {
         }
     }
 
+    /*Function that returns all posts withing a specified radius.*/
     private async getPostsWithinRadius(req: express.Request, res: express.Response) {
         try {
             if (!req.query.longitude || !req.query.latitude  || !req.query.radius || !req.query.limit) {
@@ -513,6 +538,10 @@ export class FetchPostInformationController extends BaseDatabaseController {
 
     }
 
+    /*
+    Returns for a user if they have liked a given post
+    It fetches the user using the access token. if they are not authenticated their ID will be -1 and will automatically result in false.
+    */
     private async isPostLiked(req: express.Request, res: express.Response){
         if (!req.query.post_id) {
             res.json({

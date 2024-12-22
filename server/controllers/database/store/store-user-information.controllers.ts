@@ -43,6 +43,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
         });
     }
 
+    /*
+    Function that handles liking a post. 
+    User needs to be authenticated, fetches user information from the access token.
+    */
     private async likePost(req, res) {
         try {
             const username = req.user.username
@@ -86,6 +90,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
             res.status(400).send(error)
         }
     }
+    /*
+    Function that handles following a user.
+    User needs to be authenticated.
+    */
     private async followUser(req, res) {
         const username = req.user.username
         const usernameToFollow = req.body.username;
@@ -109,6 +117,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
         }
     }
 
+    /*
+    Function for updating one's Bio.
+    User needs to be authenticated.
+    */
     private async updateBio(req, res) {
         try {
             const newBio = req.body.new_bio
@@ -129,6 +141,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
             res.status(400).send(error)
         }
     }
+    /*
+    Function for updating one's profile picture.
+    User needs to be authenticated.
+    */
     private async updatePFP(req, res) {
         // @ts-ignore
         const file = req.file
@@ -167,6 +183,10 @@ export class StoreUserInformationController extends BaseDatabaseController {
         }
 
     }
+    /*
+    Function for updating one's displayname.
+    User needs to be authenticated.
+    */
     private async updateDisplayname(req, res) {
         try {
             const newName = req.query.new_display_name
