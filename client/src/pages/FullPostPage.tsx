@@ -13,7 +13,7 @@ import MapContainer from "../components/posts/full-post/MapContainer";
 import Description from "../components/posts/full-post/Description";
 import UserSection from "../components/posts/full-post/UserSection";
 import PostImage from "../components/posts/full-post/PostImage";
-import { Post, PostComment, User } from "../components/posts/PostInterface";
+import { Post, User } from "../components/posts/PostInterface";
 import {
   FETCH_POST,
   FETCH_USER_PROFILE,

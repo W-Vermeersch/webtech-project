@@ -1,13 +1,11 @@
-import { Modal, Nav, Spinner } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { User } from "../components/posts/PostInterface";
 import "../components/scrollerPagination/Commenting/ViewComments.css";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { NavLink } from "react-router-dom";
 import {
-  FETCH_FOLLOWER_AMOUNT,
   FETCH_FOLLOWERS,
   FETCH_FOLLOWING,
-  FETCH_FOLLOWING_AMOUNT,
 } from "../api/urls";
 import { useEffect, useState } from "react";
 
@@ -29,7 +27,7 @@ const ViewUsersList = ({
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState(show);
+  const showModal = show;
 
   useEffect(() => {
     if (show) {

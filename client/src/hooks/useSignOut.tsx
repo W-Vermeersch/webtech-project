@@ -8,7 +8,7 @@ const useSignOut = () => {
   const signOut = async () => {
     setAuth({ token: "", username: "", userID: 0 });
     try {
-      const response = await axios.delete(LOG_OUT);
+      await axios.delete(LOG_OUT);
     } catch (err) {
       console.error(err);
     }

@@ -4,9 +4,7 @@ import { useState } from "react";
 
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
-import { Typeahead } from "react-bootstrap-typeahead";
 
 interface SearchProps {
   setSearchType: (searchType: string) => void;

@@ -7,7 +7,7 @@ import "./map.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { Post, PostComment } from "../posts/PostInterface";
+import { Post } from "../posts/PostInterface";
 
 interface MapContainerProps {
   posts: Post[];

@@ -102,7 +102,7 @@ const PostForm = () => {
         setAlert(true);
         setAlertMessage(resp.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       setAlert(true);
       setAlertMessage(error.response.data);
     } finally {

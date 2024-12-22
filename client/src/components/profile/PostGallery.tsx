@@ -1,7 +1,7 @@
 import "./PostGallery.css";
 import Image from "react-bootstrap/Image";
 import { NavLink } from "react-router-dom";
-import { Post, PostComment } from "../posts/PostInterface";
+import { Post } from "../posts/PostInterface";
 
 interface PostGalleryProps {
   posts: Post[];

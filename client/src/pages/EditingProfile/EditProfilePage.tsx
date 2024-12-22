@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Form, Button, Image, Row } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 import FileUploader from "../../components/posts/FileUploader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import "./EditProfilePage.css";
@@ -10,9 +10,6 @@ const EditProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
-  interface sendbio {
-    new_bio: string;
-  }
 
   // default state if location.state is undefined
   const {
@@ -30,11 +27,8 @@ const EditProfilePage = () => {
   }, [navigate, profilepicture, initName, initBio]);
 
   const [profilePic, setProfilePic] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(
-    profilepicture ? { profilepicture } : "/src/assets/default-profile.png"
-  );
-  const [username, setUsername] = useState(initName);
   const [bio, setBio] = useState(initBio);
+  const username = initName;
 
   // Handle the changes made to the profile.
   const handleSave = async () => {
@@ -57,7 +51,7 @@ const EditProfilePage = () => {
 
     // console.log("Updated profile:", { profilePic, username, bio });
     const objectbio = { new_bio: bio };
-    const resp = await axiosPrivate.post(UPDATE_BIO, objectbio);
+    await axiosPrivate.post(UPDATE_BIO, objectbio);
 
     navigate(-1); // Navigate back to profile page
   };
@@ -94,8 +88,6 @@ const EditProfilePage = () => {
           setFieldValue={(field, value) => {
             if (field === "file") {
               setProfilePic(value);
-              const preview = URL.createObjectURL(value);
-              setPreviewUrl(preview);
             }
           }}
         />

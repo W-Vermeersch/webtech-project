@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { Post, PostComment } from "../../posts/PostInterface";
+import { Post } from "../../posts/PostInterface";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { ADD_COMMENT, FETCH_POST_COMMENTS } from "../../../api/urls";
 import useAuthUser from "../../../hooks/useAuthUser";

@@ -1,7 +1,6 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { Post, PostComment } from "../../posts/PostInterface";
+import { Post } from "../../posts/PostInterface";
 import React from "react";
-import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { ADD_COMMENT } from "../../../api/urls";
 
@@ -27,7 +26,7 @@ const CommentModal = ({ show, onHide, post }: CommentModalProps) => {
       post_id: post.idx,
       description: comment,
     };
-    const resp = await axiosPrivate.post(ADD_COMMENT, values);
+    await axiosPrivate.post(ADD_COMMENT, values);
     onHide(); // close the modal after submission
   };
 

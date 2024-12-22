@@ -8,9 +8,6 @@ import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
-interface LeaderboardpageProps {
-  activeTab: number;
-}
 // Define the type of leaderboard entries, totalexp for global leaderboard and the follower_count for the followers leaderboard.
 interface LeaderboardEntry {
   username: string;

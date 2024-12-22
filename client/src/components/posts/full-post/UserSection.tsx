@@ -1,7 +1,6 @@
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
 import { NavLink } from "react-router-dom";
 
 interface UserSectionProps {

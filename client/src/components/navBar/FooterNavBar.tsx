@@ -3,9 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FaHome, FaMap, FaCrown, FaUser, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../../hooks/useAuthUser";
-import useSignOut from "../../hooks/useSignOut";
 import { LOG_IN } from "../../api/urls";
-import { Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
 // Icons found from website https://react-icons.github.io/react-icons/ (fa = font awesome)

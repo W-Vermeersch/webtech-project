@@ -1,7 +1,6 @@
 import "./SearchPage.css";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import axios from "../api/axios";
 import { SEARCH_USER, SEARCH_TAG, SEARCH_TAG_FOLLOWING } from "../api/urls";
 import { getLatLng } from "../geocoding";
 

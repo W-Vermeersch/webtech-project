@@ -1,10 +1,9 @@
-import { Row, Col, Container } from "react-bootstrap";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import "./SinglePost.css";
-import { Post, PostComment } from "../posts/PostInterface";
+import { Post } from "../posts/PostInterface";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import axios from "../../api/axios";
 import { DELETE_LIKE, FETCH_POST_COMMENTS, LIKE_POST } from "../../api/urls";
 import CommentModal from "./Commenting/PlaceComment";
 import ViewCommentsModal from "./Commenting/ViewComments";
@@ -25,7 +24,6 @@ export interface fetchCommentProps {
 // Render a single post.
 const SinglePost = ({ post, authCheck }: SinglePostProps) => {
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
 
   // Initialise the likes of the post, keep track if the current user has liked the post.
   const [likes, setLikes] = useState(post.likes || 0);

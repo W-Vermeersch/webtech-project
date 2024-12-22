@@ -20,8 +20,6 @@ import PostGallery from "../components/profile/PostGallery";
 import MapContainer from "../components/profile/MapContainer";
 import { Post, User } from "../components/posts/PostInterface";
 import {
-  FETCH_IS_FOLLOWING,
-  FETCH_POST,
   FETCH_USER_PROFILE,
   FOLLOW,
   UNFOLLOW,

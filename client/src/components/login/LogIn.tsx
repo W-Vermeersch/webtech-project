@@ -1,6 +1,6 @@
 import "./login.css";
 import axios from "../../api/axios.ts";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import useSignIn from "../../hooks/useSignIn.tsx";
 
 import Stack from "react-bootstrap/Stack";

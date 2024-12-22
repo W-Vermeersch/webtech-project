@@ -1,14 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useIntersection } from "@mantine/hooks";
 import { useEffect, useRef } from "react";
-import { Button, Spinner, Col } from "react-bootstrap";
+import { Spinner, Col } from "react-bootstrap";
 import SinglePost from "./SinglePost";
 import { Post } from "../posts/PostInterface";
 import { FETCH_RANDOM_POSTS, FETCH_RANDOM_FOLLOW_POSTS } from "../../api/urls";
-import Search from "../navBar/Search";
 import "./feedPage.css";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import useIsAuthenticated from "../../hooks/useIsAuthenticated";
 
 // Infinite scrolling functionality is adapted from the tutorial:https://www.youtube.com/watch?v=R1FG54FY-18
 // Adjusted to our implementation of fetching posts: FETCH_RANDOM_POSTS and FETCH_RANDOM_FOLLOW_POSTS.
@@ -22,7 +20,6 @@ interface FeedPageProps {
 
 export default function FeedPage({ activeTab }: FeedPageProps) {
   const axiosPrivate = useAxiosPrivate();
-  const isAuthenticated = useIsAuthenticated();
 
   // Fetch posts from the backend
   const fetchPosts = async ({ pageParam = 1 }): Promise<Post[]> => {
@@ -90,7 +87,7 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
               <div ref={ref} key={post.idx}>
                 <SinglePost
                   post={post}
-                  authCheck={function (action: () => void): void {
+                  authCheck={function (): void {
                     throw new Error("Function not implemented.");
                   }}
                 />
@@ -104,7 +101,7 @@ export default function FeedPage({ activeTab }: FeedPageProps) {
             <SinglePost
               key={post.idx}
               post={post}
-              authCheck={function (action: () => void): void {
+              authCheck={function (): void {
                 throw new Error("Function not implemented.");
               }}
             />
